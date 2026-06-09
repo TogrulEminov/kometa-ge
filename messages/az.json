@@ -1,0 +1,16 @@
+{
+  "notfound": {
+    "title": "Axtardığınız Səhifə Tapılmadı",
+    "description": "Axtardığınız səhifə mövcud deyil və ya silinib. Zəhmət olmasa səhifəni yenidən yoxlayın və ya ana səhifəyə qayıdın.",
+    "button": "Geriyə qayıt"
+  },
+  "noResult": {
+    "title": "Axtarışınıza uyğun nəticə tapılmadı",
+    "description": "Axtardığınız məlumat tapılmadı. Başqa bir sorğu ilə yenidən cəhd edin!"
+  },
+  "noResultComponent": {
+    "title": "Məlumat tapılmadı",
+    "description": "Burada hələ heç bir məlumat mövcud deyil. Tezliklə yenilənəcək!",
+    "btn": "Ana səhifəyə qayıt"
+  }
+}

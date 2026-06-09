@@ -1,0 +1,9 @@
+{
+  "redirect": [
+    {
+      "source": "/sitemap_index.xml",
+      "destination": "/sitemap.xml",
+      "statusCode": 301
+    }
+  ]
+}

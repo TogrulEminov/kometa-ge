@@ -1,0 +1,19 @@
+name: kometaGe-test-env
+
+services:
+  db:
+    image: postgres:17-alpine
+    container_name: kometaGe_postgres_test
+    ports:
+      - "5436:5432"
+    environment:
+      POSTGRES_USER: kometaGeUser
+      POSTGRES_PASSWORD: kometaGe2390
+      POSTGRES_DB: kometaGeDb
+    volumes:
+      - kometaGe_test_postgres_data:/var/lib/postgresql/data
+    restart: always 
+
+volumes:
+  kometaGe_test_postgres_data:
+    name: kometaGe_test_postgres_data 
