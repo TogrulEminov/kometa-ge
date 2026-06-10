@@ -1,7 +1,7 @@
 import { createSafeActionClient } from "next-safe-action";
 import { headers } from "next/headers";
 import { auth } from "../auth/auth"; 
-import { Role } from "@/src/services/interface/type";
+import { Role } from "@/services/interface/type";
 export const actionClient = createSafeActionClient({
   defaultValidationErrorsShape: "formatted",
   handleServerError: (e) => {

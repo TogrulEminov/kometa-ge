@@ -3,7 +3,7 @@ import { Suspense } from "react";
 export const metadata: Metadata = {
   title: {
     template: "%s",
-    default: "Profi Transport Admin",
+    default: "Admin - Kometa Ge",
   },
   robots: {
     index: false,

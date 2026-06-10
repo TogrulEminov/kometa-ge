@@ -1,17 +1,12 @@
 import { hasLocale, NextIntlClientProvider } from "next-intl";
 import { notFound } from "next/navigation";
-import { routing } from "@/src/i18n/routing";
 import { getMessages, setRequestLocale } from "next-intl/server";
 import { Inter, DM_Sans } from "next/font/google";
-const interSans = Inter({
-  variable: "--font-inter",
-  display: "swap",
-  weight: ["400", "500", "600", "700", "800"],
-  subsets: ["latin", "latin-ext"],
-});
+import MainLayoutProvider from "../_provider/MainLayoutProvider";
+import { routing } from "@/i18n/routing";
 
-const dmSans = DM_Sans({
-  variable: "--font-dmsans",
+const inter = Inter({
+  variable: "--font-inter",
   display: "swap",
   weight: ["400", "500", "600", "700", "800"],
   subsets: ["latin", "latin-ext"],
@@ -42,11 +37,11 @@ export default async function LocalLayout({
   return (
     <html lang={locale} className="scroll-smooth" suppressHydrationWarning>
       <body
-        className={`${interSans.variable} ${dmSans.variable} antialiased`}
+        className={`${inter.variable} antialiased`}
         suppressHydrationWarning
       >
         <NextIntlClientProvider locale={locale} messages={messages}>
-          {children}
+          <MainLayoutProvider>{children}</MainLayoutProvider>
         </NextIntlClientProvider>
       </body>
     </html>

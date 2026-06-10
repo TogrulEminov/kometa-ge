@@ -9,13 +9,21 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@fancyapps/ui": "^6.1.14",
     "@prisma/adapter-pg": "^7.8.0",
     "better-auth": "^1.6.15",
+    "clsx": "^2.1.1",
+    "motion": "^12.40.0",
     "next": "16.2.7",
     "next-intl": "^4.13.0",
     "next-safe-action": "^8.5.3",
     "react": "19.2.4",
+    "react-countup": "^6.5.3",
     "react-dom": "19.2.4",
+    "react-icons": "^5.6.0",
+    "sanitize-html": "^2.17.5",
+    "swiper": "^12.2.0",
+    "tailwind-merge": "^3.6.0",
     "zod": "^4.4.3"
   },
   "devDependencies": {
@@ -24,6 +32,7 @@
     "@types/pg": "^8.20.0",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@types/sanitize-html": "^2.16.1",
     "eslint": "^9",
     "eslint-config-next": "16.2.7",
     "prisma": "^7.8.0",

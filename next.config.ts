@@ -1,7 +1,7 @@
 // next.config.ts
 import type { NextConfig } from "next";
 import createNextIntlPlugin from "next-intl/plugin";
-import redirectData from "@/src/json/redirect.json";
+import redirectData from "@/json/redirect.json";
 
 const isDev = process.env.NODE_ENV === "development";
 // ✅ Əsas domain — yalnız bir yerdə dəyiş
@@ -13,7 +13,7 @@ const nextConfig: NextConfig = {
   poweredByHeader: true,
   trailingSlash: false,
   compress: true,
-  cacheComponents: true,
+  // cacheComponents: true,
   productionBrowserSourceMaps: false,
 
   generateBuildId: async () => {
@@ -27,6 +27,8 @@ const nextConfig: NextConfig = {
       { protocol: "https", hostname: "kometa.ge" },
       { protocol: "https", hostname: "**.r2.dev" },
       { protocol: "https", hostname: "blobs.**" },
+      { protocol: "https", hostname: "res.cloudinary.com" },
+      { protocol: "https", hostname: "images.unsplash.com" },
     ],
     formats: ["image/avif", "image/webp"],
     deviceSizes: [640, 768, 1024, 1280, 1920],
