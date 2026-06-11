@@ -7,7 +7,7 @@ export const metadata: Metadata = {
   ),
   title: {
     template: "%s",
-    default: "Profi Transport",
+    default: "Kometa Ge",
   },
   robots: {
     index: true,

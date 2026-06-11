@@ -1,6 +1,5 @@
 import Image, { StaticImageData } from "next/image";
 import { FC } from "react";
-// import noImage from "@public/assets/no-image.webp";
 interface ImageProps {
   src?: string | StaticImageData;
   width?: number;

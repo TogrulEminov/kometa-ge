@@ -6,6 +6,7 @@ import { FaPlay, FaExpand, FaImage, FaVideo } from "react-icons/fa";
 import SectionContentComponent from "@/components/SectionContent";
 import ReactFancyBox from "@/lib/fancybox";
 import Link from "next/link";
+import GalleryCardV2EB from "@/globalElement/cards/PhotoGallery";
 
 export function PhotoCard() {
   const [isHovered, setIsHovered] = useState(false);
@@ -80,7 +81,7 @@ export function PhotoCard() {
 // ===== MEDIA SECTION (Full) =====
 export default function MediaSection() {
   return (
-    <section className="w-full pb-10  pt-20 border-t border-t-gray-100">
+    <section className="w-full pb-10  pt-10 lg:pt-20 border-t border-t-gray-100">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 xl:px-12">
         <SectionContentComponent
           title="Photo & Video Gallery"
@@ -88,9 +89,10 @@ export default function MediaSection() {
           subTitle={"Media"}
           type="vertical"
         />
-        <ReactFancyBox className="mb-16 grid gap-5 grid-cols-3">
-          <PhotoCard />
-          <PhotoCard />
+        <ReactFancyBox className="grid gap-5 grid-cols-3">
+          <GalleryCardV2EB />
+          <GalleryCardV2EB />
+          <GalleryCardV2EB />
         </ReactFancyBox>
       </div>
     </section>
