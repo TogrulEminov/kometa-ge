@@ -3,6 +3,7 @@
 @theme {
   --color-primary: #b11226;
   --color-secondary: #1c1e29;
+  --color-tertiary: #f2f2f2;
   --font-inter: var(--font-inter);
 }
 @layer base {
@@ -15,4 +16,171 @@
   .container {
     @apply mx-auto max-w-[1180px] px-4;
   }
+}
+/* ===== DETAILS/SUMMARY ANIMATIONS ===== */
+
+/* Default state - answer hidden */
+details .faq-answer {
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  transition:
+    grid-template-rows 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+    opacity 0.3s ease 0.1s;
+}
+
+/* Open state - answer visible */
+details[open] .faq-answer {
+  grid-template-rows: 1fr;
+  opacity: 1;
+  transition:
+    grid-template-rows 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+    opacity 0.3s ease;
+}
+
+/* Inner wrapper for grid animation */
+details .faq-answer-inner {
+  overflow: hidden;
+}
+
+/* Chevron rotation */
+details summary .chevron-icon {
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+details[open] summary .chevron-icon {
+  transform: rotate(180deg);
+}
+
+/* Card background transition */
+details .faq-card {
+  transition:
+    background-color 0.4s ease,
+    border-color 0.4s ease,
+    box-shadow 0.4s ease;
+}
+
+details[open] .faq-card {
+  background-color: #b11226;
+  border-color: #b11226;
+  box-shadow: 0 20px 40px -10px rgba(177, 18, 38, 0.3);
+}
+
+/* Question text color */
+details summary .faq-question {
+  transition: color 0.3s ease;
+}
+
+details[open] summary .faq-question {
+  color: #ffffff;
+}
+
+/* Question icon color */
+details summary .faq-icon {
+  transition: color 0.3s ease;
+}
+
+details[open] summary .faq-icon {
+  color: #ffffff;
+}
+
+/* Chevron container */
+details summary .chevron-container {
+  transition: background-color 0.3s ease;
+}
+
+details[open] summary .chevron-container {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+details[open] summary .chevron-icon {
+  color: #ffffff;
+}
+
+/* Answer text color */
+details .faq-answer-text {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+/* Divider line */
+details .faq-divider {
+  transition: opacity 0.3s ease;
+  opacity: 0;
+}
+
+details[open] .faq-divider {
+  opacity: 1;
+}
+
+/* Remove default marker */
+details > summary {
+  list-style: none;
+}
+details > summary::-webkit-details-marker {
+  display: none;
+}
+
+/* Hover states (only when not open) */
+details:not([open]) .faq-card:hover {
+  border-color: rgba(177, 18, 38, 0.3);
+  box-shadow: 0 4px 20px -4px rgba(0, 0, 0, 0.08);
+}
+
+details:not([open]) summary:hover .faq-question {
+  color: #b11226;
+}
+
+details:not([open]) summary:hover .chevron-container {
+  background-color: #b11226;
+}
+
+details:not([open]) summary:hover .chevron-icon {
+  color: #ffffff;
+}
+
+/* Scroll animation for header */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.6s ease forwards;
+  opacity: 0;
+}
+
+.delay-100 {
+  animation-delay: 0.1s;
+}
+.delay-200 {
+  animation-delay: 0.2s;
+}
+.delay-300 {
+  animation-delay: 0.3s;
+}
+.delay-400 {
+  animation-delay: 0.4s;
+}
+
+/* Stagger for FAQ items */
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.faq-item {
+  animation: slideInRight 0.5s ease forwards;
+  opacity: 0;
 }

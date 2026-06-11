@@ -1,0 +1,35 @@
+import {Select, type SelectProps} from "antd";
+import {FieldWrapper} from "./FieldsWrapper";
+
+interface BaseFormSelectProps extends SelectProps {
+    className?: string;
+    fieldName: string;
+    label?: string;
+}
+
+export type FormSelectProps = BaseFormSelectProps;
+
+export default function FormSelect({
+                                       label,
+                                       fieldName,
+                                       className,
+                                       options,
+                                       ...rest
+                                   }: FormSelectProps) {
+
+    return (
+        <FieldWrapper fieldName={fieldName} label={label}>
+            {(field, fieldState) => (
+                <Select
+                    {...field}
+                    {...rest}
+                    options={options}
+                    id={field.id}
+                    className={`${className} w-full`}
+                    status={fieldState.invalid ? "error" : ""}
+                    value={field.value ?? undefined}
+                />
+            )}
+        </FieldWrapper>
+    );
+}

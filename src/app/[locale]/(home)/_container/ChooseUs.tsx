@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { FaArrowRight, FaHeadset, FaPaperPlane, FaCogs } from "react-icons/fa";
+import { FaArrowRight, FaHeadset, FaPaperPlane, FaCogs, FaGlobe } from "react-icons/fa";
 import CustomImage from "@/globalElement/CustomImage";
 
 const features = [
@@ -29,7 +29,6 @@ const accordionItems = [
   {
     id: 1,
     icon: <FaCogs className="text-lg" />,
-    badge: "SAFETY YOU CAN COUNT",
     title: "CUSTOMER-CENTRIC SOLUTIONS",
     description:
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut elit tellus, luctus nec ullamcorper mattis, pulvinar dapibus leo.",
@@ -47,7 +46,6 @@ const accordionItems = [
     id: 3,
     icon: <FaCogs className="text-lg" />,
     title: "SMART ROUTE OPTIMIZATION",
-    badge: "SAFETY YOU CAN COUNT",
     description:
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut elit tellus, luctus nec ullamcorper mattis, pulvinar dapibus leo.",
 
@@ -57,7 +55,6 @@ const accordionItems = [
     id: 4,
     icon: <FaCogs className="text-lg" />,
     title: "SAFETY YOU CAN COUNT ON",
-    badge: "SAFETY YOU CAN COUNT",
     description:
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut elit tellus, luctus nec ullamcorper mattis, pulvinar dapibus leo.",
 
@@ -146,9 +143,7 @@ export default function WhyChooseUs() {
                 <div
                   key={item.id}
                   className={`rounded-xl transition-all duration-500 overflow-hidden ${
-                    isOpen
-                      ? "bg-[#F1F5F9] shadow-lg"
-                      : "bg-[#F8FAFC] hover:bg-[#F1F5F9]"
+                    isOpen ? "bg-tertiary" : "bg-tertiary/90"
                   }`}
                 >
                   {/* Accordion Header */}
@@ -163,7 +158,7 @@ export default function WhyChooseUs() {
                           : "bg-primary/10 text-primary"
                       }`}
                     >
-                      {index + 1}
+                      <FaGlobe/>
                     </div>
                     <span
                       className={`text-base md:text-lg font-bold tracking-wide transition-colors duration-300 ${
@@ -181,12 +176,7 @@ export default function WhyChooseUs() {
                     }`}
                   >
                     <div className="px-5 md:px-6 pb-5 md:pb-6 pl-16 md:pl-18">
-                      {item.badge && (
-                        <span className="inline-flex items-center px-3 py-1 bg-primary/10 text-primary text-[10px] font-bold tracking-[1px] uppercase rounded-full mb-3">
-                          {item.badge}
-                        </span>
-                      )}
-                      {item.description && (
+                        {item.description && (
                         <p className="text-[#64748B] text-[15px] leading-relaxed">
                           {item.description}
                         </p>

@@ -1,4 +1,10 @@
-"use client";
+// app/sections/FAQSplitServer.jsx
+// NO "use client" - Pure Server Component
+
+import SectionContentComponent from "@/components/SectionContent";
+import { Link } from "@/i18n/navigation";
+import { FaQuestion } from "react-icons/fa";
+import { FaArrowRightLong } from "react-icons/fa6";
 
 const faqData = [
   {
@@ -39,63 +45,85 @@ const faqData = [
   },
 ];
 
-export default function FAQSection() {
+export default function FAQSplitServer() {
   return (
-    <section className="w-full py-10 lg:py-20 bg-[#F8FAFC]">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 xl:px-12">
-        {/* Header */}
-        <div className="text-center mb-16">
-          <span className="inline-flex px-5 py-2 bg-[#C8102E]/10 text-[#C8102E] text-xs font-bold uppercase rounded-full mb-6">
-            FAQ
-          </span>
-          <h2 className="text-4xl md:text-5xl font-bold text-[#0F172A] mb-4">
-            Frequently Asked <span className="text-[#C8102E]">Questions</span>
-          </h2>
-          <p className="text-[#64748B] text-lg max-w-2xl mx-auto">
-            The most commonly asked questions and their answers
-          </p>
-        </div>
-
-        {/* FAQ */}
-        <div className="max-w-4xl mx-auto space-y-4">
-          {faqData.map((item) => (
-            <details
-              key={item.id}
-              className="group bg-white rounded-xl border border-[#E2E8F0] overflow-hidden hover:border-[#C8102E]/30 hover:shadow-lg transition-all duration-300"
-            >
-              <summary className="flex items-center justify-between gap-4 p-6 cursor-pointer list-none select-none">
-                <div className="flex items-center gap-4">
-                  <span className="w-10 h-10 rounded-lg bg-[#C8102E]/10 text-[#C8102E] flex items-center justify-center text-sm font-bold group-open:bg-[#C8102E] group-open:text-white transition">
-                    {String(item.id).padStart(2, "0")}
-                  </span>
-
-                  <h3 className="text-[15px] md:text-base font-bold text-[#1E293B] group-open:text-[#C8102E] transition">
-                    {item.question}
-                  </h3>
-                </div>
-
-                {/* icon */}
-                <span className="text-[#64748B] group-open:rotate-180 text-3xl transition-transform duration-300">
-                  +
-                </span>
-              </summary>
-
-              <div className="px-6 pb-6 pl-[72px] text-[#64748B] text-[15px] leading-relaxed">
-                {item.answer}
+    <section className="w-full py-10 border-b border-b-gray-200 lg:py-20 bg-white">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16">
+          {/* LEFT: Sticky Header */}
+          <div className="lg:col-span-5">
+            <div className="lg:sticky lg:top-32">
+              <SectionContentComponent
+                description={
+                  "Find answers to the most common questions about our logistics services."
+                }
+                title="Frequently Asked Questions"
+                type="vertical"
+                highlightWord={"Questions"}
+                subTitle={"FAQ"}
+              />
+              <div className="animate-fade-in-up delay-400 mt-8">
+                <p className="text-gray-400 text-sm mb-4">
+                  Still have questions?
+                </p>
+                <Link
+                  href="/contact"
+                  className="inline-flex items-center gap-2 bg-primary text-white font-bold text-sm uppercase tracking-wider px-6 py-3 rounded-lg shadow-md hover:bg-[#8f0e1f] transition-all duration-300 hover:gap-3"
+                >
+                  Contact us
+                  <FaArrowRightLong className="transition-transform group-hover:translate-x-1" />
+                </Link>
               </div>
-            </details>
-          ))}
-        </div>
+            </div>
+          </div>
 
-        {/* CTA */}
-        <div className="text-center mt-14">
-          <p className="text-[#64748B] mb-4">Still haven’t found the answer?</p>
-          <a
-            href="/contact"
-            className="inline-flex items-center gap-2 px-8 py-3.5 bg-[#C8102E] text-white text-sm font-bold uppercase rounded-xl hover:bg-[#A00D24] transition"
-          >
-            Contact us
-          </a>
+          {/* RIGHT: FAQ Items */}
+          <div className="lg:col-span-7 space-y-4">
+            {faqData.map((item) => (
+              <details key={item.id} className="faq-item group">
+                <summary className="faq-card cursor-pointer rounded-2xl border border-gray-100 bg-tertiary">
+                  <div className="flex items-center justify-between gap-4 p-6 md:p-7">
+                    <div className="flex items-center gap-4">
+                      {/* Question Icon */}
+                      <FaQuestion className="text-primary group-open:text-white transition-colors duration-300" />
+
+                      <h3 className="faq-question text-base md:text-lg font-bold text-secondary">
+                        {item.question}
+                      </h3>
+                    </div>
+
+                    <div className="chevron-container shrink-0 w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center">
+                      <svg
+                        className="chevron-icon w-3 h-3 text-gray-500"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={3}
+                          d="M19 9l-7 7-7-7"
+                        />
+                      </svg>
+                    </div>
+                  </div>
+
+                  {/* Answer */}
+                  <div className="faq-answer">
+                    <div className="faq-answer-inner">
+                      <div className="px-6 md:px-7 pb-6 md:pb-7 pl-14 md:pl-14">
+                        <div className="faq-divider h-px w-full bg-white/20 mb-4" />
+                        <p className="faq-answer-text text-[15px] leading-relaxed">
+                          {item.answer}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </summary>
+              </details>
+            ))}
+          </div>
         </div>
       </div>
     </section>

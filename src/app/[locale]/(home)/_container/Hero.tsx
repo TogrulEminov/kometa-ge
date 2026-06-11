@@ -105,7 +105,7 @@ export default function HomeHeroComponent() {
                     </div>
                     <input
                       type="text"
-                      placeholder="Tracking nömrəsini daxil edin (məs: KMT-2024-001)"
+                      placeholder="Enter your tracking id"
                       className="w-full pl-12 pr-4 py-4 bg-white/5 border border-white/10 rounded-xl text-white placeholder-white/30 text-[15px] font-medium focus:outline-none focus:border-white/50 focus:bg-white/10 transition-all duration-300"
                     />
                   </div>
@@ -114,7 +114,7 @@ export default function HomeHeroComponent() {
                     className="px-8 py-4 bg-linear-to-r bg-primary text-white font-bold text-base tracking-wider capitalize rounded-xl transition-all duration-300 hover:shadow-lg  disabled:opacity-60 disabled:cursor-not-allowed  flex items-center cursor-pointer justify-center gap-3 min-w-30"
                   >
                     <FaSearch className="text-sm" />
-                    İzlə
+                    Track
                   </button>
                 </form>
               </div>

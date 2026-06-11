@@ -50,10 +50,10 @@ export default function SectionContentComponent({
           ? "flex-col"
           : "flex-col lg:flex-row lg:items-end lg:justify-between",
         rootClass,
-        "flex   space-y-2 mb-6 xl:mb-10",
+        "flex   space-y-4 mb-6 xl:mb-10",
       )}
     >
-      <div className="flex flex-col space-y-2">
+      <div className="flex flex-col space-y-4">
         {subTitle && (
           <div className={"flex items-center w-fit  px-5 py-2 rounded-full bg-primary gap-2"}>
             <span className="text-white font-semibold text-sm tracking-wide">
