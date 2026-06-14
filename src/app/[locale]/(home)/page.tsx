@@ -1,14 +1,13 @@
-import HomeHeroComponent from "./_container/Hero";
-import CallAction from "./_container/CallAction";
-import HomeAboutComponent from "./_container/AboutSection";
-import HomeServicesSection from "./_container/Services";
-import WhyChooseUs from "./_container/ChooseUs";
-import HomeDirectionsSection from "./_container/Directions";
-import FAQSection from "./_container/FagSection";
-import MediaSection from "./_container/MediaCard";
-import HowItWorksHome from "./_container/HowItWorks";
-import CTASectionV1 from "./_container/CtaSection";
-import ShipmentModal from "./_container/atoms/FormModal";
+import HomeHeroComponent from "./_components/Hero";
+import CallAction from "./_components/CallAction";
+import HomeAboutComponent from "./_components/AboutSection";
+import HomeServicesSection from "./_components/Services";
+import WhyChooseUs from "./_components/ChooseUs";
+import HomeDirectionsSection from "./_components/Directions";
+import FAQSection from "./_components/FagSection";
+import MediaSection from "./_components/MediaCard";
+import HowItWorksHome from "./_components/HowItWorks";
+import CTASectionV1 from "./_components/CtaSection";
 export default function HomePage() {
   return (
     <>
@@ -22,8 +21,6 @@ export default function HomePage() {
       <MediaSection />
       <FAQSection />
       <CTASectionV1 />
-
-  
     </>
   );
 }

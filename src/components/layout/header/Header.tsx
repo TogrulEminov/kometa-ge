@@ -1,18 +1,11 @@
 "use client";
 
-import Logo from "@/components/Logo";
-import Link from "next/link";
-import React, { useState, useRef, useEffect } from "react";
-import { FaEnvelope, FaMapPin, FaPhoneAlt } from "react-icons/fa";
-import { IoMdMenu, IoMdClose } from "react-icons/io";
-import { IoChevronDown } from "react-icons/io5";
-import Language from "./Language";
-import { availableIcons, renderSocialIcon } from "@/utils/renderSocialIcon";
+import { useState } from "react";
 import { useMotionValueEvent, useScroll } from "motion/react";
 import { cn } from "@/utils/cn";
 import HeaderTop from "./HeaderTop";
 import HeaderBottom from "./HeaderBottom";
-import ShipmentModal from "@/app/[locale]/(home)/_container/atoms/FormModal";
+import ShipmentModal from "@/app/[locale]/(home)/_components/atoms/FormModal";
 
 export default function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -34,7 +27,7 @@ export default function Header() {
         className={cn("top-0 w-full z-99", isSticky ? "fixed" : "absolute")}
       >
         <HeaderTop isSticky={isSticky} />
-        <HeaderBottom isSticky={isSticky} setIsOpen={setIsOpen}/>
+        <HeaderBottom isSticky={isSticky} setIsOpen={setIsOpen} />
       </header>
       <ShipmentModal open={isOpen} onClose={() => setIsOpen(false)} />
     </>
