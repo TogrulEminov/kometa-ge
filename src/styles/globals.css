@@ -14,7 +14,62 @@
 
 @layer utilities {
   .container {
-    @apply mx-auto max-w-[1180px] px-4;
+    @apply mx-auto max-w-295 px-4;
+  }
+  .prose {
+    @apply text-secondary text-base lg:text-lg leading-relaxed;
+    max-width: 100%;
+    :where(h1, h2, h3, h4) {
+      @apply text-secondary font-bold tracking-tight mt-6 mb-4;
+    }
+    :where(h1) {
+      @apply text-2xl lg:text-4xl;
+    }
+    :where(h2) {
+      @apply text-xl lg:text-2xl border-b border-gray-200 pb-1;
+    }
+    :where(h3) {
+      @apply text-lg lg:text-xl;
+    }
+    :where(p) {
+      @apply mb-4;
+    }
+    :where(ul) {
+      @apply list-disc list-inside mb-4 pl-4;
+    }
+    :where(ol) {
+      @apply list-decimal list-inside mb-4 pl-4;
+    }
+    :where(li) {
+      @apply mb-1;
+    }
+    :where(a) {
+      @apply text-primary underline underline-offset-4  transition-colors;
+    }
+    :where(blockquote) {
+      @apply italic border-l-4 border-gray-300 pl-4 my-4 text-gray-600;
+    }
+    :where(code) {
+      @apply bg-gray-100 text-red-500 rounded px-1.5 py-0.5 font-mono text-sm;
+    }
+    :where(pre) {
+      @apply bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto font-mono text-sm my-4;
+    }
+    :where(pre code) {
+      @apply bg-transparent text-inherit p-0 rounded-none;
+    }
+    :where(img) {
+      @apply rounded-lg max-w-full h-auto my-6 mx-auto;
+    }
+    :where(table) {
+      @apply w-full text-left border-collapse my-6 text-sm;
+    }
+    :where(th) {
+      @apply border-b-2 border-gray-300 p-2 font-semibold;
+    }
+    :where(td) {
+      @apply border-b border-gray-200 p-2;
+    }
   }
 }
 /* ===== DETAILS/SUMMARY ANIMATIONS ===== */
