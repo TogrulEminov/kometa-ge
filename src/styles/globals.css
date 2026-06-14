@@ -239,3 +239,6 @@ details:not([open]) summary:hover .chevron-icon {
   animation: slideInRight 0.5s ease forwards;
   opacity: 0;
 }
+.leaflet-container {
+  z-index: 1;
+}

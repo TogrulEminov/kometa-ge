@@ -1,16 +1,16 @@
 "use client";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import {
   useInView,
   Variants,
   useScroll,
   useMotionValueEvent,
 } from "framer-motion";
-import { useState } from "react";
 import CustomImage from "@/globalElement/CustomImage";
 import { MotionDiv, MotionNav } from "@/lib/motion";
 import { Link } from "@/i18n/navigation";
 import innerBanner from "@public/assets/inner-banner.png";
+import { FaAngleLeft } from "react-icons/fa";
 
 interface BreadcrumbItem {
   label: string;
@@ -58,21 +58,14 @@ export default function InnerBanner({
   const sectionRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(sectionRef, { once: true, margin: "-100px" });
 
-  // Mobil Sticky Back düyməsi üçün scroll vəziyyəti
   const [showStickyBack, setShowStickyBack] = useState(false);
   const { scrollY } = useScroll();
 
   useMotionValueEvent(scrollY, "change", (latest) => {
-    // Əgər istifadəçi banner hündürlüyündən (təxmini 280px) aşağı scroll edibsə sticky barı göstər
-    if (latest > 280) {
-      setShowStickyBack(true);
-    } else {
-      setShowStickyBack(false);
-    }
+    const bannerHeight = sectionRef.current?.offsetHeight ?? 280;
+    setShowStickyBack(latest > bannerHeight * 0.6);
   });
 
-  // Breadcrumbs içindən bir əvvəlki linki tapırıq (Back linki üçün)
-  // Əgər tapılmasa default olaraq ana səhifəyə ("/") yönləndiririk
   const backLink =
     breadcrumbs.length > 1
       ? breadcrumbs[breadcrumbs.length - 2]?.href || "/"
@@ -94,44 +87,31 @@ export default function InnerBanner({
 
   return (
     <>
-      {/* MOBILE STICKY BACK BAR */}
+      {/* MOBILE STICKY BACK BUTTON */}
       <MotionDiv
-        initial={{ y: -60, opacity: 0 }}
-        animate={showStickyBack ? { y: 0, opacity: 1 } : { y: -60, opacity: 0 }}
+        initial={{ x: -80, opacity: 0 }}
+        animate={showStickyBack ? { x: 0, opacity: 1 } : { x: -80, opacity: 0 }}
         transition={{ duration: 0.3, ease: EASE_CUBIC }}
-        // Mobil rəng sxemini əsas rəngə uyğunlaşdırırıq (məsələn: bg-secondary və ya bg-[#0f172a])
-        className="fixed top-0 left-0 right-0 z-50 bg-[#003459] shadow-md border-b border-white/10 py-3 px-4 flex items-center justify-between lg:hidden"
+        className="fixed lg:left-45  bottom-0 lg:bottom-[unset] lg:top-25  mx-auto  w-full z-50"
+        style={{ pointerEvents: showStickyBack ? "auto" : "none" }}
       >
         <Link
           href={backLink}
-          className="flex items-center gap-2 text-white/90 font-medium text-sm active:scale-95 transition-transform"
+          className="flex items-center justify-center lg:justify-start gap-2  bg-primary/90 backdrop-blur-md border border-white/15 shadow-lg w-full lg:w-fit lg:rounded-lg px-10 py-2 active:scale-95 transition-transform"
         >
-          <svg
-            className="w-5 h-5 text-white"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-            strokeWidth={2.5}
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M15 19l-7-7 7-7"
-            />
-          </svg>
-          Geri
+          <FaAngleLeft color="white"  size={24}/>
+          <span className="text-lg font-bold text-white">Back</span>
         </Link>
-        <span className="text-white/70 text-xs font-semibold max-w-[60%] truncate">
-          {title}
-        </span>
       </MotionDiv>
 
       {/* MAIN BANNER */}
       <div
         ref={sectionRef}
-        className={`relative ${variant === "image" ? "" : bgStyles[variant]} pt-34 pb-16 sm:pb-20 overflow-hidden`}
+        className={`relative ${
+          variant === "image" ? "" : bgStyles[variant]
+        } pt-34 pb-16 sm:pb-20 overflow-hidden`}
       >
-        {/* Image Background for image variant */}
+        {/* Image Background */}
         {variant === "image" && (
           <>
             <CustomImage
@@ -144,11 +124,16 @@ export default function InnerBanner({
             <div className="absolute inset-0 bg-[#0F172A]/85" />
           </>
         )}
+
         {variant !== "image" && (
           <div className={`absolute inset-0 ${overlayStyles[variant]}`} />
         )}
+
+        {/* Grid pattern */}
         <div
-          className={`absolute inset-0 opacity-[0.04] ${variant === "image" ? "hidden" : ""}`}
+          className={`absolute inset-0 opacity-[0.04] ${
+            variant === "image" ? "hidden" : ""
+          }`}
         >
           <svg
             className="w-full h-full"
@@ -173,6 +158,8 @@ export default function InnerBanner({
             <rect width="100" height="100" fill="url(#grid-inner)" />
           </svg>
         </div>
+
+        {/* Glow blobs */}
         <MotionDiv
           initial={{ opacity: 0, scale: 0.8 }}
           animate={isInView ? { opacity: 1, scale: 1 } : {}}
@@ -186,17 +173,20 @@ export default function InnerBanner({
           className="absolute bottom-0 left-0 w-48 h-48 sm:w-64 sm:h-64 md:w-80 md:h-80 bg-white/3 rounded-full blur-3xl"
         />
 
+        {/* Vertical lines */}
         <div className="absolute top-0 left-1/4 w-px h-full bg-linear-to-b from-transparent via-white/8 to-transparent hidden md:block" />
         <div className="absolute top-0 right-1/3 w-px h-full bg-linear-to-b from-transparent via-white/5 to-transparent hidden md:block" />
 
+        {/* Content */}
         <div className="relative z-10 container">
           <MotionDiv
             variants={containerVariants}
             initial="hidden"
-            className="space-y-5 lg:space-y-4"
             animate={isInView ? "visible" : "hidden"}
+            className="space-y-5 lg:space-y-4"
           >
-            <MotionNav variants={itemVariants}>
+            {/* Breadcrumb — mobiledə gizli, desktop-da görünür */}
+            <MotionNav variants={itemVariants} className="hidden sm:block">
               <ol className="flex items-center flex-wrap gap-1.5 sm:gap-2.5 text-xs sm:text-sm">
                 {breadcrumbs.map((item, index) => (
                   <li
@@ -234,17 +224,20 @@ export default function InnerBanner({
                 ))}
               </ol>
             </MotionNav>
+
+            {/* Title + subtitle */}
             <MotionDiv variants={itemVariants}>
               <h1 className="font-display text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-white leading-[1.1] tracking-tight">
                 {title}
               </h1>
               {subtitle && (
-                <p className="text-white/60 text-sm sm:text-base md:text-lg max-w-2xl leading-relaxed font-light">
+                <p className="text-white/60 text-sm sm:text-base md:text-lg max-w-2xl leading-relaxed font-light mt-3">
                   {subtitle}
                 </p>
               )}
             </MotionDiv>
 
+            {/* Decorative lines */}
             <MotionDiv
               variants={itemVariants}
               className="mt-8 sm:mt-10 md:mt-12 flex items-center gap-2 sm:gap-3"
