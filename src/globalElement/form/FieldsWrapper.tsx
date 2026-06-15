@@ -10,6 +10,7 @@ import {
 import { ErrorMessage } from "@hookform/error-message";
 import { useFormSchema } from "./FormContextType";
 import { isFieldRequired } from "@/helper/isFieldRequired";
+import { cn } from "@/utils/cn";
 
 type RenderFieldProps<
   T extends FieldValues,
@@ -21,6 +22,7 @@ type RenderFieldProps<
 interface FieldWrapperProps<T extends FieldValues, K extends Path<T>> {
   fieldName: K;
   label?: string;
+  className?: string;
   children: (
     fieldProps: RenderFieldProps<T, K>,
     fieldState: ControllerFieldState,
@@ -31,6 +33,7 @@ export function FieldWrapper<T extends FieldValues, K extends Path<T>>({
   fieldName,
   label,
   children,
+  className,
 }: FieldWrapperProps<T, K>) {
   const id = useId();
   const schema = useFormSchema();
@@ -40,7 +43,7 @@ export function FieldWrapper<T extends FieldValues, K extends Path<T>>({
   } = useFormContext<T>();
   const isRequired = isFieldRequired(schema, fieldName);
   return (
-    <div className="flex flex-col gap-1 mb-4">
+    <div className={cn(className, "flex flex-col gap-1")}>
       {label && (
         <label htmlFor={id} className="text-sm font-medium flex items-center">
           {label}

@@ -10,8 +10,8 @@ export interface FormPhoneProps extends Omit<
 > {
   fieldName: string;
   label?: string;
+  wrapperClassName?: string;
 }
-
 function PhoneInput({
   value,
   onChange,
@@ -29,28 +29,31 @@ function PhoneInput({
 } & Omit<InputProps, "value" | "onChange" | "type" | "status">) {
   const inputRef = useRef<HTMLInputElement>(null);
   const maskRef = useRef<InputMask<any> | null>(null);
-  const isInternalUpdate = useRef(false);
+  const onChangeRef = useRef(onChange);
+
+  useEffect(() => {
+    onChangeRef.current = onChange;
+  }, [onChange]);
 
   useEffect(() => {
     if (!inputRef.current || maskRef.current) return;
 
-    // IMask-a aid bütün məntiq phoneMask.ts-dən gəlir
     maskRef.current = createPhoneMask(inputRef.current);
 
     maskRef.current.on("accept", () => {
-      if (!isInternalUpdate.current) {
-        onChange?.(maskRef.current?.value ?? "");
-      }
+      onChangeRef.current?.(maskRef.current?.value ?? "");
     });
 
-    return () => maskRef.current?.destroy();
-  }, [onChange]);
+    return () => {
+      maskRef.current?.destroy();
+      maskRef.current = null;
+    };
+  }, []);
 
   useEffect(() => {
-    if (maskRef.current && value !== maskRef.current.value) {
-      isInternalUpdate.current = true;
-      maskRef.current.value = value || "";
-      isInternalUpdate.current = false;
+    if (!maskRef.current) return;
+    if (value !== undefined && value !== maskRef.current.value) {
+      maskRef.current.value = value;
     }
   }, [value]);
 
@@ -73,10 +76,15 @@ function PhoneInput({
 export default function FormPhone({
   label,
   fieldName,
+  wrapperClassName,
   ...rest
 }: FormPhoneProps) {
   return (
-    <FieldWrapper fieldName={fieldName as any} label={label}>
+    <FieldWrapper
+      fieldName={fieldName as any}
+      label={label}
+      className={wrapperClassName}
+    >
       {(field, fieldState) => (
         <PhoneInput
           {...field}
