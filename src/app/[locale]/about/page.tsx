@@ -14,7 +14,7 @@ export default function AboutPage() {
       <InnerBanner
         title="About Us"
         subtitle="Your trusted partner in global logistics and freight transportation"
-        breadcrumbs={[{ label: "Home", href: "/" }, { label: "About Us" }]}
+        breadcrumbs={[{ label: "About Us" }]}
         variant="image"
       />
       <HeroSection />

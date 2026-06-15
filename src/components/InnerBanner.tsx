@@ -92,14 +92,14 @@ export default function InnerBanner({
         initial={{ x: -80, opacity: 0 }}
         animate={showStickyBack ? { x: 0, opacity: 1 } : { x: -80, opacity: 0 }}
         transition={{ duration: 0.3, ease: EASE_CUBIC }}
-        className="fixed lg:left-45  bottom-0 lg:bottom-[unset] lg:top-25  mx-auto  w-full z-50"
+        className="fixed left-5 xl:left-45  bottom-0 lg:bottom-[unset] lg:top-25  mx-auto  w-full z-50"
         style={{ pointerEvents: showStickyBack ? "auto" : "none" }}
       >
         <Link
           href={backLink}
           className="flex items-center justify-center lg:justify-start gap-2  bg-primary/90 backdrop-blur-md border border-white/15 shadow-lg w-full lg:w-fit lg:rounded-lg px-10 py-2 active:scale-95 transition-transform"
         >
-          <FaAngleLeft color="white"  size={24}/>
+          <FaAngleLeft color="white" size={24} />
           <span className="text-lg font-bold text-white">Back</span>
         </Link>
       </MotionDiv>
@@ -188,6 +188,27 @@ export default function InnerBanner({
             {/* Breadcrumb — mobiledə gizli, desktop-da görünür */}
             <MotionNav variants={itemVariants} className="hidden sm:block">
               <ol className="flex items-center flex-wrap gap-1.5 sm:gap-2.5 text-xs sm:text-sm">
+                <li className="flex items-center gap-1.5 sm:gap-2.5">
+                  <Link
+                    href={"/"}
+                    className="text-white/50 hover:text-white/90 transition-colors duration-300 hover:underline underline-offset-4 decoration-white/30"
+                  >
+                    Home
+                  </Link>
+                  <svg
+                    className="w-3.5 h-3.5 text-white/30 shrink-0"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    strokeWidth={2}
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M9 5l7 7-7 7"
+                    />
+                  </svg>
+                </li>
                 {breadcrumbs.map((item, index) => (
                   <li
                     key={index}

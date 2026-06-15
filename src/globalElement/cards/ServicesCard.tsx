@@ -6,11 +6,11 @@ import { Link } from "@/i18n/navigation";
 export default function ServiceCard() {
   return (
     <Link
-      href={""}
+      href={"/services/4"}
       className="group relative bg-white border border-gray-100 rounded-none overflow-hidden"
     >
       {/* Image Container */}
-      <div className="relative aspect-[4/3] overflow-hidden">
+      <div className="relative aspect-4/3 overflow-hidden">
         <CustomImage
           src={
             "https://res.cloudinary.com/da403zlyf/image/upload/v1781117569/2151541873_mhuzr3.jpg"
@@ -21,7 +21,7 @@ export default function ServiceCard() {
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
         />
         {/* Subtle overlay on hover */}
-        <div className="absolute inset-0 bg-gradient-to-t from-primary/70 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+        <div className="absolute inset-0 bg-linear-to-t from-primary/70 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
       </div>
 
       {/* Icon Box - Overlapping Image */}
