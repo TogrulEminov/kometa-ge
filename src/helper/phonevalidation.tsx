@@ -42,8 +42,13 @@ export function resolvePhoneMask(value: string): PhoneMaskItem {
  */
 export function phoneDispatch(appended: string, dynamicMasked: any) {
   const current = (dynamicMasked.value + appended).replace(/\D/g, "");
-  const foundIndex = PHONE_MASKS.findIndex((m) => current.startsWith(m.regex));
-  return dynamicMasked.compiledMasks[foundIndex !== -1 ? foundIndex : 0];
+
+  const sorted = PHONE_MASKS.map((m, i) => ({ ...m, i })).sort(
+    (a, b) => b.regex.length - a.regex.length,
+  );
+
+  const found = sorted.find((m) => current.startsWith(m.regex));
+  return dynamicMasked.compiledMasks[found ? found.i : 0];
 }
 
 /**

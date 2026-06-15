@@ -6,6 +6,7 @@ interface BaseFormInputProps extends InputProps {
   fieldName: string;
   label?: string | undefined;
   suffix?: React.ReactNode;
+  wrapperClassName?: string;
 }
 
 export type FormInputProps = BaseFormInputProps;
@@ -16,10 +17,15 @@ export default function FormInput({
   className,
   type = "text",
   suffix,
+  wrapperClassName,
   ...rest
 }: FormInputProps) {
   return (
-    <FieldWrapper fieldName={fieldName} label={label}>
+    <FieldWrapper
+      fieldName={fieldName}
+      label={label}
+      className={wrapperClassName}
+    >
       {(field, fieldState) => (
         <Input
           {...field}
