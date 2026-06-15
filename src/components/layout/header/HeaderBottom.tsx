@@ -76,19 +76,18 @@ const navbar = [
     id: "nav-4",
     name: "Media",
     key: "media",
-    href: "/media",
     children: [
       {
         id: "photo-gallery",
         key: "photoGallery",
         name: "Photo Gallery",
-        href: "/media/photos",
+        href: "/photo-gallery",
       },
       {
         id: "video-gallery",
         key: "videoGallery",
         name: "Video Gallery",
-        href: "/media/videos",
+        href: "/video-gallery",
       },
     ],
   },
@@ -101,7 +100,6 @@ const navbar = [
 ];
 
 type NavItem = (typeof navbar)[number];
-
 function DropdownItem({ item }: { item: NavItem }) {
   if (!item.children) {
     return (
@@ -118,23 +116,33 @@ function DropdownItem({ item }: { item: NavItem }) {
 
   return (
     <li className="relative group">
-      <Link
-        href={item.href}
-        className="flex items-center gap-1 text-white font-medium text-sm   transition-colors duration-200"
-      >
-        {item.name}
-        <IoChevronDown
-          className={`transition-transform duration-200  group-hover:rotate-180`}
-          size={14}
-        />
-      </Link>
+      {item.href ? (
+        <Link
+          href={item.href}
+          className="flex items-center gap-1 leading-10 text-white font-medium text-sm transition-colors duration-200"
+        >
+          {item.name}
+          <IoChevronDown
+            className="transition-transform duration-200 group-hover:rotate-180"
+            size={14}
+          />
+        </Link>
+      ) : (
+        <span className="flex items-center gap-1 leading-10 text-white font-medium text-sm transition-colors duration-200 cursor-default">
+          {item.name}
+          <IoChevronDown
+            className="transition-transform duration-200 group-hover:rotate-180"
+            size={14}
+          />
+        </span>
+      )}
 
-      <ul className="absolute group-hover:block hidden top-full left-0 mt-2 w-56 bg-[#1C1E29] border border-white/10 rounded-lg shadow-xl z-50 py-1 overflow-hidden">
+      <ul className="absolute group-hover:block hidden top-full left-0 mt-0 w-56 bg-[#1C1E29] border border-white/10 rounded-lg shadow-xl z-50 py-1 overflow-hidden">
         {item.children.map((child) => (
           <li key={child.id}>
             <Link
               href={"href" in child ? (child.href ?? "/") : "/"}
-              className="block px-4 py-2.5 text-sm text-white/80 hover:text-white hover:bg-white/10 transition-colors duration-150"
+              className="block px-4 py-2.5  text-sm text-white/80 hover:text-white hover:bg-white/10 transition-colors duration-150"
             >
               {child.name}
             </Link>

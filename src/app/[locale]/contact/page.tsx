@@ -8,7 +8,7 @@ export default function ContactPage() {
       <InnerBanner
         title="Contact Us"
         subtitle="Your trusted partner in global logistics and freight transportation"
-        breadcrumbs={[{ label: "Home", href: "/" }, { label: "About Us" }]}
+        breadcrumbs={[{ label: "Contact Us" }]}
         variant="dark"
       />
       <ContactSection />
