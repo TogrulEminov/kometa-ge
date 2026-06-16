@@ -62,7 +62,6 @@ export default function ContactForm() {
         />
         <FormPhone
           fieldName="phone"
-          placeholder="Phone Number"
           wrapperClassName="sm:col-span-2!"
           classNames={{
             input:

@@ -8,7 +8,6 @@ import HeaderBottom from "./HeaderBottom";
 import ShipmentModal from "@/app/[locale]/(home)/_components/atoms/FormModal";
 
 export default function Header() {
-  const [mobileOpen, setMobileOpen] = useState(false);
   const { scrollY } = useScroll();
   const [isSticky, setIsSticky] = useState(false);
   useMotionValueEvent(scrollY, "change", (current) => {
@@ -24,7 +23,7 @@ export default function Header() {
   return (
     <>
       <header
-        className={cn("top-0 w-full z-99", isSticky ? "fixed" : "absolute")}
+        className={cn("top-0 w-full z-[1100]", isSticky ? "fixed" : "absolute")}
       >
         <HeaderTop isSticky={isSticky} />
         <HeaderBottom isSticky={isSticky} setIsOpen={setIsOpen} />

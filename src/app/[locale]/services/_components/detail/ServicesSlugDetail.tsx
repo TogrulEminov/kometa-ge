@@ -325,7 +325,7 @@ function StickyBar({ isFTL }: { isFTL: boolean }) {
   }));
 
   return (
-    <div className="lg:sticky lg:top-45 space-y-6">
+    <div className="lg:sticky lg:top-25 space-y-6">
       {/* All Services */}
       <div
         className="rounded-2xl p-6 shadow-xl"
@@ -696,10 +696,7 @@ function Statistics({ isFTL }: { isFTL: boolean }) {
                 className="text-sm font-medium flex items-center justify-center gap-2"
                 style={{ color: "rgba(255,255,255,0.6)" }}
               >
-                <FaChartBar
-                  className="w-4 h-4"
-                  style={{ color: colors.primary }}
-                />
+                
                 {stat.label}
               </div>
             </motion.div>

@@ -1,8 +1,13 @@
-import React, { useEffect, useRef } from "react";
-import { type InputMask } from "imask";
-import { Input, type InputProps } from "antd";
+import React, {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  type FocusEventHandler,
+} from "react";
+import { Input, type InputProps, type InputRef } from "antd";
 import { FieldWrapper } from "./FieldsWrapper";
-import { createPhoneMask } from "@/helper/phonevalidation";
+import { getAntdNativeInput, usePhoneMask, DEFAULT_PHONE_PLACEHOLDER } from "@/helper/phonevalidation";
 
 export interface FormPhoneProps extends Omit<
   InputProps,
@@ -11,64 +16,114 @@ export interface FormPhoneProps extends Omit<
   fieldName: string;
   label?: string;
   wrapperClassName?: string;
+  className?: string;
 }
+
 function PhoneInput({
   value,
   onChange,
+  onBlur,
+  ref: rhfRef,
+  name: _name,
   id,
   fieldName,
   invalid,
+  className,
+  onFocus,
   placeholder,
-  ...restAntdProps
+  ...inputProps
 }: {
   value?: string;
   onChange?: (val: string) => void;
+  onBlur?: FocusEventHandler<HTMLInputElement>;
+  ref?: React.Ref<InputRef>;
+  name?: string;
   id?: string;
   fieldName?: string;
   invalid?: boolean;
-} & Omit<InputProps, "value" | "onChange" | "type" | "status">) {
-  const inputRef = useRef<HTMLInputElement>(null);
-  const maskRef = useRef<InputMask<any> | null>(null);
+} & Omit<InputProps, "value" | "onChange" | "type">) {
   const onChangeRef = useRef(onChange);
+  const isFocusedRef = useRef(false);
+  const prevValueRef = useRef(value);
+  const [resetKey, setResetKey] = useState(0);
 
   useEffect(() => {
     onChangeRef.current = onChange;
   }, [onChange]);
 
   useEffect(() => {
-    if (!inputRef.current || maskRef.current) return;
+    if (prevValueRef.current === value) return;
 
-    maskRef.current = createPhoneMask(inputRef.current);
+    if (!isFocusedRef.current) {
+      setResetKey((key) => key + 1);
+    }
 
-    maskRef.current.on("accept", () => {
-      onChangeRef.current?.(maskRef.current?.value ?? "");
-    });
+    prevValueRef.current = value;
+  }, [value]);
 
-    return () => {
-      maskRef.current?.destroy();
-      maskRef.current = null;
-    };
+  const handleAccept = useCallback((maskedValue: string) => {
+    onChangeRef.current?.(maskedValue);
   }, []);
 
-  useEffect(() => {
-    if (!maskRef.current) return;
-    if (value !== undefined && value !== maskRef.current.value) {
-      maskRef.current.value = value;
-    }
-  }, [value]);
+  const setMaskRef = usePhoneMask(value, handleAccept);
+
+  const attachMaskToAntdInput = useCallback(
+    (instance: InputRef | null) => {
+      if (!instance) {
+        setMaskRef(null);
+        return;
+      }
+
+      const tryAttach = () => {
+        const nativeInput = getAntdNativeInput(instance);
+        if (nativeInput) {
+          setMaskRef(nativeInput);
+          return true;
+        }
+        return false;
+      };
+
+      if (!tryAttach()) {
+        requestAnimationFrame(tryAttach);
+      }
+    },
+    [setMaskRef],
+  );
+
+  const setInputRef = useCallback(
+    (instance: InputRef | null) => {
+      if (typeof rhfRef === "function") {
+        rhfRef(instance);
+      } else if (rhfRef) {
+        (rhfRef as React.MutableRefObject<InputRef | null>).current = instance;
+      }
+
+      attachMaskToAntdInput(instance);
+    },
+    [attachMaskToAntdInput, rhfRef],
+  );
+
+  const mergedStatus = invalid ? "error" : inputProps.status;
 
   return (
     <Input
-      status={invalid ? "error" : undefined}
-      ref={(antInputRef) => {
-        (inputRef as any).current = (antInputRef as any)?.input ?? antInputRef;
-      }}
+      key={resetKey}
+      {...inputProps}
+      ref={setInputRef}
       id={id}
       name={fieldName}
       type="tel"
-      placeholder={placeholder ?? "+994 (00) 000-00-00"}
-      onChange={() => {}}
-      {...restAntdProps}
+      className={`${className ?? ""} ${invalid ? "ant-input-status-error" : ""}`.trim()}
+      status={mergedStatus}
+      placeholder={placeholder ?? DEFAULT_PHONE_PLACEHOLDER}
+      onFocus={(e) => {
+        isFocusedRef.current = true;
+        onFocus?.(e);
+      }}
+      onBlur={(e) => {
+        isFocusedRef.current = false;
+        onBlur?.(e);
+      }}
     />
   );
 }
@@ -77,6 +132,7 @@ export default function FormPhone({
   label,
   fieldName,
   wrapperClassName,
+  className,
   ...rest
 }: FormPhoneProps) {
   return (
@@ -89,6 +145,7 @@ export default function FormPhone({
         <PhoneInput
           {...field}
           {...rest}
+          className={className}
           invalid={fieldState.invalid}
           id={field.id}
           fieldName={fieldName}

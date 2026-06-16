@@ -1,4 +1,5 @@
-import IMask from "imask";
+import { useCallback, useEffect, useRef } from "react";
+import IMask, { type InputMask } from "imask";
 
 export interface PhoneMaskItem {
   mask: string;
@@ -27,13 +28,29 @@ export const PHONE_MASKS: PhoneMaskItem[] = [
   { mask: "+971 00 000 0000", regex: "971" },
 ];
 
+/** Default: Gürcüstan (+995) */
+export const DEFAULT_PHONE_MASK: PhoneMaskItem = {
+  mask: "+995 (000) 00-00-00",
+  regex: "995",
+};
+
+export const DEFAULT_PHONE_PLACEHOLDER = DEFAULT_PHONE_MASK.mask;
+
+const DEFAULT_PHONE_MASK_INDEX = PHONE_MASKS.findIndex(
+  (m) => m.regex === DEFAULT_PHONE_MASK.regex,
+);
+
+const IMASK_PHONE_MASKS = PHONE_MASKS.map(({ mask }) => ({ mask }));
+
 /**
  * Verilmiş nömrəyə uyğun mask tapır.
- * Tapılmasa default olaraq ilk mask (994) qaytarılır.
+ * Tapılmasa default olaraq Gürcüstan maskası (995) qaytarılır.
  */
 export function resolvePhoneMask(value: string): PhoneMaskItem {
   const digits = value.replace(/\D/g, "");
-  return PHONE_MASKS.find((m) => digits.startsWith(m.regex)) ?? PHONE_MASKS[0];
+  return (
+    PHONE_MASKS.find((m) => digits.startsWith(m.regex)) ?? DEFAULT_PHONE_MASK
+  );
 }
 
 /**
@@ -48,15 +65,90 @@ export function phoneDispatch(appended: string, dynamicMasked: any) {
   );
 
   const found = sorted.find((m) => current.startsWith(m.regex));
-  return dynamicMasked.compiledMasks[found ? found.i : 0];
+  return dynamicMasked.compiledMasks[
+    found ? found.i : DEFAULT_PHONE_MASK_INDEX
+  ];
+}
+
+export const phoneMaskOptions = {
+  mask: IMASK_PHONE_MASKS,
+  dispatch: phoneDispatch,
+} as const;
+
+/**
+ * IMask instance yaradır — native HTMLInputElement üçün.
+ */
+export function createPhoneMask(el: HTMLInputElement) {
+  return IMask(el, phoneMaskOptions);
 }
 
 /**
- * IMask instance yaradır — istənilən HTMLInputElement üçün işlənə bilər.
+ * Ant Design InputRef-dən native input elementi çıxarır.
  */
-export function createPhoneMask(el: HTMLInputElement) {
-  return IMask(el, {
-    mask: PHONE_MASKS,
-    dispatch: phoneDispatch,
-  });
+export function getAntdNativeInput(
+  instance: { input: HTMLInputElement | null; nativeElement?: Element | null } | null,
+): HTMLInputElement | null {
+  if (!instance) return null;
+  if (instance.input) return instance.input;
+
+  const { nativeElement } = instance;
+  return nativeElement instanceof HTMLInputElement ? nativeElement : null;
+}
+
+/**
+ * Native <input> + IMask inteqrasiyası.
+ * Callback ref qaytarır.
+ */
+export function usePhoneMask(
+  value: string | undefined,
+  onAccept: (maskedValue: string) => void,
+) {
+  const maskRef = useRef<InputMask | null>(null);
+  const elementRef = useRef<HTMLInputElement | null>(null);
+  const onAcceptRef = useRef(onAccept);
+  const valueRef = useRef(value);
+
+  useEffect(() => {
+    onAcceptRef.current = onAccept;
+  }, [onAccept]);
+
+  useEffect(() => {
+    valueRef.current = value;
+  }, [value]);
+
+  useEffect(() => {
+    const mask = maskRef.current;
+    if (!mask || value === undefined) return;
+    if (mask.value !== value) {
+      mask.value = value;
+    }
+  }, [value]);
+
+  const setRef = useCallback((el: HTMLInputElement | null) => {
+    if (!el) {
+      maskRef.current?.destroy();
+      maskRef.current = null;
+      elementRef.current = null;
+      return;
+    }
+
+    if (elementRef.current === el && maskRef.current) return;
+
+    maskRef.current?.destroy();
+
+    const mask = createPhoneMask(el);
+    maskRef.current = mask;
+    elementRef.current = el;
+
+    mask.on("accept", () => {
+      onAcceptRef.current(mask.value);
+    });
+
+    const initial = valueRef.current;
+    if (initial !== undefined && mask.value !== initial) {
+      mask.value = initial;
+    }
+  }, []);
+
+  return setRef;
 }

@@ -181,7 +181,7 @@ function StickyBar() {
   };
 
   return (
-    <div className="lg:sticky lg:top-40 space-y-6">
+    <div className="lg:sticky lg:top-25 space-y-6">
       {/* All Services */}
       <div className="bg-secondary rounded-2xl p-6 shadow-xl">
         <h3 className="text-white font-bold text-lg mb-5 flex items-center gap-2">
