@@ -87,24 +87,6 @@ export default function InnerBanner({
 
   return (
     <>
-      {/* MOBILE STICKY BACK BUTTON */}
-      <MotionDiv
-        initial={{ x: -80, opacity: 0 }}
-        animate={showStickyBack ? { x: 0, opacity: 1 } : { x: -80, opacity: 0 }}
-        transition={{ duration: 0.3, ease: EASE_CUBIC }}
-        className="fixed left-5 xl:left-45  bottom-0 lg:bottom-[unset] lg:top-25  mx-auto  w-full z-50"
-        style={{ pointerEvents: showStickyBack ? "auto" : "none" }}
-      >
-        <Link
-          href={backLink}
-          className="flex items-center justify-center lg:justify-start gap-2  bg-primary/90 backdrop-blur-md border border-white/15 shadow-lg w-full lg:w-fit lg:rounded-lg px-10 py-2 active:scale-95 transition-transform"
-        >
-          <FaAngleLeft color="white" size={24} />
-          <span className="text-lg font-bold text-white">Back</span>
-        </Link>
-      </MotionDiv>
-
-      {/* MAIN BANNER */}
       <div
         ref={sectionRef}
         className={`relative ${

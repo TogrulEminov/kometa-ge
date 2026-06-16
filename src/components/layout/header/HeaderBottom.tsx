@@ -17,7 +17,7 @@ const navbar = [
         id: "certificates",
         key: "certificates",
         name: "Certificates",
-        href: "/about/certificates",
+        href: "/certificates",
       },
     ],
   },

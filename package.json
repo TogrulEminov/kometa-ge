@@ -17,6 +17,7 @@
     "antd": "^6.4.3",
     "better-auth": "^1.6.15",
     "clsx": "^2.1.1",
+    "d3": "^7.9.0",
     "imask": "^7.6.1",
     "leaflet": "^1.9.4",
     "motion": "^12.40.0",
@@ -37,6 +38,7 @@
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
     "@tailwindcss/typography": "^0.5.20",
+    "@types/d3": "^7.4.3",
     "@types/node": "^20",
     "@types/pg": "^8.20.0",
     "@types/react": "^19",
