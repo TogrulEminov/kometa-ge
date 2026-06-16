@@ -146,11 +146,11 @@ export default function RouteMapView({
   return (
     <div
       className={cn(
-        "overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm",
+        "route-map-root overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm",
         className,
       )}
     >
-      <div className="relative h-[min(520px,70vw)] min-h-[360px] w-full [&_.leaflet-container]:h-full [&_.leaflet-container]:w-full [&_.leaflet-container]:cursor-grab [&_.leaflet-container.leaflet-dragging]:cursor-grabbing">
+      <div className="relative isolate z-0 h-[min(520px,70vw)] min-h-[360px] w-full [&_.leaflet-container]:z-0 [&_.leaflet-container]:h-full [&_.leaflet-container]:w-full [&_.leaflet-container]:cursor-grab [&_.leaflet-container.leaflet-dragging]:cursor-grabbing">
         <MapContainer
           key={`${fromCode}-${toCode}`}
           center={mapCenter}
@@ -161,7 +161,6 @@ export default function RouteMapView({
           doubleClickZoom
           zoomControl
           style={{ height: "100%", width: "100%" }}
-          className="z-0"
         >
           <TileLayer
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>'
@@ -219,7 +218,7 @@ export default function RouteMapView({
           <FitRouteBounds positions={routePositions} />
         </MapContainer>
 
-        <div className="pointer-events-none absolute bottom-4 left-4 z-1000 rounded-xl bg-white/95 p-3 text-xs shadow-lg backdrop-blur-sm">
+        <div className="pointer-events-none absolute bottom-4 left-4 z-10 rounded-xl bg-white/95 p-3 text-xs shadow-lg backdrop-blur-sm">
           <div className="mb-1.5 flex items-center gap-2">
             <span className="h-3 w-3 rounded-sm bg-[#1E3A5F]" />
             <span>

@@ -240,5 +240,11 @@ details:not([open]) summary:hover .chevron-icon {
   opacity: 0;
 }
 .leaflet-container {
-  z-index: 1;
+  z-index: 0;
+}
+
+.route-map-root {
+  isolation: isolate;
+  position: relative;
+  z-index: 0;
 }
