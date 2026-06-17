@@ -47,7 +47,7 @@ const nextConfig: NextConfig = {
 
   experimental: {
     turbopackMemoryLimit: isDev ? 2048 : undefined,
-    optimizeCss: true,
+    // optimizeCss: true,
     optimizePackageImports: [
       "lucide-react",
       "recharts",

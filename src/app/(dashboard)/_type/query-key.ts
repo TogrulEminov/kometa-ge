@@ -1,0 +1,1 @@
+export const categories_content_list = "categories_content_list";

@@ -1,20 +1,4 @@
-import { Metadata } from "next";
 import { Suspense } from "react";
-export const metadata: Metadata = {
-  title: {
-    template: "%s",
-    default: "Admin - Kometa Ge",
-  },
-  robots: {
-    index: false,
-    follow: false,
-    nocache: true,
-    googleBot: {
-      index: false,
-      follow: false,
-    },
-  },
-};
 
 export default function DashboardGroupLayout({
   children,
@@ -22,10 +6,21 @@ export default function DashboardGroupLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="az" className="scroll-smooth">
-      <body className="--font-inter --font-dmsans antialiased">
-        <Suspense fallback={null}>{children}</Suspense>
-      </body>
-    </html>
+    <Suspense
+      fallback={
+        <div className="flex flex-col items-center justify-center min-h-screen bg-white  transition-colors duration-300">
+          <div className="h-12 w-12 border-[4px] border-indigo-500 border-t-transparent border-solid rounded-full animate-spin"></div>
+          <p className="mt-4 text-lg font-medium text-gray-700 dark:text-gray-300">
+            Məlumat yüklənir...
+          </p>
+
+          <p className="mt-1 text-sm text-gray-500 dark:text-gray-500">
+            Zəhmət olmasa gözləyin.
+          </p>
+        </div>
+      }
+    >
+      {children}
+    </Suspense>
   );
 }
