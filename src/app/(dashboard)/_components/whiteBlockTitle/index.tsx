@@ -24,8 +24,8 @@ const WhiteBlockTitleArea = ({ link, title, disabled = false }: Props) => {
         <h3 className="text-2xl font-bold text-gray-900 font-poppins">
           {title}
         </h3>
-        <p className="text-sm text-gray-500 mt-1">Məlumatları idarə edin</p>
-      </div>
+        <p className="text-sm text-gray-500 mt-1">Manage information</p>
+      </div>  
       {!disabled && (
         <div className="flex items-center gap-3">
           <button
@@ -47,7 +47,7 @@ const WhiteBlockTitleArea = ({ link, title, disabled = false }: Props) => {
             className="group flex items-center gap-2.5 bg-blue-600 text-white h-11 rounded-xl text-sm font-semibold px-6 hover:bg-blue-700 hover:shadow-lg hover:shadow-blue-500/30 transition-all duration-300 cursor-pointer"
           >
             <BiPlus className="w-5 h-5 group-hover:rotate-90 transition-transform" />
-            Əlavə et
+            Add
           </Link>
         </div>
       )}
@@ -55,4 +55,4 @@ const WhiteBlockTitleArea = ({ link, title, disabled = false }: Props) => {
   );
 };
 
-export default React.memo(WhiteBlockTitleArea);
+export default WhiteBlockTitleArea;

@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useEffect, useMemo, useState } from "react";
-import { Table } from "antd";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
+import { Popconfirm, Table } from "antd";
 import {
   DndContext,
   PointerSensor,
@@ -19,7 +19,7 @@ import {
 import { CSS } from "@dnd-kit/utilities";
 import { useQueryClient } from "@tanstack/react-query";
 import { useAction } from "next-safe-action/hooks";
-import { LuGripVertical } from "react-icons/lu";
+import { LuGripVertical, LuTrash2 } from "react-icons/lu";
 import NoDataComponent from "@/app/(dashboard)/_components/noData";
 import UptadeButton from "@/app/(dashboard)/_components/uptadeButton";
 import { updateOrderAction } from "@/actions/order/updateOrder.action";
@@ -48,9 +48,10 @@ interface AdminTableProps<T extends BaseTableItem> {
   columns: AdminTableColumn<T>[];
   page: string;
   locale: string;
-  model: string;
+  model?: string;
   invalidateQueryKey: string;
   sortable?: boolean;
+  onDelete?: (id: string) => Promise<void> | void;
 }
 
 interface RowContextValue {
@@ -84,9 +85,7 @@ function SortableRow(props: RowProps) {
   };
 
   return (
-    <RowContext.Provider
-      value={{ setActivatorNodeRef, listeners, attributes }}
-    >
+    <RowContext.Provider value={{ setActivatorNodeRef, listeners, attributes }}>
       <tr {...props} ref={setNodeRef} style={style} />
     </RowContext.Provider>
   );
@@ -121,12 +120,14 @@ function AdminTable<T extends BaseTableItem>({
   columns,
   invalidateQueryKey,
   sortable = false,
+  onDelete,
 }: AdminTableProps<T>) {
   const queryClient = useQueryClient();
   const { success, error } = useMessageStore();
   const [dataSource, setDataSource] = useState<T[]>(dataItems);
+  const [deletingId, setDeletingId] = useState<string | number | null>(null);
 
-  const canSort = sortable && isOrderableModel(model);
+  const canSort = sortable && isOrderableModel(model ?? "");
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -156,6 +157,24 @@ function AdminTable<T extends BaseTableItem>({
     setDataSource(dataItems);
   }, [dataItems]);
 
+  const handleDelete = useCallback(
+    async (id: string) => {
+      if (!onDelete) return;
+
+      setDeletingId(id);
+      try {
+        await onDelete(id);
+        await queryClient.invalidateQueries({ queryKey: [invalidateQueryKey] });
+        refetch?.();
+      } catch {
+        error("Silinərkən xəta baş verdi");
+      } finally {
+        setDeletingId(null);
+      }
+    },
+    [error, invalidateQueryKey, onDelete, queryClient, refetch],
+  );
+
   const tableColumns = useMemo(() => {
     const mapped = columns.map((col) => ({
       title: col.title,
@@ -163,7 +182,9 @@ function AdminTable<T extends BaseTableItem>({
       dataIndex: col.dataIndex as string,
       width: col.width,
       render: (value: unknown, record: T) =>
-        col.render ? col.render(value, record, page) : (value as React.ReactNode),
+        col.render
+          ? col.render(value, record, page)
+          : (value as React.ReactNode),
     }));
 
     if (canSort) {
@@ -177,22 +198,43 @@ function AdminTable<T extends BaseTableItem>({
     }
 
     mapped.push({
-      title: "Əməliyyatlar",
+      title: "Actions",
       key: "actions",
       dataIndex: "actions",
-      width: 140,
+      width: onDelete ? 200 : 140,
       render: (_: unknown, record: T) => (
-        <div className="flex items-center justify-center">
+        <div className="flex items-center justify-center gap-2">
           <UptadeButton
             documentId={`${record.id}/content`}
-            link={`manage/${page}/uptade`}
+            link={`manage/${page}/update`}
           />
+          {onDelete && (
+            <Popconfirm
+              title="Are you sure you want to delete this item?"
+              okButtonProps={{
+                danger: true,
+                loading: deletingId === record.id,
+              }}
+              cancelButtonProps={{ disabled: deletingId === record.id }}
+              onConfirm={() => handleDelete(record.id as string)}
+            >
+              <button
+                type="button"
+                disabled={deletingId === record.id}
+                className="flex items-center gap-2 rounded-lg bg-red-50 px-3 py-2 text-sm font-medium text-red-600 transition-colors hover:bg-red-100 disabled:cursor-not-allowed disabled:opacity-50"
+                aria-label="Sil"
+              >
+                <LuTrash2 className="h-4 w-4" />
+                Sil
+              </button>
+            </Popconfirm>
+          )}
         </div>
       ),
     });
 
     return mapped;
-  }, [canSort, columns, page]);
+  }, [canSort, columns, page, onDelete, deletingId, handleDelete]);
 
   const onDragEnd = ({ active, over }: DragEndEvent) => {
     if (!over || active.id === over.id) return;
@@ -210,7 +252,7 @@ function AdminTable<T extends BaseTableItem>({
     setDataSource(nextItems);
 
     execute({
-      model,
+      model: model ?? "",
       items: nextItems.map((item, index) => ({
         id: item.id,
         orderNumber: index + 1,
@@ -230,7 +272,7 @@ function AdminTable<T extends BaseTableItem>({
   }
 
   if (!isLoading && !dataSource.length) {
-    return <NoDataComponent link={`/manage/${page}/create?locale=${locale}`} />;
+    return <NoDataComponent link={`/${page}/create?locale=${locale}`} />;
   }
 
   const table = (
@@ -238,7 +280,7 @@ function AdminTable<T extends BaseTableItem>({
       rowKey={(record) => String(record.id)}
       columns={tableColumns}
       dataSource={dataSource}
-      loading={isLoading || isExecuting}
+      loading={isLoading || isExecuting || deletingId !== null}
       pagination={false}
       scroll={{ x: true }}
       components={

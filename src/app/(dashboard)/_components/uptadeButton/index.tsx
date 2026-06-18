@@ -16,34 +16,23 @@ const UptadeButton = ({ link, documentId }: Props) => {
     setEditOpen(open ? documentId : "");
   }, []);
 
+  const lang = [
+    { label: "En", value: "en" },
+    { label: "Ge", value: "ka" },
+  ];
   return (
     <Popover
       content={
         <div className="flex flex-col gap-1">
-          <Link
-            className="px-4 py-2 text-sm font-medium text-gray-700 hover:bg-blue-50 hover:text-blue-600 rounded-lg transition-colors cursor-pointer"
-            href={`/${link}/${documentId}?locale=az`}
-          >
-            Az
-          </Link>
-          <Link
-            className="px-4 py-2 text-sm font-medium text-gray-700 hover:bg-blue-50 hover:text-blue-600 rounded-lg transition-colors cursor-pointer"
-            href={`/${link}/${documentId}?locale=en`}
-          >
-            En
-          </Link>
-          <Link
-            className="px-4 py-2 text-sm font-medium text-gray-700 hover:bg-blue-50 hover:text-blue-600 rounded-lg transition-colors cursor-pointer"
-            href={`/${link}/${documentId}?locale=ru`}
-          >
-            Ru
-          </Link>
-          <Link
-            className="px-4 py-2 text-sm font-medium text-gray-700 hover:bg-blue-50 hover:text-blue-600 rounded-lg transition-colors cursor-pointer"
-            href={`/${link}/${documentId}?locale=tr`}
-          >
-            Tr
-          </Link>
+          {lang?.map((l) => (
+            <Link
+              key={l.value}
+              className="px-4 py-2 text-sm font-medium text-gray-700 hover:bg-blue-50 hover:text-blue-600 rounded-lg transition-colors cursor-pointer"
+              href={`/${link}/${documentId}?locale=${l.value}`}
+            >
+              {l.label}
+            </Link>
+          ))}
         </div>
       }
       trigger="click"
@@ -55,7 +44,7 @@ const UptadeButton = ({ link, documentId }: Props) => {
         className="flex items-center gap-2 px-4 py-2 bg-blue-50 text-blue-600 rounded-lg text-sm font-medium hover:bg-blue-100 transition-colors cursor-pointer"
       >
         <LuPencil className="w-4 h-4" />
-        Redaktə
+        Edit
       </button>
     </Popover>
   );

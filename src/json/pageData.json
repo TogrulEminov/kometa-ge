@@ -1,0 +1,83 @@
+{
+  "categories": [
+    {
+      "value": "home",
+      "label": "Ana səhifə"
+    },
+    {
+      "value": "directions",
+      "label": "İstiqamətlər"
+    },
+    {
+      "value": "services",
+      "label": "Xidmətlərimiz"
+    },
+    {
+      "value": "blog",
+      "label": "Bloqlar"
+    },
+    {
+      "value": "about",
+      "label": "Haqqımızda"
+    },
+    {
+      "value": "certificates",
+      "label": "Sertifikatlar"
+    },
+    {
+      "value": "videoGallery",
+      "label": "Video qalereya"
+    },
+    {
+      "value": "photoGallery",
+      "label": "Foto qalereya"
+    },
+    {
+      "value": "media",
+      "label": "Media səhifəsi"
+    },
+    {
+      "value": "contact",
+      "label": "Əlaqə"
+    }
+  ],
+  "sectionsContent": [
+    {
+      "value": "services",
+      "label": "Xidmətlər bölümü"
+    },
+    {
+      "value": "directions",
+      "label": "İstiqamətlər bölümü"
+    },
+    {
+      "value": "process",
+      "label": "Prosess bölümü"
+    },
+
+    {
+      "value": "blog",
+      "label": "Bloqlar bölümü"
+    },
+    {
+      "value": "media",
+      "label": "Media bölümü"
+    },
+    {
+      "value": "branches",
+      "label": "Filiallar bölümü"
+    },
+    {
+      "value": "testimonials",
+      "label": "Rəy bölümü"
+    },
+    {
+      "value": "fag",
+      "label": "Suallar bölümü"
+    },
+    {
+      "value": "employee",
+      "label": "Əməkdaşlar bölümü"
+    }
+  ]
+}

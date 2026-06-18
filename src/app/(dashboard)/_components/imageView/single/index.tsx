@@ -28,7 +28,7 @@ const OneImageView: React.FC<OneImageViewProps> = ({
           "flex items-center justify-center h-[200px] bg-[#f2f2f2] text-2xl text-center rounded-lg shadow-[0 4px 6px rgba(0, 0, 0, 0.1)] hover:bg-[#e0e0e0] cursor-pointer noImage"
         }
       >
-        Göstəriləcək fayl yoxdur
+        No file to display
       </div>
     );
   }
@@ -42,12 +42,12 @@ const OneImageView: React.FC<OneImageViewProps> = ({
       },
       {
         onSuccess: () => {
-          success("Fayl uğurla silindi.");
+          success("File deleted successfully.");
           onDeleteSuccess?.();
         },
         onError: (err) => {
           console.error("Delete API error:", (err as Error).message);
-          error("Fayl silinərkən xəta baş verdi");
+          error("Error deleting file");
         },
       },
     );
@@ -95,7 +95,7 @@ const OneImageView: React.FC<OneImageViewProps> = ({
           className="w-full max-w-full max-h-80 object-contain rounded-lg"
           preload="metadata"
         >
-          Brauzeriniz video formatını dəstəkləmir.
+          Your browser does not support the video format.
         </video>
       );
     }
@@ -111,7 +111,7 @@ const OneImageView: React.FC<OneImageViewProps> = ({
           >
             <path d="M4 18h12V6h-4V2H4v16zm-2 1V0h12l4 4v16H2v-1z" />
           </svg>
-          <p className="text-gray-600 font-medium">PDF Sənəd</p>
+          <p className="text-gray-600 font-medium">PDF Document</p>
           <p className="text-sm text-gray-500">{selectedImage?.originalName}</p>
         </div>
       );
@@ -128,7 +128,7 @@ const OneImageView: React.FC<OneImageViewProps> = ({
           >
             <path d="M4 18h12V6h-4V2H4v16zm-2 1V0h12l4 4v16H2v-1z" />
           </svg>
-          <p className="text-gray-600 font-medium">Sənəd</p>
+          <p className="text-gray-600 font-medium">Document</p>
           <p className="text-sm text-gray-500">{selectedImage?.originalName}</p>
         </div>
       );
@@ -144,7 +144,7 @@ const OneImageView: React.FC<OneImageViewProps> = ({
         >
           <path d="M4 18h12V6h-4V2H4v16zm-2 1V0h12l4 4v16H2v-1z" />
         </svg>
-        <p className="text-gray-600 font-medium">Fayl</p>
+        <p className="text-gray-600 font-medium">File</p>
         <p className="text-sm text-gray-500">{selectedImage?.originalName}</p>
       </div>
     );
@@ -152,7 +152,7 @@ const OneImageView: React.FC<OneImageViewProps> = ({
 
   return (
     <ReactFancyBox>
-      <FieldBlock title="Əvvəlki fayl">
+      <FieldBlock title="Previous file">
         <div className="grid grid-cols-3 gap-2">
           <div className="relative rounded-md overflow-hidden">
             {renderFilePreview()}
@@ -164,7 +164,7 @@ const OneImageView: React.FC<OneImageViewProps> = ({
                 onClick={handleRemove}
                 className="min-w-9 h-9 cursor-pointer disabled:bg-gray-500 px-4 rounded-md bg-red-500 text-white flex items-center justify-center shadow-[0_4px_6px_rgba(0,0,0,0.1)]"
               >
-                {deleteLoading ? "Silinir..." : "Sil"}
+                {deleteLoading ? "Deleting..." : "Delete"}
               </button>
 
               <a
@@ -176,7 +176,7 @@ const OneImageView: React.FC<OneImageViewProps> = ({
                 tabIndex={0}
                 className="min-w-9 h-9 px-4 rounded-md bg-white flex items-center justify-center shadow-[0_4px_6px_rgba(0,0,0,0.1)]"
               >
-                {isPDF || isDocument ? "Aç" : "Önizləmə"}
+                {isPDF || isDocument ? "Open" : "Preview"}
               </a>
             </div>
           </div>

@@ -25,7 +25,7 @@ const SearchingArea = ({ link, sort }: Props) => {
   const locale = searchParams!.get("locale") ?? "az";
   const queryParams = searchParams!.get("query") ?? "";
   const [selectedSort, setSelectedSort] = useState<string>(
-    searchParams!.get("sort") || ""
+    searchParams!.get("sort") || "",
   );
   const [query, setQuery] = useState(queryParams);
 
@@ -35,7 +35,7 @@ const SearchingArea = ({ link, sort }: Props) => {
       const next = updater(current);
       router.replace(`${pathname}?${next.toString()}`);
     },
-    [router, pathname, searchParams]
+    [router, pathname, searchParams],
   );
 
   const getLocaleHref = useCallback(
@@ -44,7 +44,7 @@ const SearchingArea = ({ link, sort }: Props) => {
       params.set("locale", newLocale);
       return `/${link}?${params.toString()}`;
     },
-    [link, searchParams]
+    [link, searchParams],
   );
 
   const handleRadioChange = useCallback(
@@ -57,7 +57,7 @@ const SearchingArea = ({ link, sort }: Props) => {
         return newParams;
       });
     },
-    [setSearchParams]
+    [setSearchParams],
   );
 
   const debouncedHandleChange = useMemo(
@@ -73,7 +73,7 @@ const SearchingArea = ({ link, sort }: Props) => {
           return newParams;
         });
       }, 100),
-    [setSearchParams]
+    [setSearchParams],
   );
 
   const handleOpenChange = useCallback((title: string, open: boolean) => {
@@ -86,7 +86,7 @@ const SearchingArea = ({ link, sort }: Props) => {
       setQuery(value);
       debouncedHandleChange(value);
     },
-    [debouncedHandleChange]
+    [debouncedHandleChange],
   );
 
   return (
@@ -99,7 +99,7 @@ const SearchingArea = ({ link, sort }: Props) => {
           onChange={handleChange}
           value={query}
           name="title"
-          placeholder="Axtar..."
+          placeholder="Search..."
           className="w-full bg-white rounded-lg pl-10 pr-4 h-10 text-sm outline-none font-poppins border border-gray-200 focus:border-blue-500 transition-colors"
         />
       </div>
@@ -154,7 +154,7 @@ const SearchingArea = ({ link, sort }: Props) => {
                     : "text-gray-700"
                 }`}
               >
-                Ən yeni
+                Newest
               </button>
               <button
                 onClick={() => {
@@ -167,7 +167,7 @@ const SearchingArea = ({ link, sort }: Props) => {
                     : "text-gray-700"
                 }`}
               >
-                Ən köhnə
+                Oldest
               </button>
             </div>
           }
@@ -187,4 +187,4 @@ const SearchingArea = ({ link, sort }: Props) => {
   );
 };
 
-export default React.memo(SearchingArea);
+export default SearchingArea;

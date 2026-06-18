@@ -1,8 +1,8 @@
 import React from "react";
 import Link from "next/link";
 
-const NoDataInfo = ({
-  title = "Əlavə et",
+const NoDataInfo = ({ 
+  title = "Add",
   link,
 }: {
   title?: string;
@@ -47,11 +47,10 @@ const NoDataInfo = ({
 
           <div className="space-y-3">
             <h2 className="text-2xl font-bold text-slate-900">
-              Heç bir məlumat tapılmadı
+              No data found
             </h2>
             <p className="max-w-sm text-sm text-slate-600">
-              Bu bölmədə hələ heç bir məlumat əlavə edilməyib. Yeni məlumat
-              əlavə etmək üçün aşağıdakı düyməyə klikləyin.
+              No data found in this section. To add new data, click the button below.
             </p>
           </div>
 

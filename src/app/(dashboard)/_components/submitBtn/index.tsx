@@ -4,7 +4,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { LuLoader, LuPlus, LuRefreshCw, LuX } from "react-icons/lu";
 
 interface SubmitButtonProps {
-  title?: string;
+  title?: string | null;
   isLoading: boolean;
   disabled?: boolean;
   onModalClose?: () => void;
@@ -47,8 +47,8 @@ const SubmitAdminButton: React.FC<SubmitButtonProps> = ({
       : "bg-blue-600 cursor-pointer hover:bg-blue-700 active:scale-[0.98]"
   }`;
 
-  const label = isUpdate ? "Yenilə" : "Yarat";
-  const loadingLabel = isUpdate ? "Yenilənir..." : "Yaradılır...";
+  const label = isUpdate ? "Update" : "Create";
+  const loadingLabel = isUpdate ? "Updating..." : "Creating...";
   const Icon = isUpdate ? LuRefreshCw : LuPlus;
 
   if (!isUpdate) {
@@ -105,10 +105,10 @@ const SubmitAdminButton: React.FC<SubmitButtonProps> = ({
             )}
 
             <h3 className="text-lg font-bold text-center text-gray-900 mb-2">
-              Yeniləməyi təsdiqləyin
+              Confirm the update
             </h3>
             <p className="text-center text-gray-600 mb-6 text-sm">
-              Məlumatları yeniləmək istədiyinizdən əminsiniz?
+              Are you sure you want to update the information?
             </p>
 
             <div className="flex gap-3">
@@ -118,7 +118,7 @@ const SubmitAdminButton: React.FC<SubmitButtonProps> = ({
                 disabled={isLoading}
                 className="flex-1 px-4 py-2.5 border border-gray-300 rounded-lg font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50 cursor-pointer"
               >
-                Ləğv et
+                Cancel
               </button>
               <button
                 type="submit"
@@ -131,7 +131,7 @@ const SubmitAdminButton: React.FC<SubmitButtonProps> = ({
                     {loadingLabel}
                   </span>
                 ) : (
-                  "Bəli, təsdiq edirəm"
+                  "Yes, I confirm"
                 )}
               </button>
             </div>

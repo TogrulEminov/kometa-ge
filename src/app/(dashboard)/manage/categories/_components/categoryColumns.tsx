@@ -1,23 +1,28 @@
 import Link from "next/link";
 import type { AdminTableColumn } from "@/app/(dashboard)/_components/AdminTable";
 import CustomImage from "@/globalElement/CustomImage";
-import type { CategoryListItem } from "@/services/interface/type";
 import { getForCards } from "@/utils/getFullimageUrl";
+import { Category, FileType } from "@/services/interface/type";
+import { FaFileImage } from "react-icons/fa";
+import { pageRoutes } from "@/app/(dashboard)/_type/constant";
 
 const formatDate = (date: Date | string) =>
-  new Date(date).toLocaleDateString("az-AZ", {
+  new Date(date).toLocaleDateString("en-US", {
     year: "numeric",
     month: "2-digit",
     day: "2-digit",
   });
 
-export const categoryColumns: AdminTableColumn<CategoryListItem>[] = [
+export const categoryColumns: AdminTableColumn<Category>[] = [
   {
-    title: "Başlıq",
+    title: "Title",
     key: "title",
     render: (_, record) => {
-      const title = record.translations[0]?.title ?? "—";
+      const title = record?.translations?.[0]?.title ?? "—";
+      console.log(record);
+      
       const imageSrc = getForCards(record.imageUrl);
+      console.log("img", imageSrc);
 
       return (
         <div className="flex items-center gap-3">
@@ -43,27 +48,27 @@ export const categoryColumns: AdminTableColumn<CategoryListItem>[] = [
     key: "slug",
   },
   {
-    title: "Yaradılıb",
+    title: "Created At",
     key: "createdAt",
     width: 120,
     render: (_, record) => formatDate(record.createdAt),
   },
   {
-    title: "Yenilənib",
+    title: "Updated At",
     key: "updatedAt",
     width: 120,
     render: (_, record) => formatDate(record.updatedAt),
   },
   {
-    title: "Şəkil",
+    title: "Image",
     key: "image",
     width: 100,
     render: (_, record) => (
       <Link
-        href={`/manage/categories/uptade/${record.id}/image`}
-        className="text-sm text-blue-600 hover:underline"
+        href={pageRoutes.categories.updateImage({ id: record.id })}
+        className="text-sm mx-auto flex items-center justify-center w-fit text-blue-600 hover:underline"
       >
-        Şəkil
+        <FaFileImage size={26} />
       </Link>
     ),
   },

@@ -2,7 +2,7 @@ import {
   idSchema,
   imageSchema,
   localeSchema,
-} from "@/src/services/global/global.type";
+} from "@/app/(dashboard)/_type/global.type";
 import z from "zod";
 
 export const createYoutubeSchema = z

@@ -249,7 +249,8 @@ model HeroInfoTranslations {
   id          String    @id @default(cuid())
   title       String
   slug        String?
-  description Json?
+  description String?
+  subTitle    String?
   locale      Locales   @default(en)
   document    HeroInfo? @relation(fields: [documentId], references: [id], onDelete: Cascade)
   documentId  String?
@@ -371,7 +372,6 @@ model Youtube {
   imageUrl     File?                 @relation("youtubeFile", fields: [imageId], references: [id], onDelete: SetNull)
   createdAt    DateTime              @default(now())
   updatedAt    DateTime              @updatedAt
-  duration     String
   translations YoutubeTranslations[]
   user         User?                 @relation(fields: [userId], references: [id])
   userId       String?

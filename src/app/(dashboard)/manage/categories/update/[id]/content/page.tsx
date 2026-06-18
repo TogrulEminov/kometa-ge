@@ -19,11 +19,6 @@ import {
 } from "@/actions/client/categories/category.schema";
 import { pageRoutes } from "@/app/(dashboard)/_type/constant";
 import FormWrapper from "@/globalElement/form/FormWrapper";
-
-type OptionTypes = {
-  value: string;
-  label: string;
-};
 export default function CategriesUptadeContent() {
   const params = useParams();
   const id = Array.isArray(params?.id) ? params.id[0] : params?.id;

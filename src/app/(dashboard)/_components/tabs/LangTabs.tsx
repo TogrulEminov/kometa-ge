@@ -10,7 +10,7 @@ const LangContext = createContext<{
 
 function LangTabsInner({
   children,
-  defaultLang = "az",
+  defaultLang = "en",
   className = "",
 }: {
   children: ReactNode;
@@ -54,7 +54,7 @@ function LangTabsSkeleton({ className = "" }: { className?: string }) {
 
 export function LangTabs({
   children,
-  defaultLang = "az",
+  defaultLang = "en",
   className = "",
 }: {
   children: ReactNode;

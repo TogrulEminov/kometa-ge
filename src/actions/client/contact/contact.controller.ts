@@ -1,20 +1,18 @@
 "use server";
+import { localeSchema } from "@/app/(dashboard)/_type/global.type";
+import { Locales } from "@/generated/prisma/enums";
+import { db } from "@/lib/prisma";
+import { authActionClient } from "@/lib/safe-action/SafeAction";
 import { ZodError } from "zod";
-import { db } from "../../../lib/admin/prismaClient";
-import { Locales } from "@/src/generated/prisma/enums";
-import { formatZodErrors } from "../../../utils/format-zod-errors";
-import {
-  UpsertContactInput,
-  upsertContactSchema,
-} from "@/src/actions/client/contact/contact.schema";
-import { authActionClient } from "@/src/lib/safe-action";
 import { z } from "zod";
+import { upsertContactSchema } from "./contact.schema";
+import { formatZodErrors } from "@/utils/format-zod-errors";
 
 // --- GET CONTACT ---
 export const getContact = authActionClient
-  .inputSchema(z.object({ locale: z.nativeEnum(Locales) }))
+  .inputSchema(localeSchema)
   .action(async ({ parsedInput: { locale } }) => {
-    const data = await db.contactInformation.findFirst({
+    return db.contactInformation.findFirst({
       where: { key: "main" },
       select: {
         id: true,
@@ -32,17 +30,10 @@ export const getContact = authActionClient
             id: true,
             adress: true,
             locale: true,
-            info: true,
           },
         },
       },
     });
-
-    return {
-      message: "Success",
-      data,
-      success: true,
-    };
   });
 
 // --- UPSERT CONTACT ---
@@ -57,7 +48,6 @@ export const upsertContact = authActionClient
       adress,
       locale,
       longitude,
-      info,
       latitude,
     } = parsedInput;
 
@@ -94,13 +84,11 @@ export const upsertContact = authActionClient
           },
           create: {
             adress,
-            info: JSON.stringify(info),
             documentId: mainRecord.id,
             locale,
           },
           update: {
             adress,
-            info: JSON.stringify(info),
             documentId: mainRecord.id,
             locale,
           },

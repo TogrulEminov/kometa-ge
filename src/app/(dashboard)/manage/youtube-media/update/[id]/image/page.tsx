@@ -1,105 +1,100 @@
 "use client";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-
 import { useAction } from "next-safe-action/hooks";
 import {
-  getCategoriesById,
-  uptadeCategoryImage,
-} from "@/actions/client/categories/category.controller";
-import { Category, FileType } from "@/services/interface/type";
+  getYoutubeById,
+  updateYoutubeImage,
+} from "@/actions/client/youtube/youtube.controller";
+import { YoutubeItems } from "@/services/interface/type";
 import { useServerQueryById } from "@/hooks/useServerActions";
-import { categories_content_list } from "@/app/(dashboard)/_type/query-key";
+import { youtube_media_list } from "@/app/(dashboard)/_type/query-key";
 import {
   imageSchema,
   ImageSchemaInput,
 } from "@/app/(dashboard)/_type/global.type";
-import FormWrapper from "@/globalElement/form/FormWrapper";
 import OneImageView from "@/app/(dashboard)/_components/imageView/single";
 import FieldBlock from "@/app/(dashboard)/_components/contentBlock";
-import ReactFancyBox from "@/lib/fancybox";
 import SingleUploadImage from "@/app/(dashboard)/_components/upload/single";
 import NavigateBtn from "@/app/(dashboard)/_components/navigateBtn";
 import SubmitAdminButton from "@/app/(dashboard)/_components/submitBtn";
+import FormWrapper from "@/globalElement/form/FormWrapper";
 
-export default function CategoriesUpdateImagePage() {
+export default function YoutubesUpdateImagePage() {
   const params = useParams();
   const id = Array.isArray(params?.id) ? params.id[0] : params?.id;
+
   const getCategoryWrapper = async () => {
-    const result = await getCategoriesById({
+    const result = await getYoutubeById({
       locale: "en",
       id: id as string,
     });
+
     return {
-      data: result.data as Category | undefined,
-      message: result.message,
-      code: result.code,
+      data: result.data as unknown as YoutubeItems | undefined,
     };
   };
 
-  const { data: existingData, refetch } = useServerQueryById<Category>(
-    categories_content_list,
+  const { data: existingData, refetch } = useServerQueryById<YoutubeItems>(
+    youtube_media_list,
     getCategoryWrapper,
     id,
-    { locale: "az" },
+    { locale: "en" },
   );
 
   const generalForm = useForm<ImageSchemaInput>({
     resolver: zodResolver(imageSchema),
     values: {
       id: existingData?.id,
-      imageId: existingData?.imageUrl?.id || undefined,
+      imageId: Number(existingData?.imageUrl?.id || undefined),
     },
   });
-
-  const { execute, isExecuting } = useAction(uptadeCategoryImage, {
-    onSuccess: (data) => {
-      generalForm.reset();
-      generalForm.setValue("imageId", null);
-    },
-    onError: (err) => {
-      console.log(err);
+  const {
+    handleSubmit,
+    formState: { isDirty },
+  } = generalForm;
+  const { execute, isExecuting } = useAction(updateYoutubeImage, {
+    onSuccess: async () => {
+      await refetch();
     },
   });
-  console.log(generalForm.formState.errors);
   const onSubmit = async (data: ImageSchemaInput) => {
-    await execute(data);
+    execute(data);
   };
 
   return (
     <>
       <section className={"flex flex-col gap-4 mb-4.5"}>
         <h1 className={"text-2xl font-medium text-[#171717] mb-8"}>
-          Şəkili dəyişin
+         Change Existing Image
         </h1>
 
         <FormWrapper
           methods={generalForm}
           schema={imageSchema}
           onSubmit={onSubmit}
+          className={"grid grid-cols-1 gap-2"}
         >
           <OneImageView
-            selectedImage={existingData?.imageUrl as unknown as FileType}
+            selectedImage={existingData?.imageUrl || null}
             onDeleteSuccess={refetch}
           />
 
-          <FieldBlock title="Şəkili daxil et">
-            <ReactFancyBox>
-              <SingleUploadImage
-                fieldName="imageId"
-                label="Şəkil yüklə"
-                acceptType="image/*"
-              />
-            </ReactFancyBox>
+          <FieldBlock title="Change Existing Image">
+            <SingleUploadImage
+              label="Click or drag and drop to upload"
+              fieldName="imageId"
+              onRemoveSuccess={refetch}
+            />
           </FieldBlock>
 
-          <div className={"grid grid-cols-2 gap-5"}>
+          <div className={"grid grid-cols-2 gap-5 max-w-lg"}>
             <NavigateBtn />
             <SubmitAdminButton
-              title="Şəkili dəyiş"
+              title={"Change Existing Image"}
               isLoading={isExecuting}
-              disabled={!generalForm.formState.isDirty || isExecuting}
+              disabled={!isDirty || isExecuting}
             />
           </div>
         </FormWrapper>

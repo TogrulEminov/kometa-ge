@@ -2,19 +2,24 @@
 
 import { Suspense } from "react";
 import { Pagination, Spin } from "antd";
-import { getCategories } from "@/actions/client/categories/category.controller";
+import {
+  deleteCategory,
+  getCategories,
+} from "@/actions/client/categories/category.controller";
 import AdminTable from "@/app/(dashboard)/_components/AdminTable";
 import { usePaginationQuery } from "@/hooks/usePaginationQuery";
 import { useServerQuery } from "@/hooks/useServerActions";
-import { authClient } from "@/lib/auth/auth-client";
-import type { CustomLocales } from "@/services/interface/type";
+import type { Category, CustomLocales } from "@/services/interface/type";
 import { pageRoutes } from "../../_type/constant";
 import { categories_content_list } from "../../_type/query-key";
 import SearchingArea from "../../_components/whiteBlockSearch";
 import WhiteBlockTitleArea from "../../_components/whiteBlockTitle";
 import { categoryColumns } from "./_components/categoryColumns";
+import { useAction } from "next-safe-action/hooks";
+import { useMessageStore } from "@/hooks/useMessageStore";
 
 export default function AdminCategoriesPage() {
+  const { success, error } = useMessageStore();
   const { queryParams, handleChange, locale } = usePaginationQuery();
   const { data, isLoading, isError, refetch } = useServerQuery(
     categories_content_list,
@@ -28,19 +33,29 @@ export default function AdminCategoriesPage() {
       },
     },
   );
-  const { data: session } = authClient.useSession();
-  const isSuperAdmin = session?.user.role === "admin";
+  console.log({data});
 
   const totalCount = data?.paginations.dataCount ?? 0;
   const page = data?.paginations.page ?? 1;
   const pageSize = data?.paginations.pageSize ?? 12;
   const totalPages = data?.paginations.totalPages ?? 1;
 
+  const { execute: deleteData } = useAction(deleteCategory, {
+    onSuccess: () => {
+      success("Category deleted successfully");
+    },
+    onError: (err) => {
+      const errMessage = err.error?.serverError ?? "Failed to delete category";
+      error(errMessage ?? "Failed to delete category");
+    },
+  });
+  const handleDelete = async (id: string) => {
+    await deleteData({ id: id as string });
+  };
   return (
     <div>
       <WhiteBlockTitleArea
         title="Main Pages"
-        disabled={!isSuperAdmin}
         link={pageRoutes.categories.create}
       />
       <SearchingArea link={pageRoutes.categories.link} />
@@ -51,11 +66,12 @@ export default function AdminCategoriesPage() {
           </div>
         }
       >
-        <AdminTable
+        <AdminTable<Category>
+          onDelete={handleDelete}
           columns={categoryColumns}
           page="categories"
           model={categories_content_list}
-          dataItems={data?.data ?? []}
+          dataItems={(data?.data ?? []) as unknown as Category[]}
           isError={isError}
           refetch={refetch}
           locale={locale}

@@ -14,7 +14,7 @@ const NavigateBtn = () => {
       onClick={handleBack}
       className="w-full cursor-pointer bg-red-600 text-white py-2 px-4 rounded-md transition-all duration-200 ease-in-out hover:bg-red-700"
     >
-      Geri dön
+      Go back
     </button>
   );
 };

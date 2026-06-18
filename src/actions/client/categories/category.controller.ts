@@ -10,8 +10,7 @@ import { FILE_SELECT } from "@/helper/fragments";
 import { publishSingleFile } from "@/helper/publishFiles";
 import { db } from "@/lib/prisma";
 import { authActionClient } from "@/lib/safe-action/SafeAction";
-import { imageSchema } from "@/app/(dashboard)/_type/global.type";
-import { Category } from "@/services/interface/type";
+import { idSchema, imageSchema } from "@/app/(dashboard)/_type/global.type";
 type GetProps = {
   page: number;
   query: string;
@@ -23,23 +22,12 @@ type GetByIDProps = {
   locale: Locales;
 };
 
-type GetCategoriesResult = {
-  message: string;
-  data: Category[];
-  paginations: {
-    page: number;
-    pageSize: number;
-    totalPages: number;
-    dataCount: number;
-  };
-};
-
 export async function getCategories({
   page,
   pageSize,
   query,
   locale,
-}: GetProps): Promise<GetCategoriesResult> {
+}: GetProps) {
   const customPageSize = Number(pageSize) || Number(12);
   const skip = 0;
   const take = Number(page) * customPageSize;
@@ -109,13 +97,7 @@ export async function getCategoriesById({ locale, id }: GetByIDProps) {
     const category = await db.categories.findFirst({
       where: whereClause,
       include: {
-        imageUrl: {
-          select: {
-            id: true,
-            publicUrl: true,
-            fileKey: true,
-          },
-        },
+        imageUrl: FILE_SELECT,
         translations: {
           where: { locale },
           include: {
@@ -261,7 +243,7 @@ export const uptadeCategory = authActionClient
 
       const uptadeData = await db.$transaction(async (prisma: any) => {
         const updatedData = await prisma.categories.update({
-          where: { documentId: id },
+          where: { id },
           data: {
             slug: slug || existingCategory.slug,
             translations: {
@@ -367,6 +349,30 @@ export const uptadeCategoryImage = authActionClient
         code: "SUCCESS",
         data: uptadeData,
         message: "Uptade is successfully",
+      };
+    } catch (error) {
+      const errorMessage = (error as Error).message;
+      throw new Error(`Internal Server Error - ${errorMessage}`);
+    }
+  });
+
+export const deleteCategory = authActionClient
+  .inputSchema(idSchema)
+  .action(async ({ parsedInput }) => {
+    try {
+      const { id } = parsedInput;
+      const existingCategory = await db.categories.findUnique({
+        where: { id: id, isDeleted: false },
+      });
+      if (!existingCategory) {
+        throw new Error("Category not found");
+      }
+      await db.categories.update({
+        where: { id: id },
+        data: { isDeleted: true },
+      });
+      return {
+        message: "Category deleted successfully",
       };
     } catch (error) {
       const errorMessage = (error as Error).message;

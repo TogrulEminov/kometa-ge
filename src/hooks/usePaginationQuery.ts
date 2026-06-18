@@ -9,7 +9,7 @@ export const usePaginationQuery = () => {
   // URL-dən oxu, default dəyərlər ver
   const page = Number(searchParams!.get("page")) || 1;
   const pageSize = Number(searchParams!.get("pageSize")) || 25;
-  const locale = searchParams!.get("locale") || "az";
+  const locale = searchParams!.get("locale") || "en";
   const title = searchParams!.get("title") || "";
   const sort = searchParams!.get("sort") || "desc";
 

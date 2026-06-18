@@ -9,6 +9,7 @@ import {
   LuMonitor,
 } from "react-icons/lu";
 import { Role } from "@/services/interface/type";
+import { GiKnightBanner } from "react-icons/gi";
 
 export type DashboardRole = typeof Role.ADMIN | typeof Role.MODERATOR;
 
@@ -32,6 +33,9 @@ export const pageRoutes = {
     root: "/manage/categories",
     create: "/manage/categories/create?locale=en",
     link: "manage/categories",
+    updateImage({ id }: { id: string }) {
+      return `/manage/categories/update/${id}/image`;
+    },
   },
   contact: {
     root: "/manage/contact",
@@ -42,10 +46,17 @@ export const pageRoutes = {
   },
   youtubeMedia: {
     root: "/manage/youtube-media",
+    link: "manage/youtube-media",
     create: "/manage/youtube-media/create?locale=en",
+    updateImage({ id }: { id: string }) {
+      return `/manage/youtube-media/update/${id}/image`;
+    },
   },
   aboutHome: {
     root: "/manage/about-home",
+  },
+  heroInfos: {
+    root: "/manage/hero-info",
   },
   enum: {
     root: "/manage/enum",
@@ -68,60 +79,59 @@ export const menuSections: MenuSection[] = [
     items: [
       {
         href: pageRoutes.categories.root,
-        label: "Meta məlumatlar",
+        label: "Meta information",
         icon: LuFileCheck,
       },
-      { href: pageRoutes.contact.root, label: "Əlaqə", icon: LuMail },
-      { href: pageRoutes.services.root, label: "Xidmətlər", icon: LuMonitor },
+      { href: pageRoutes.contact.root, label: "Contact", icon: LuMail },
       {
         href: pageRoutes.youtubeMedia.root,
-        label: "Youtube videolarımız",
+        label: "Youtube videos",
         icon: LuVideo,
       },
     ],
   },
   {
-    title: "Ana səhifə",
+    title: "Main pages",
     items: [
       {
-        href: pageRoutes.aboutHome.root,
-        label: "Haqqımızda",
-        icon: LuImage,
+        href: pageRoutes.heroInfos.root,
+        label: "Hero info",
+        icon: GiKnightBanner,
       },
     ],
   },
-  {
-    title: "Komponentlər",
-    items: [
-      {
-        href: pageRoutes.enum.root,
-        label: "Sistem tipləri",
-        icon: LuBriefcase,
-      },
-      {
-        href: pageRoutes.socials.root,
-        label: "Sosial şəbəkələr",
-        icon: LuUsers,
-      },
-      {
-        href: pageRoutes.sectionContent.root,
-        label: "Bölüm başlıqları",
-        icon: LuFileCheck,
-      },
-    ],
-  },
-  {
-    title: "Sistem",
-    roles: [Role.ADMIN],
-    items: [
-      {
-        href: pageRoutes.users,
-        label: "İstifadəçilər",
-        icon: LuUsers,
-        roles: [Role.ADMIN],
-      },
-    ],
-  },
+  // {
+  //   title: "Components",
+  //   items: [
+  //     {
+  //       href: pageRoutes.enum.root,
+  //       label: "System types",
+  //       icon: LuBriefcase,
+  //     },
+  //     {
+  //       href: pageRoutes.socials.root,
+  //       label: "Social networks",
+  //       icon: LuUsers,
+  //     },
+  //     {
+  //       href: pageRoutes.sectionContent.root,
+  //       label: "Section titles",
+  //       icon: LuFileCheck,
+  //     },
+  //   ],
+  // },
+  // {
+  //   title: "System",
+  //   roles: [Role.ADMIN],
+  //   items: [
+  //     {
+  //       href: pageRoutes.users,
+  //       label: "Users",
+  //       icon: LuUsers,
+  //       roles: [Role.ADMIN],
+  //     },
+  //   ],
+  // },
 ];
 
 function canAccess(

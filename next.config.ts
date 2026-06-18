@@ -30,6 +30,7 @@ const nextConfig: NextConfig = {
       { protocol: "https", hostname: "res.cloudinary.com" },
       { protocol: "https", hostname: "images.unsplash.com" },
       { protocol: "https", hostname: "i.pinimg.com" },
+      { protocol: "https", hostname: "kometa-ge-new.togruleminov.site" },
     ],
     formats: ["image/avif", "image/webp"],
     deviceSizes: [640, 768, 1024, 1280, 1920],

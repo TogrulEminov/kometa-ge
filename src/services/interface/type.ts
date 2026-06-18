@@ -17,6 +17,11 @@ export const CustomLocales = {
 } as const;
 
 export type CustomLocales = (typeof CustomLocales)[keyof typeof CustomLocales];
+export const StaticKey = {
+  main: "main",
+} as const;
+
+export type StaticKey = (typeof StaticKey)[keyof typeof StaticKey];
 
 export interface User {
   id: string;
@@ -103,7 +108,7 @@ export type Category = {
   slug: string;
   isDeleted: boolean;
   imageId: number | null;
-  imageUrl?: DatabaseImageType | null;
+  imageUrl?: FileType | null;
   createdAt: Date;
   updatedAt: Date;
   userId: string | null;
@@ -131,3 +136,75 @@ interface Seo {
   locale: CustomLocales;
   image: string;
 }
+
+// 2. Tərcümə Modeli üçün İnterfeys (ContactInformationTranslation)
+interface IContactInformationTranslation {
+  id: string;
+  adress: string;
+  documentId: string;
+  locale: CustomLocales;
+  createdAt: Date | string;
+  updatedAt: Date | string;
+}
+
+// 3. Əsas Əlaqə Modeli üçün İnterfeys (ContactInformation)
+export interface IContactInformation {
+  id: string;
+  documentId: string;
+  createdAt: Date | string;
+  updatedAt: Date | string;
+  phone: string;
+  phoneSecond?: string | null;
+  latitude?: string | null;
+  longitude?: string | null;
+  adressLink?: string | null;
+  whatsapp?: string | null;
+  email?: string | null;
+  translations?: IContactInformationTranslation[];
+  isDeleted: boolean;
+}
+
+export interface HeroInfoTranslation {
+  id: string;
+  title: string;
+  slug: string | null;
+  subTitle?: string | null;
+  description?: string | null;
+  locale: CustomLocales;
+  documentId: string | null;
+  document?: HeroInfo | null;
+  createdAt: Date | string;
+  updatedAt: Date | string;
+}
+
+// 2. HeroInfo Əsas İnterfeysi
+export interface HeroInfo {
+  id: string;
+  imageId: number | null;
+  imageUrl: FileType | null;
+  key: StaticKey;
+  userId: string | null;
+  user?: User | null;
+  translations: HeroInfoTranslation[];
+  createdAt: Date | string;
+  updatedAt: Date | string;
+}
+// youtube
+interface YoutubeTranslations {
+  id: string;
+  title: string;
+  description: string;
+  slug: string;
+  locale: string;
+  documentId: string;
+  createdAt: Date | string;
+  updatedAt: Date | string;
+}
+export type YoutubeItems = {
+  id: string;
+  url: string;
+  imageUrl?: FileType | null;
+  createdAt: Date | string;
+  updatedAt: Date | string;
+  translations: YoutubeTranslations[];
+};

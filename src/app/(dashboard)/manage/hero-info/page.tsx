@@ -1,0 +1,68 @@
+"use client";
+import data from "@/json/language.json";
+import { useSearchParams } from "next/navigation";
+import { useServerQuery } from "@/hooks/useServerActions";
+import Content from "./_components/content";
+import { hero_info_list } from "../../_type/query-key";
+import { getHeroInfo } from "@/actions/client/hero/hero.controller";
+import { CustomLocales, HeroInfo } from "@/services/interface/type";
+import {
+  QueryTabs,
+  TabsBody,
+  TabsList,
+  TabsTitle,
+} from "../../_components/tabs/QueryTabs";
+import { LangItem, LangTabs } from "../../_components/tabs/LangTabs";
+import UpdateImageComponent from "./_components/image";
+export default function AboutPage() {
+  const searchParams = useSearchParams();
+  const locale = searchParams?.get("locale") ?? "en";
+  const { data: existingData, refetch } = useServerQuery(
+    hero_info_list,
+    getHeroInfo,
+    {
+      params: {
+        locale: locale as CustomLocales,
+      },
+    },
+  );
+
+  return (
+    <section className={"flex flex-col gap-4 mb-4.5"}>
+      <h1 className="text-3xl font-inter font-bold text-ui-1 mb-5">
+        Banner info
+      </h1>
+      <QueryTabs defaultTab="info" queryParam="type">
+        <TabsList variant="pills" className="mb-6">
+          <TabsTitle value="info">Information</TabsTitle>
+          <TabsTitle value="files">Image</TabsTitle>
+        </TabsList>
+        <div>
+          <TabsBody value="info">
+            <LangTabs defaultLang={locale} className="mb-10">
+              {data?.map((item, index) => {
+                return (
+                  <LangItem
+                    key={index}
+                    value={item?.code}
+                    label={item?.title}
+                  />
+                );
+              })}
+            </LangTabs>
+            <Content
+              existingData={existingData as HeroInfo}
+              refetch={refetch}
+            />
+          </TabsBody>
+          <TabsBody value="files">
+            <UpdateImageComponent
+              existingData={existingData as HeroInfo}
+              refetch={refetch}
+            />
+          </TabsBody>
+        </div>
+      </QueryTabs>
+    </section>
+  );
+}

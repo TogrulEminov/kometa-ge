@@ -13,6 +13,7 @@ import {
 } from "react-icons/lu";
 import { useDeleteData, usePostData } from "@/hooks/useApi";
 import type { FileType } from "@/services/interface/type";
+import ReactFancyBox from "@/lib/fancybox";
 
 interface DefaultPreview {
   name: string;
@@ -25,6 +26,7 @@ interface SingleUploadProps {
   label?: string;
   acceptType?: string;
   defaultPreview?: DefaultPreview;
+  onRemoveSuccess?: () => void;
 }
 
 type UploadPreview = {
@@ -43,6 +45,7 @@ const SingleUploadImage: React.FC<SingleUploadProps> = ({
   label = "Fayl Yüklə",
   acceptType = "image/*",
   defaultPreview,
+  onRemoveSuccess,
 }) => {
   const {
     setValue,
@@ -62,8 +65,9 @@ const SingleUploadImage: React.FC<SingleUploadProps> = ({
     { data: FileType },
     FormData
   >();
-  const { mutate: unpublishFile, isPending: isRemoving } =
-    useDeleteData<{ message: string }>();
+  const { mutate: unpublishFile, isPending: isRemoving } = useDeleteData<{
+    message: string;
+  }>();
 
   const setFileId = useCallback(
     (id: number | null) => {
@@ -143,6 +147,7 @@ const SingleUploadImage: React.FC<SingleUploadProps> = ({
           setPreview(null);
           setFileId(null);
           setError(null);
+          onRemoveSuccess?.();
         },
         onError: () => {
           setError("Silinərkən xəta baş verdi");
@@ -176,9 +181,7 @@ const SingleUploadImage: React.FC<SingleUploadProps> = ({
         <LuUpload className="mx-auto mb-4 text-blue-500" size={40} />
         <p className="text-gray-700 font-medium mb-1">{label}</p>
         <p className="text-sm text-gray-500">
-          {isUploading
-            ? "Yüklənir..."
-            : "Faylı seçin və ya bura sürüşdürün"}
+          {isUploading ? "Yüklənir..." : "Faylı seçin və ya bura sürüşdürün"}
         </p>
       </div>
 
@@ -216,7 +219,7 @@ const SingleUploadImage: React.FC<SingleUploadProps> = ({
             </div>
           </div>
 
-          <div className="flex items-center gap-2">
+          <ReactFancyBox className="flex items-center gap-2">
             {isBusy ? (
               <LuLoader className="w-5 h-5 animate-spin text-blue-500" />
             ) : (
@@ -226,6 +229,7 @@ const SingleUploadImage: React.FC<SingleUploadProps> = ({
                     href={getFullUrl(preview.url)}
                     target="_blank"
                     rel="noreferrer"
+                    data-fancybox="gallery"
                     className="px-3 py-1.5 border border-gray-300 rounded text-sm text-blue-600 hover:bg-blue-50"
                   >
                     <LuImage size={16} className="inline mr-1" />
@@ -241,7 +245,7 @@ const SingleUploadImage: React.FC<SingleUploadProps> = ({
                 </button>
               </>
             )}
-          </div>
+          </ReactFancyBox>
         </div>
       )}
 

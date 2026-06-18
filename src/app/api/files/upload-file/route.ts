@@ -1,4 +1,4 @@
-import { uploadImage } from "@/src/extensions/upload/upload-image";
+import { uploadImage } from "@/extensions/upload/upload-image";
 import { db } from "@/lib/prisma";
 import { NextRequest } from "next/server";
 
