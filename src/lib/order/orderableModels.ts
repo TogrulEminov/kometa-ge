@@ -1,5 +1,5 @@
 export const ORDERABLE_MODELS = [
-  "fag",
+  "faq",
   "work-process",
   "service",
   "service-category",

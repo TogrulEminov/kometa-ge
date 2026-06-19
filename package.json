@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "postinstall": "prisma generate"
+    "postinstall": "prisma generate",
+    "migrate":"npx prisma migrate dev --name init && npm i"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1071.0",

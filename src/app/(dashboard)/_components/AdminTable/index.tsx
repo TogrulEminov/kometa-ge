@@ -224,7 +224,7 @@ function AdminTable<T extends BaseTableItem>({
                 aria-label="Sil"
               >
                 <LuTrash2 className="h-4 w-4" />
-                Sil
+                Delete
               </button>
             </Popconfirm>
           )}

@@ -1,14 +1,14 @@
 "use server";
 import { Prisma } from "@/generated/prisma/client";
-import { EnumKey, Locales } from "@/generated/prisma/enums";
+import {   Locales } from "@/generated/prisma/enums";
 import { db } from "@/lib/prisma";
 import { authActionClient } from "@/lib/safe-action/SafeAction";
-import { CustomLocales } from "@/services/interface/type";
 import { ZodError } from "zod";
-import { createEnumSchema, uptadeEnumSchema } from "./enum.schema";
 import { createSlug } from "@/utils/createSlug";
 import { formatZodErrors } from "@/utils/format-zod-errors";
 import { idSchema } from "@/app/(dashboard)/_type/global.type";
+import { createFagSchema, uptadeFagSchema } from "./fags.schema";
+import { getNextOrderNumber } from "@/lib/order/getNextOrderNumber";
 
 type GetProps = {
   page?: number;
@@ -20,14 +20,14 @@ type GetByIDProps = {
   id: string;
   locale: Locales;
 };
-export async function getEnumData({ page, pageSize, query, locale }: GetProps) {
+export async function getFagData({ page, pageSize, query, locale }: GetProps) {
   const customPage = page || 1;
   const customPageSize = Math.min(Number(pageSize) || 12, 100);
   const skip = (customPage - 1) * customPageSize;
   const take = customPageSize;
   const searchTerm = query?.trim();
 
-  const whereClause: Prisma.EnumWhereInput = {
+  const whereClause: Prisma.FaqWhereInput = {
     isDeleted: false,
     translations: {
       some: {
@@ -41,16 +41,14 @@ export async function getEnumData({ page, pageSize, query, locale }: GetProps) {
       },
     },
   };
-
-  // ✅ SELECT OPTIMIZATION VƏ PARALLEL SORĞU
   const [data, totalCount] = await Promise.all([
-    db.enum.findMany({
+    db.faq.findMany({
       where: whereClause,
       select: {
         id: true,
+        orderNumber:true,
         createdAt: true,
         updatedAt: true,
-        key: true,
         translations: {
           where: {
             locale: locale,
@@ -64,11 +62,11 @@ export async function getEnumData({ page, pageSize, query, locale }: GetProps) {
           },
         },
       },
-      orderBy: { createdAt: "desc" },
+      orderBy: { orderNumber: "asc" },
       skip: skip,
       take: take,
     }),
-    db.enum.count({ where: whereClause }),
+    db.faq.count({ where: whereClause }),
   ]);
 
   const totalPages = Math.ceil(totalCount / customPageSize);
@@ -85,9 +83,9 @@ export async function getEnumData({ page, pageSize, query, locale }: GetProps) {
     },
   };
 }
-export async function getEnumById({ locale, id }: GetByIDProps) {
+export async function getFagById({ locale, id }: GetByIDProps) {
   try {
-    const whereClause: Prisma.EnumWhereInput = {
+    const whereClause: Prisma.FaqWhereInput = {
       isDeleted: false,
       id,
       translations: {
@@ -95,11 +93,10 @@ export async function getEnumById({ locale, id }: GetByIDProps) {
       },
     };
 
-    return db.enum.findFirst({
+    return db.faq.findFirst({
       where: whereClause,
       select: {
         id: true,
-        status: true,
         createdAt: true,
         updatedAt: true,
         translations: {
@@ -117,51 +114,15 @@ export async function getEnumById({ locale, id }: GetByIDProps) {
     };
   }
 }
-export async function getEnumByKey({
-  locale,
-  key,
-}: {
-  locale: CustomLocales;
-  key: EnumKey;
-}) {
-  try {
-    const whereClause: Prisma.EnumWhereInput = {
-      isDeleted: false,
-      key: key,
-      translations: {
-        some: { locale },
-      },
-    };
 
-    const existingData = await db.enum.findMany({
-      where: whereClause,
-      select: {
-        id: true,
-        translations: {
-          where: { locale },
-        },
-      },
-    });
-
-    return { data: existingData };
-  } catch (error) {
-    console.error("getPositionById error:", error);
-    const errorMessage = (error as Error).message;
-    return {
-      success: false,
-      code: "SERVER_ERROR",
-      error: `Internal Server Error - ${errorMessage}`,
-    };
-  }
-}
-export const createEnum = authActionClient
-  .inputSchema(createEnumSchema)
+export const createFag = authActionClient
+  .inputSchema(createFagSchema)
   .action(async ({ parsedInput }) => {
     try {
-      const { title, locale, key, slug } = parsedInput;
-      const customSlug = slug || createSlug(title);
+      const { title, locale, description } = parsedInput;
+      const customSlug = createSlug(title);
 
-      const existingData = await db.enum.findFirst({
+      const existingData = await db.faq.findFirst({
         where: {
           isDeleted: false,
           translations: {
@@ -173,14 +134,16 @@ export const createEnum = authActionClient
       if (existingData) {
         throw new Error("Bu başlıqla (slug) məlumat artıq mövcuddur");
       }
+      const nextOrder = await getNextOrderNumber("faq");
 
-      const newData = await db.enum.create({
+      const newData = await db.faq.create({
         data: {
-          key: key || "contact",
+          orderNumber: nextOrder,
           translations: {
             create: {
-              title: title,
+              title,
               slug: customSlug,
+              description,
               locale: locale,
             },
           },
@@ -197,18 +160,17 @@ export const createEnum = authActionClient
     }
   });
 
-export const updateEnum = authActionClient
-  .inputSchema(uptadeEnumSchema)
+export const updateFag = authActionClient
+  .inputSchema(uptadeFagSchema)
   .action(async ({ parsedInput }) => {
     try {
-      const { title, locale, id, key, slug } = parsedInput;
+      const { title, locale, id, description } = parsedInput;
 
-      const customSlug = slug || createSlug(title);
+      const customSlug = createSlug(title);
       const updatedData = await db.$transaction(async (prisma) => {
-        const result = await prisma.enum.update({
+        const result = await prisma.faq.update({
           where: { id: id },
           data: {
-            key: key || "contact",
             translations: {
               upsert: {
                 where: {
@@ -221,10 +183,13 @@ export const updateEnum = authActionClient
                   title: title,
                   locale,
                   slug: customSlug,
+                  description,
                 },
                 update: {
                   title,
                   slug: customSlug,
+                  description,
+                  locale,
                 },
               },
             },
@@ -244,18 +209,18 @@ export const updateEnum = authActionClient
       throw new Error(`Internal Server Error - ${errorMessage}`);
     }
   });
-export const deleteEnum = authActionClient
+export const deleteFag = authActionClient
   .inputSchema(idSchema)
   .action(async ({ parsedInput }) => {
     try {
       const { id } = parsedInput;
-      const existingCategory = await db.enum.findUnique({
+      const existingCategory = await db.faq.findUnique({
         where: { id: id, isDeleted: false },
       });
       if (!existingCategory) {
         throw new Error("Data not found");
       }
-      await db.enum.update({
+      await db.faq.update({
         where: { id: id },
         data: { isDeleted: true },
       });

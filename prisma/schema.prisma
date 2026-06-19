@@ -266,17 +266,15 @@ model HeroInfoTranslations {
 
 // about
 model AboutHome {
-  id       String @id @default(cuid())
-  imageId  Int?   @unique
-  imageUrl File?  @relation("AboutImg", fields: [imageId], references: [id], onDelete: SetNull)
-
+  id           String                  @id @default(cuid())
+  imageId      Int?                    @unique
+  imageUrl     File?                   @relation("AboutImg", fields: [imageId], references: [id], onDelete: SetNull)
   translations AboutHomeTranslations[]
   user         User?                   @relation(fields: [userId], references: [id])
   userId       String?
   key          StaticKey               @unique @default(main)
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt    DateTime                @default(now())
+  updatedAt    DateTime                @updatedAt
 
   @@index([createdAt])
   @@index([userId])
@@ -286,7 +284,8 @@ model AboutHomeTranslations {
   id          String     @id @default(cuid())
   title       String
   subTitle    String?
-  description Json?
+  description String?
+  features    Json?
   locale      Locales    @default(en)
   document    AboutHome? @relation(fields: [documentId], references: [id], onDelete: Cascade)
   documentId  String?
@@ -418,7 +417,7 @@ model Faq {
 }
 
 model FaqTranslations {
-  id          Int      @id @default(autoincrement())
+  id          String   @id @default(cuid())
   title       String
   slug        String?
   locale      Locales  @default(en)

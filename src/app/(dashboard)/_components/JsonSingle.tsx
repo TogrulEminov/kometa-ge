@@ -7,19 +7,21 @@ import FormInput from "@/globalElement/form/FormInput";
 import FormSelect from "@/globalElement/form/FormSelect";
 import FormTextarea from "@/globalElement/form/FormTextarea";
 import FormRichEditor from "@/globalElement/form/FormRichEditor";
+
 import {
   BiAlignLeft,
   BiBox,
   BiChevronDown,
   BiChevronUp,
   BiHash,
-  BiKey,
   BiPlus,
 } from "react-icons/bi";
 import { BsLayers, BsTrash2, BsType, BsTypeBold } from "react-icons/bs";
 import { cn } from "@/utils/cn";
 
-interface ExtraItemField {
+// ─── Types ───────────────────────────────────────────────────────────────────
+
+export interface ExtraItemField {
   fieldKey: string;
   label: string;
   placeholder?: string;
@@ -28,36 +30,34 @@ interface ExtraItemField {
 }
 
 interface TypeConfig {
-  showSectionTitle?: boolean; // ← YENİ
-  showSectionDescription?: boolean;
-  richSectionDescription?: boolean;
-  showItemDescription?: boolean;
-  richItemDescription?: boolean;
+  /** Təsvir göstərilsinmi? Default: true */
+  showDescription?: boolean;
+  /** Rich editor istifadə edilsinmi? Default: false (sadə textarea) */
+  richDescription?: boolean;
+  /** Item siyahısı göstərilsinmi? Default: false */
   showItems?: boolean;
-  itemKeyOptions?: { value: string; label: string }[];
+  /** Item-ə əlavə sahələr */
   extraItemFields?: ExtraItemField[];
+  /** Item sayı limiti. Default: 10 */
+  itemLimit?: number;
 }
 
 interface JsonSectionBlockProps {
   fieldName: string;
   sectionIndex: number;
   onRemove: () => void;
-  typeOptions?: { value: string; label: string }[];
-  typeConfig?: Record<string, TypeConfig>;
   defaultConfig?: TypeConfig;
-  limit?: number;
 }
 
-const DEFAULT_CONFIG: TypeConfig = {
-  showSectionTitle: true, // ← default: göstərilir
-  showSectionDescription: true,
-  richSectionDescription: true,
-  showItemDescription: true,
-  richItemDescription: false,
-  showItems: true,
-  itemKeyOptions: [],
+const BASE_CONFIG: Required<TypeConfig> = {
+  showDescription: true,
+  richDescription: false,
+  showItems: false,
   extraItemFields: [],
+  itemLimit: 10,
 };
+
+// ─── Helper ──────────────────────────────────────────────────────────────────
 
 function FieldLabel({ icon, label }: { icon: React.ReactNode; label: string }) {
   return (
@@ -70,14 +70,13 @@ function FieldLabel({ icon, label }: { icon: React.ReactNode; label: string }) {
   );
 }
 
-export default function JsonSectionBlock({
+// ─── Component ───────────────────────────────────────────────────────────────
+
+export default function JsonSingleBlock({
   fieldName,
   sectionIndex,
   onRemove,
-  typeOptions = [],
-  typeConfig = {},
   defaultConfig,
-  limit = 10,
 }: JsonSectionBlockProps) {
   const { control } = useFormContext();
   const [isExpanded, setIsExpanded] = useState(true);
@@ -85,43 +84,28 @@ export default function JsonSectionBlock({
   const basePath = `${fieldName}.${sectionIndex}`;
   const itemsArray = useFieldArray({ control, name: `${basePath}.items` });
   const dataTitle = useWatch({ control, name: `${basePath}.title` });
-  const dataType = useWatch({ control, name: `${basePath}.type` });
 
-  const activeConfig: TypeConfig = {
-    ...DEFAULT_CONFIG,
+  // Aktiv konfiqurasiya: base → defaultConfig → type-a görə typeConfig
+  const activeConfig: Required<TypeConfig> = {
+    ...BASE_CONFIG,
     ...(defaultConfig ?? {}),
-    ...(dataType && typeConfig[dataType] ? typeConfig[dataType] : {}),
   };
 
   const {
-    showSectionTitle,
-    showSectionDescription,
-    richSectionDescription,
-    showItemDescription,
-    richItemDescription,
+    showDescription,
+    richDescription,
     showItems,
-    itemKeyOptions = [],
-    extraItemFields = [],
+    extraItemFields,
+    itemLimit,
   } = activeConfig;
 
   const buildEmptyItem = () => {
-    const base: Record<string, string> = { itemTitle: "", itemDescription: "" };
+    const base: Record<string, string> = { itemTitle: "" };
     extraItemFields.forEach((f) => {
       base[f.fieldKey] = "";
     });
     return base;
   };
-
-  const typeLabel = typeOptions.find((o) => o.value === dataType)?.label;
-
-  // Başlıq + Tip sütunlarının grid-i:
-  // showSectionTitle=false VƏ typeOptions varsa → yalnız Tip (tam en)
-  // showSectionTitle=true  VƏ typeOptions varsa → 2 sütun
-  // typeOptions yoxdursa   VƏ showSectionTitle   → yalnız Başlıq
-  const showTitleCol = showSectionTitle !== false;
-  const showTypeCol = typeOptions.length > 0;
-  const gridCols =
-    showTitleCol && showTypeCol ? "lg:grid-cols-2" : "grid-cols-1";
 
   return (
     <div className="rounded-2xl border border-blue-100 bg-white overflow-hidden shadow-sm hover:shadow-md hover:border-blue-200 transition-all duration-300">
@@ -135,11 +119,6 @@ export default function JsonSectionBlock({
             <span className="text-sm font-semibold text-white">
               {dataTitle || "Başlıqsız bölmə"}
             </span>
-            {typeLabel && (
-              <span className="px-2.5 py-0.5 rounded-full bg-white/20 text-white text-xs font-semibold border border-white/25">
-                {typeLabel}
-              </span>
-            )}
           </div>
         </div>
 
@@ -169,43 +148,27 @@ export default function JsonSectionBlock({
       {isExpanded && (
         <div className="p-5 space-y-5">
           {/* Başlıq + Tip */}
-          {(showTitleCol || showTypeCol) && (
-            <div className={cn("grid grid-cols-1 gap-4", gridCols)}>
-              {showTitleCol && (
-                <div>
-                  <FieldLabel
-                    icon={<BsTypeBold className="w-3.5 h-3.5" />}
-                    label="Başlıq"
-                  />
-                  <FormInput
-                    placeholder="Bölmə başlığını daxil edin"
-                    fieldName={`${basePath}.title`}
-                  />
-                </div>
-              )}
-              {showTypeCol && (
-                <div>
-                  <FieldLabel
-                    icon={<BsLayers className="w-3.5 h-3.5" />}
-                    label="Tip"
-                  />
-                  <FormSelect
-                    fieldName={`${basePath}.type`}
-                    options={typeOptions}
-                  />
-                </div>
-              )}
+          <div className={cn("grid grid-cols-1 gap-4")}>
+            <div>
+              <FieldLabel
+                icon={<BsTypeBold className="w-3.5 h-3.5" />}
+                label="Başlıq"
+              />
+              <FormInput
+                placeholder="Bölmə başlığını daxil edin"
+                fieldName={`${basePath}.title`}
+              />
             </div>
-          )}
+          </div>
 
-          {/* Bölmə təsviri */}
-          {showSectionDescription && (
+          {/* ── Təsvir ── */}
+          {showDescription && (
             <div className="rounded-xl border border-blue-100 bg-blue-50/40 p-4 space-y-2">
               <FieldLabel
                 icon={<BiAlignLeft className="w-3.5 h-3.5" />}
-                label="Bölmə təsviri"
+                label="Təsvir"
               />
-              {richSectionDescription ? (
+              {richDescription ? (
                 <FormRichEditor fieldName={`${basePath}.description`} />
               ) : (
                 <FormTextarea fieldName={`${basePath}.description`} />
@@ -213,9 +176,10 @@ export default function JsonSectionBlock({
             </div>
           )}
 
-          {/* Items */}
+          {/* ── Items ── */}
           {showItems && (
             <div className="space-y-4">
+              {/* Items başlıq barı */}
               <div className="flex items-center gap-2.5 px-4 py-3 rounded-xl bg-slate-50 border border-slate-200">
                 <div className="flex items-center justify-center size-7 rounded-lg bg-blue-600">
                   <BiBox className="w-3.5 h-3.5 text-white" />
@@ -228,12 +192,14 @@ export default function JsonSectionBlock({
                 </span>
               </div>
 
+              {/* Item siyahısı */}
               <div className="space-y-3">
                 {itemsArray.fields.map((field, itemIndex) => (
                   <div
                     key={field.id}
                     className="group/item rounded-xl border border-slate-200 bg-white overflow-hidden hover:border-blue-200 hover:shadow-sm transition-all duration-200"
                   >
+                    {/* Item başlıq */}
                     <div className="flex items-center justify-between px-4 py-3 bg-slate-50 border-b border-slate-100">
                       <div className="flex items-center gap-2.5">
                         <div className="flex items-center justify-center size-6 rounded-md bg-slate-200">
@@ -252,7 +218,9 @@ export default function JsonSectionBlock({
                       </button>
                     </div>
 
+                    {/* Item body */}
                     <div className="p-4 space-y-3">
+                      {/* itemTitle — həmişə göstərilir */}
                       <div>
                         <FieldLabel
                           icon={<BsType className="w-3 h-3" />}
@@ -264,24 +232,7 @@ export default function JsonSectionBlock({
                         />
                       </div>
 
-                      {showItemDescription && (
-                        <div>
-                          <FieldLabel
-                            icon={<BiAlignLeft className="w-3 h-3" />}
-                            label="Təsvir"
-                          />
-                          {richItemDescription ? (
-                            <FormRichEditor
-                              fieldName={`${basePath}.items.${itemIndex}.itemDescription`}
-                            />
-                          ) : (
-                            <FormTextarea
-                              fieldName={`${basePath}.items.${itemIndex}.itemDescription`}
-                            />
-                          )}
-                        </div>
-                      )}
-
+                      {/* Extra sahələr */}
                       {extraItemFields.map((extraField) => (
                         <div key={extraField.fieldKey}>
                           <FieldLabel
@@ -307,25 +258,13 @@ export default function JsonSectionBlock({
                           )}
                         </div>
                       ))}
-
-                      {itemKeyOptions.length > 0 && (
-                        <div>
-                          <FieldLabel
-                            icon={<BiKey className="w-3 h-3" />}
-                            label="Açar"
-                          />
-                          <FormSelect
-                            fieldName={`${basePath}.items.${itemIndex}.itemKey`}
-                            options={itemKeyOptions}
-                          />
-                        </div>
-                      )}
                     </div>
                   </div>
                 ))}
               </div>
 
-              {itemsArray.fields.length < limit && (
+              {/* Element əlavə et */}
+              {itemsArray.fields.length < itemLimit && (
                 <button
                   type="button"
                   onClick={() => itemsArray.append(buildEmptyItem())}
@@ -356,84 +295,42 @@ export default function JsonSectionBlock({
     </div>
   );
 }
-// <JsonSectionBlock
-//   key={field.id}
-//   fieldName="description"
-//   sectionIndex={index}
-//   onRemove={() => remove(index)}
-//   typeOptions={[
-//     {
-//       value: "advantages",
-//       label: "Advantages",
-//     },
-//     {
-//       value: "main",
-//       label: "Main",
-//     },
-//     {
-//       value: "faq",
-//       label: "FAQ",
-//     },
-//     {
-//       value: "statistics",
-//       label: "Statistics",
-//     },
-//     {
-//       value: "strategicGoals",
-//       label: "Strategic Goals",
-//     },
-//   ]}
-//   typeConfig={{
-//     advantages: {
-//       showSectionDescription: true,
-//       richSectionDescription: true,
-//       showItems: true,
-//       showItemDescription: true,
-//     },
-//     main: {
-//       showSectionDescription: true,
-//       richSectionDescription: true,
-//       showItems: false,
-//     },
-//     faq: {
-//       showSectionDescription: true,
-//       richSectionDescription: false,
-//       showItems: true,
-//       showItemDescription: true,
-//     },
-//     strategicGoals: {
-//       showItems: true,
-//       showSectionDescription: false,
-//       itemKeyOptions: [
-//         {
-//           value: "mission",
-//           label: "Mission",
-//         },
-//         {
-//           value: "vision",
-//           label: "Vision",
-//         },
-//       ],
-//     },
-//     statistics: {
-//       showSectionDescription: false,
-//       showItems: true,
-//       showItemDescription: false,
-//       extraItemFields: [
-//         {
-//           fieldKey: "itemValue",
-//           label: "Value",
-//           placeholder: "e.g. 500+",
-//           type: "input",
-//           icon: <Hash className="w-3 h-3" />,
-//         },
-//         {
-//           fieldKey: "itemSuffix",
-//           label: "Suffix",
-//           placeholder: "e.g. + , K+",
-//           type: "input",
-//         },
-//       ],
-//     },
-//   }}
-// />;
+
+{
+  /* <JsonSectionBlock
+  fieldName="sections"
+  sectionIndex={0}
+  onRemove={...}
+  typeOptions={[
+    { value: "text", label: "Mətn" },
+    { value: "statistic", label: "Statistika" },
+  ]}
+  defaultConfig={{
+    showDescription: true,
+    richDescription: true,   // default rich editor
+    showItems: false,
+  }}
+  typeConfig={{
+    statistic: {
+      showDescription: false,
+      showItems: true,
+      itemLimit: 6,
+      extraItemFields: [
+        {
+          fieldKey: "itemValue",
+          label: "Value",
+          placeholder: "e.g. 500+",
+          type: "input",
+          icon: <Hash className="w-3 h-3" />,
+        },
+        {
+          fieldKey: "itemSuffix",
+          label: "Suffix",
+          placeholder: "e.g. + , K+",
+          type: "input",
+        },
+      ],
+    },
+  }}
+/> */
+}

@@ -15,37 +15,37 @@ import {
 import { auth } from "@/lib/auth/auth";
 import { db } from "@/lib/prisma";
 
-// export const loginAdminPanel = actionClient
-//   .inputSchema(loginValidation)
-//   .action(async ({ parsedInput }) => {
-//     await auth.api.signInEmail({
-//       body: {
-//         email: parsedInput.email,
-//         password: parsedInput.password,
-//       },
-//       headers: await headers(), // Bu vacibdir
-//     });
-//   });
-
 export const loginAdminPanel = actionClient
   .inputSchema(loginValidation)
   .action(async ({ parsedInput }) => {
-    try {
-      const response = await auth.api.signUpEmail({
-        body: {
-          email: parsedInput.email,
-          password: parsedInput.password,
-          name: "Togrul",
-        },
-      });
-
-      return { success: true, data: response };
-    } catch (error) {
-      const message = (error as Error).message;
-      console.error("Xəta baş verdi:", message);
-      return { success: false, error: message };
-    }
+    await auth.api.signInEmail({
+      body: {
+        email: parsedInput.email,
+        password: parsedInput.password,
+      },
+      headers: await headers(), // Bu vacibdir
+    });
   });
+
+// export const loginAdminPanel = actionClient
+//   .inputSchema(loginValidation)
+//   .action(async ({ parsedInput }) => {
+//     try {
+//       const response = await auth.api.signUpEmail({
+//         body: {
+//           email: parsedInput.email,
+//           password: parsedInput.password,
+//           name: "Togrul",
+//         },
+//       });
+
+//       return { success: true, data: response };
+//     } catch (error) {
+//       const message = (error as Error).message;
+//       console.error("Xəta baş verdi:", message);
+//       return { success: false, error: message };
+//     }
+//   });
 export const logoutUser = actionClient.action(async () => {
   await auth.api.signOut({ headers: await headers() });
   // Revoke all other sessions

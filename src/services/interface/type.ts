@@ -53,6 +53,20 @@ export interface User {
   createdAt: Date;
   updatedAt: Date;
 }
+export interface jsonItem {
+  itemTitle?: string | null;
+  itemDescription?: string | null;
+  itemValue?: string | null;
+  itemSuffix?: string | null;
+  itemKey?: "mission" | "vision";
+}
+
+export interface newInfoJson {
+  title: string;
+  type?: string | undefined;
+  description?: string | null;
+  items: jsonItem[];
+}
 
 export interface Session {
   id: string;
@@ -283,3 +297,71 @@ export interface Social {
   createdAt: Date;
   updatedAt: Date;
 }
+export type FaqItem = {
+  id: string;
+  createdAt: Date;
+  updatedAt: Date;
+  userId: string | null;
+  orderNumber: number | null;
+  isDeleted: boolean;
+  translations: FaqItemTranslationType[];
+};
+
+export type FaqItemTranslationType = {
+  id: string;
+  title: string;
+  slug: string | null;
+  locale: CustomLocales;
+  documentId: string | null;
+  createdAt: Date;
+  updatedAt: Date;
+  description: string | null;
+};
+export interface WorkJson {
+  title?: string | null;
+  description?: string | null;
+}
+export type WorkProcessItemTranslationType = {
+  id: string;
+  title: string;
+  subTitle?: string | null;
+  description?: WorkJson[] | null;
+  locale: CustomLocales;
+  documentId: string | null;
+  createdAt: Date | string;
+  updatedAt: Date | string;
+};
+
+export type WorkProcessItem = {
+  id: string;
+  userId: string | null;
+  key: StaticKey;
+  imageId: number | null;
+  imageUrl: FileType;
+  createdAt: Date | string;
+  updatedAt: Date | string;
+  translations: WorkProcessItemTranslationType[];
+};
+export type AboutHomeTranslationType = {
+  id: string;
+  title: string;
+  subTitle: string | null;
+  features: newInfoJson[] | null;
+  locale: CustomLocales;
+  description?: string | null;
+  documentId: string | null;
+  createdAt: Date;
+  updatedAt: Date;
+};
+
+export type AboutHomeType = {
+  id: string;
+  imageUrl?: FileType | null;
+  imageId: number | null;
+  userId: string | null;
+  key: StaticKey;
+  createdAt: Date;
+  updatedAt: Date;
+
+  translations: AboutHomeTranslationType[];
+};

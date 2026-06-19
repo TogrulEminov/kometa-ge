@@ -10,6 +10,8 @@ import {
 } from "react-icons/lu";
 import { Role } from "@/services/interface/type";
 import { GiKnightBanner } from "react-icons/gi";
+import { FaG, FaNetworkWired, FaQuestion } from "react-icons/fa6";
+import { BsInfo } from "react-icons/bs";
 
 export type DashboardRole = typeof Role.ADMIN | typeof Role.MODERATOR;
 
@@ -75,6 +77,12 @@ export const pageRoutes = {
   heroInfos: {
     root: "/manage/hero-info",
   },
+  aboutSection: {
+    root: "/manage/about-section",
+  },
+  workProcess: {
+    root: "/manage/work-process",
+  },
   enum: {
     root: "/manage/enum",
     single: "enum",
@@ -82,6 +90,15 @@ export const pageRoutes = {
     link: "manage/enum",
     updateContent({ id }: { id: string }) {
       return `/manage/enum/update/${id}/content`;
+    },
+  },
+  faq: {
+    root: "/manage/faq",
+    single: "faq",
+    create: "/manage/faq/create?locale=en",
+    link: "manage/faq",
+    updateContent({ id }: { id: string }) {
+      return `/manage/faq/update/${id}/content`;
     },
   },
   socials: {
@@ -115,6 +132,21 @@ export const menuSections: MenuSection[] = [
         href: pageRoutes.heroInfos.root,
         label: "Hero info",
         icon: GiKnightBanner,
+      },
+      {
+        href: pageRoutes.aboutSection.root,
+        label: "About Section",
+        icon: BsInfo,
+      },
+      {
+        href: pageRoutes.workProcess.root,
+        label: "Work Process",
+        icon: FaNetworkWired,
+      },
+      {
+        href: pageRoutes.faq.root,
+        label: "FAQ",
+        icon: FaQuestion,
       },
     ],
   },
