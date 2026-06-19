@@ -23,6 +23,26 @@ export const StaticKey = {
 
 export type StaticKey = (typeof StaticKey)[keyof typeof StaticKey];
 
+export const SectionKey = {
+  services: "services",
+  media: "media",
+  contact: "contact",
+} as const;
+export type SectionKey = (typeof SectionKey)[keyof typeof SectionKey];
+
+export const SocialMediaKey = {
+  facebook: "facebook",
+  instagram: "instagram",
+  twitter: "twitter",
+  linkedin: "linkedin",
+  youtube: "youtube",
+  telegram: "telegram",
+  whatsapp: "whatsapp",
+  tiktok: "tiktok",
+} as const;
+
+export type SocialMediaKey =
+  (typeof SocialMediaKey)[keyof typeof SocialMediaKey];
 export interface User {
   id: string;
   name: string;
@@ -93,6 +113,11 @@ export type UploadedFileMeta = {
   [key: string]: any;
 } | null;
 
+export const EnumKey = {
+  contact: "contact",
+} as const;
+
+export type EnumKey = (typeof EnumKey)[keyof typeof EnumKey];
 export interface CustomUploadFile {
   type: any;
   uid: string;
@@ -207,4 +232,54 @@ export type YoutubeItems = {
   createdAt: Date | string;
   updatedAt: Date | string;
   translations: YoutubeTranslations[];
+  orderNumber?: number;
 };
+interface SectionContentTr {
+  title: string;
+  description: string;
+  subTitle?: string;
+  highlightWord?: string;
+  id: string;
+  documentId: string;
+  slug: string;
+  locale: string;
+}
+
+export type SectionContent = {
+  id: string;
+  key: string;
+  createdAt: Date | string;
+  updatedAt: Date | string;
+  translations: SectionContentTr[];
+};
+type EnumTranslation = {
+  id: string;
+  title: string;
+  slug: string;
+  locale: CustomLocales;
+  description?: string;
+  documentId: string;
+  createdAt: Date;
+  updatedAt: Date;
+};
+
+export type Enum = {
+  id: string;
+  documentId: string;
+  count?: number;
+  isActive?: boolean;
+  createdAt: Date;
+  key?: EnumKey | undefined;
+  updatedAt: Date;
+  status: Status;
+  translations: EnumTranslation[];
+};
+export interface Social {
+  id: string;
+  socialName: string;
+  socialLink: string;
+  iconName: string;
+  status: "published" | "draft";
+  createdAt: Date;
+  updatedAt: Date;
+}

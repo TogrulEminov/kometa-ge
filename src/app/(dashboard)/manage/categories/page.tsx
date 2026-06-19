@@ -33,7 +33,7 @@ export default function AdminCategoriesPage() {
       },
     },
   );
-  console.log({data});
+  console.log({ data });
 
   const totalCount = data?.paginations.dataCount ?? 0;
   const page = data?.paginations.page ?? 1;
@@ -69,7 +69,7 @@ export default function AdminCategoriesPage() {
         <AdminTable<Category>
           onDelete={handleDelete}
           columns={categoryColumns}
-          page="categories"
+          page={pageRoutes.categories.root}
           model={categories_content_list}
           dataItems={(data?.data ?? []) as unknown as Category[]}
           isError={isError}
@@ -77,6 +77,7 @@ export default function AdminCategoriesPage() {
           locale={locale}
           invalidateQueryKey={categories_content_list}
           isLoading={isLoading}
+          updateLink={(id) => pageRoutes.categories.updateContent({ id })}
         />
       </Suspense>
 

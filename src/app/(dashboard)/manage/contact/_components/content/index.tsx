@@ -3,6 +3,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useAction } from "next-safe-action/hooks";
 import { CustomLocales, IContactInformation } from "@/services/interface/type";
 import {
+  UpsertContactFormValues,
   UpsertContactInput,
   upsertContactSchema,
 } from "@/actions/client/contact/contact.schema";
@@ -27,15 +28,15 @@ export default function Content({ existingData, refetch }: Props) {
   const locale = searchParams?.get("locale") ?? "az";
   const router = useRouter();
   const translations = existingData?.translations?.[0];
-  const generalForm = useForm<UpsertContactInput>({
+  const generalForm = useForm<UpsertContactFormValues>({
     resolver: zodResolver(upsertContactSchema),
     mode: "onChange",
     values: {
       phone: existingData?.phone ?? "",
       adressLink: existingData?.adressLink ?? "",
       email: existingData?.email ?? "",
-      latitude: (existingData?.latitude as string | undefined) ?? undefined,
-      longitude: (existingData?.longitude as string | undefined) ?? undefined,
+      latitude: existingData?.latitude ?? "",
+      longitude: existingData?.longitude ?? "",
       whatsapp: existingData?.whatsapp ?? "",
       adress: translations?.adress ?? "",
       locale: locale as CustomLocales,
@@ -56,7 +57,7 @@ export default function Content({ existingData, refetch }: Props) {
       console.error(err);
     },
   });
-  const onSubmit = async (data: UpsertContactInput) => {
+  const onSubmit = async (data: UpsertContactFormValues) => {
     execute(data);
   };
 
@@ -70,7 +71,6 @@ export default function Content({ existingData, refetch }: Props) {
       >
         <div className="flex flex-col space-y-4">
           <FieldBlock title="Form information to be translated">
-           
             <FormInput
               label="Address"
               placeholder="Enter address"
@@ -78,24 +78,30 @@ export default function Content({ existingData, refetch }: Props) {
             />
           </FieldBlock>
 
-          <FieldBlock title="Map coordinates (x,y)">
+          <FieldBlock
+            title="Map coordinates (x,y)"
+            wrapperClassName="grid md:grid-cols-2 gap-4"
+          >
             <FormInput
               label="Latitude"
               placeholder="40.4093"
-              type="text"
-              step="any"
+              type="number"
+              step={0.0001}
               fieldName="latitude"
             />
             <FormInput
               label="Longitude"
-              placeholder="49.8671"
-              type="text"
-              step="any"
+              placeholder="49.4093"
+              type="number"
+              step={0.0001}
               fieldName="longitude"
             />
           </FieldBlock>
 
-          <FieldBlock title="Contact details">
+          <FieldBlock
+            title="Contact details"
+            wrapperClassName="grid md:grid-cols-2 gap-4"
+          >
             <FormPhone
               label="Phone"
               fieldName="phone"

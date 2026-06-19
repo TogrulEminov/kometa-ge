@@ -1,4 +1,4 @@
-import { idSchema, localeSchema } from "@/src/services/global/global.type";
+import { idSchema, localeSchema } from "@/app/(dashboard)/_type/global.type";
 import z from "zod";
 
 export const createSectionContentSchema = z

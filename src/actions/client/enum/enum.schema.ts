@@ -1,5 +1,5 @@
-import { EnumKey } from "@/src/generated/prisma/enums";
-import { idSchema, localeSchema } from "@/src/services/global/global.type";
+import { idSchema, localeSchema } from "@/app/(dashboard)/_type/global.type";
+import { EnumKey } from "@/generated/prisma/enums";
 import z from "zod";
 export const createEnumSchema = z
   .object({

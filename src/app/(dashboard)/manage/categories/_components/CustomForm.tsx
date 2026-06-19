@@ -26,8 +26,8 @@ export default function CustomForm({
       <div className={"flex flex-col space-y-5"}>
         <FieldBlock>
           <FormInput
-            label="Başlıq"
-            placeholder="Başlıq"
+            label="Title"
+            placeholder="Enter title"
             fieldName="title"
             styles={{
               input: {
@@ -36,32 +36,31 @@ export default function CustomForm({
             }}
           />
           <FormSelect
-            label="Səhifəni seçin"
-            placeholder="Səhifəni seçin"
+            label="Select Page"
+            placeholder="Select Page"
             fieldName="slug"
             options={categories}
           />
-          <FormRichEditor fieldName="description" label="Ətraflı məlumat" />
-        </FieldBlock>
-      </div>
-      <div className={"flex flex-col space-y-5"}>
-        <SeoContent />
-        {isImage && (
-          <FieldBlock title="Əsas şəkili daxil et">
-            <SingleUploadImage
-              fieldName="image"
-              label="Şəkil yüklə"
-              acceptType="image/*"
-            />
-          </FieldBlock>
-        )}
-        <div className={"grid grid-cols-2 gap-5"}>
-          <NavigateBtn />
-          <SubmitAdminButton
-            title={title}
-            isLoading={isPending}
-            disabled={!generalContentForm.formState.isDirty || isPending}
+          <FormRichEditor
+            fieldName="description"
+            label="Detailed Information"
           />
+        </FieldBlock>
+        <div className={"flex flex-col space-y-5"}>
+          <SeoContent />
+          {isImage && (
+            <FieldBlock title="Əsas şəkili daxil et">
+              <SingleUploadImage fieldName="imageId" />
+            </FieldBlock>
+          )}
+          <div className={"grid grid-cols-2 gap-5"}>
+            <NavigateBtn />
+            <SubmitAdminButton
+              title={title}
+              isLoading={isPending}
+              disabled={!generalContentForm.formState.isDirty || isPending}
+            />
+          </div>
         </div>
       </div>
     </>

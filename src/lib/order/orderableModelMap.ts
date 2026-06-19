@@ -10,4 +10,5 @@ export const ORDERABLE_MODEL_MAP: Record<
   service: db.services,
   "service-category": db.subServices,
   directions: db.directions,
+  youtube: db.youtube,
 };

@@ -42,7 +42,7 @@ function parseAccept(acceptType: string): Accept | undefined {
 
 const SingleUploadImage: React.FC<SingleUploadProps> = ({
   fieldName,
-  label = "Fayl Yüklə",
+  label = "Upload file",
   acceptType = "image/*",
   defaultPreview,
   onRemoveSuccess,
@@ -108,7 +108,7 @@ const SingleUploadImage: React.FC<SingleUploadProps> = ({
             });
           },
           onError: () => {
-            setError("Yükləmə zamanı xəta baş verdi");
+            setError("An error occurred while uploading the file");
             setFileId(null);
             setPreview(null);
           },
@@ -150,7 +150,7 @@ const SingleUploadImage: React.FC<SingleUploadProps> = ({
           onRemoveSuccess?.();
         },
         onError: () => {
-          setError("Silinərkən xəta baş verdi");
+          setError("An error occurred while deleting the file");
         },
       },
     );
@@ -181,7 +181,7 @@ const SingleUploadImage: React.FC<SingleUploadProps> = ({
         <LuUpload className="mx-auto mb-4 text-blue-500" size={40} />
         <p className="text-gray-700 font-medium mb-1">{label}</p>
         <p className="text-sm text-gray-500">
-          {isUploading ? "Yüklənir..." : "Faylı seçin və ya bura sürüşdürün"}
+          {isUploading ? "Uploading..." : "Select a file or drag and drop it here"}
         </p>
       </div>
 
@@ -212,9 +212,9 @@ const SingleUploadImage: React.FC<SingleUploadProps> = ({
                 {preview.name}
               </p>
               <p className="text-xs text-gray-500 mt-1">
-                {isUploading && "Yüklənir..."}
-                {!isUploading && !isRemoving && "Uğurla yükləndi"}
-                {isRemoving && "Silinir..."}
+                {isUploading && "Uploading..."}
+                {!isUploading && !isRemoving && "Successfully uploaded"}
+                {isRemoving && "Deleting..."}
               </p>
             </div>
           </div>
@@ -233,7 +233,7 @@ const SingleUploadImage: React.FC<SingleUploadProps> = ({
                     className="px-3 py-1.5 border border-gray-300 rounded text-sm text-blue-600 hover:bg-blue-50"
                   >
                     <LuImage size={16} className="inline mr-1" />
-                    Önizləmə
+                    Preview
                   </a>
                 )}
                 <button
@@ -241,7 +241,7 @@ const SingleUploadImage: React.FC<SingleUploadProps> = ({
                   onClick={handleRemove}
                   className="px-3 py-1.5 border border-red-300 rounded text-sm text-red-600 hover:bg-red-50"
                 >
-                  Sil
+                  Delete
                 </button>
               </>
             )}
@@ -251,7 +251,7 @@ const SingleUploadImage: React.FC<SingleUploadProps> = ({
 
       {showPreview && !preview && fileId && (
         <div className="mt-5 p-4 border border-gray-200 bg-gray-50 rounded-lg flex items-center justify-between">
-          <p className="text-sm text-gray-700">Seçilmiş fayl ID: {fileId}</p>
+          <p className="text-sm text-gray-700">Selected file ID: {fileId}</p>
           <button
             type="button"
             onClick={handleRemove}

@@ -1,14 +1,16 @@
 "use server";
+import { Prisma } from "@/generated/prisma/client";
+import { db } from "@/lib/prisma";
+import { authActionClient } from "@/lib/safe-action/SafeAction";
+import { CustomLocales } from "@/services/interface/type";
 import { ZodError } from "zod";
-import { db } from "../../../lib/admin/prismaClient";
-import { createSlug } from "@/src/lib/slugifyHelper";
 import {
   createSectionContentSchema,
   uptadeSectionContentSchema,
-} from "@/src/actions/client/section/section.schema";
-import { Prisma } from "@/src/generated/prisma/browser";
-import { CustomLocales } from "@/src/services/interface";
-import { authActionClient } from "@/src/lib/safe-action";
+} from "./section.schema";
+import { createSlug } from "@/utils/createSlug";
+import { idSchema } from "@/app/(dashboard)/_type/global.type";
+
 type GetProps = {
   page: number;
   query: string;
@@ -47,7 +49,6 @@ export async function getSectionContent({
     db.sectionContent.findMany({
       where: whereClause,
       select: {
-        status: true,
         key: true,
         id: true,
         createdAt: true,
@@ -94,7 +95,7 @@ export async function getSectionContentById({ locale, id }: GetByIDProps) {
       },
     };
 
-    const existingData = await db.sectionContent.findFirst({
+    return db.sectionContent.findFirst({
       where: whereClause,
       include: {
         translations: {
@@ -102,8 +103,6 @@ export async function getSectionContentById({ locale, id }: GetByIDProps) {
         },
       },
     });
-
-    return { data: existingData };
   } catch (error) {
     const errorMessage = (error as Error).message;
     throw new Error(`Internal Server Error - ${errorMessage}`);
@@ -114,7 +113,8 @@ export const createSectionContent = authActionClient
   .inputSchema(createSectionContentSchema)
   .action(async ({ parsedInput }) => {
     try {
-      const { title, description, locale, key } = parsedInput;
+      const { title, description, locale, key, highlightWord, subTitle } =
+        parsedInput;
 
       const customSlug = createSlug(title);
       const existingData = await db.sectionContent.findFirst({
@@ -139,6 +139,8 @@ export const createSectionContent = authActionClient
               slug: customSlug,
               description: description ?? "",
               locale: locale,
+              highlightWord,
+              subTitle,
             },
           },
         },
@@ -184,7 +186,7 @@ export const uptadeSectionContent = authActionClient
       const customSlug = createSlug(title);
       const uptadeData = await db.$transaction(async (prisma: any) => {
         const updatedData = await prisma.sectionContent.update({
-          where: { documentId: id },
+          where: { id: id },
           data: {
             key,
             translations: {
@@ -221,6 +223,30 @@ export const uptadeSectionContent = authActionClient
         return updatedData;
       });
       return uptadeData;
+    } catch (error) {
+      const errorMessage = (error as Error).message;
+      throw new Error(`Internal Server Error - ${errorMessage}`);
+    }
+  });
+
+export const deleteSection = authActionClient
+  .inputSchema(idSchema)
+  .action(async ({ parsedInput }) => {
+    try {
+      const { id } = parsedInput;
+      const existingCategory = await db.sectionContent.findUnique({
+        where: { id: id, isDeleted: false },
+      });
+      if (!existingCategory) {
+        throw new Error("Data not found");
+      }
+      await db.sectionContent.update({
+        where: { id: id },
+        data: { isDeleted: true },
+      });
+      return {
+        message: "Data deleted successfully",
+      };
     } catch (error) {
       const errorMessage = (error as Error).message;
       throw new Error(`Internal Server Error - ${errorMessage}`);

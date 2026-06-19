@@ -28,7 +28,7 @@ const OneImageView: React.FC<OneImageViewProps> = ({
           "flex items-center justify-center h-[200px] bg-[#f2f2f2] text-2xl text-center rounded-lg shadow-[0 4px 6px rgba(0, 0, 0, 0.1)] hover:bg-[#e0e0e0] cursor-pointer noImage"
         }
       >
-        No file to display
+     📌   No file to display
       </div>
     );
   }

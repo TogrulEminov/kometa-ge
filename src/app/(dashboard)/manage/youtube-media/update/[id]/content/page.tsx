@@ -17,13 +17,14 @@ import {
 } from "@/actions/client/youtube/youtube.schema";
 import { pageRoutes } from "@/app/(dashboard)/_type/constant";
 import FormWrapper from "@/globalElement/form/FormWrapper";
+import LanguageComponent from "@/app/(dashboard)/_components/LanguageComponent";
 
 export default function UpdateContent() {
   const params = useParams();
   const id = Array.isArray(params?.id) ? params.id[0] : params?.id;
   const router = useRouter();
   const searchParams = useSearchParams();
-  const locale = searchParams?.get("locale") ?? "az";
+  const locale = searchParams?.get("locale") ?? "en";
   const getCategoryWrapper = async () => {
     const result = await getYoutubeById({
       locale: locale as CustomLocales,
@@ -35,7 +36,7 @@ export default function UpdateContent() {
     };
   };
   const { data: existingData } = useServerQueryById<YoutubeItems>(
-    youtube_media_list,
+    `${youtube_media_list}/${locale}`,
     getCategoryWrapper,
     id,
     { locale },
@@ -50,7 +51,7 @@ export default function UpdateContent() {
       locale: locale as CustomLocales,
     },
   });
-  const { handleSubmit, reset } = generalForm;
+  const { reset } = generalForm;
   const { execute, isExecuting } = useAction(updateYoutube, {
     onSuccess: () => {
       reset();
@@ -65,14 +66,7 @@ export default function UpdateContent() {
   return (
     <>
       <section className={"flex flex-col gap-4 mb-2"}>
-        <h1 className={"text-2xl font-medium text-[#171717] mb-8"}>
-          {locale === "az"
-            ? "Azərbaycan dilində daxil  et"
-            : locale === "en"
-              ? "İngilis dilində daxil et"
-              : "Rus dilində daxil et"}
-        </h1>
-
+        <LanguageComponent locale={locale} />
         <FormWrapper
           methods={generalForm}
           schema={uptadeYoutubeSchema}

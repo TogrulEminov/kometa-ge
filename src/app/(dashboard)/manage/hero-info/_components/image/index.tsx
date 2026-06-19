@@ -49,12 +49,8 @@ export default function UpdateImageComponent({ existingData, refetch }: Props) {
             onDeleteSuccess={refetch}
           />
 
-          <FieldBlock title="Şəkili daxil et">
-            <SingleUploadImage
-              label="Yükləmək üçün faylı vurun və ya sürükləyin"
-              fieldName="imageId"
-              onRemoveSuccess={refetch}
-            />
+          <FieldBlock>
+            <SingleUploadImage fieldName="imageId" onRemoveSuccess={refetch} />
           </FieldBlock>
 
           <div className={"grid grid-cols-2 gap-5 max-w-lg"}>

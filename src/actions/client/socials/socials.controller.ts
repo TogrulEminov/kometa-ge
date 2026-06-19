@@ -1,14 +1,11 @@
 "use server";
+import { Prisma } from "@/generated/prisma/client";
+import { db } from "@/lib/prisma";
+import { authActionClient } from "@/lib/safe-action/SafeAction";
+import { Status } from "@/services/interface/type";
 import { ZodError } from "zod";
-import { db } from "../../../lib/admin/prismaClient";
-import {
-  createSocialSchema,
-  updateSocialSchema,
-} from "@/src/actions/client/socials/social.schema";
-import { Status } from "@/src/generated/prisma/enums";
-import { Prisma } from "@/src/generated/prisma/client";
-import { authActionClient } from "@/src/lib/safe-action";
-import { idSchema } from "@/src/services/global/global.type";
+import { createSocialSchema, updateSocialSchema } from "./social.schema";
+import { idSchema } from "@/app/(dashboard)/_type/global.type";
 
 type GetProps = {
   page?: number;
@@ -98,7 +95,7 @@ export const createSocial = authActionClient
   .inputSchema(createSocialSchema)
   .action(async ({ parsedInput }) => {
     try {
-      const { socialName, socialLink, iconName, status } = parsedInput;
+      const { socialName, socialLink, iconName } = parsedInput;
       const existingSocialName = await db.social.findUnique({
         where: { socialName: socialName! },
       });
@@ -119,7 +116,6 @@ export const createSocial = authActionClient
           socialName,
           socialLink,
           iconName,
-          status: status || Status.published,
         },
       });
       return newData;
@@ -147,7 +143,7 @@ export const updateSocial = authActionClient
   .inputSchema(updateSocialSchema)
   .action(async ({ parsedInput }) => {
     try {
-      const { socialName, socialLink, iconName, status, id } = parsedInput;
+      const { socialName, socialLink, iconName, id } = parsedInput;
 
       const existingData = await db.social.findUnique({
         where: { id: id },
@@ -178,7 +174,6 @@ export const updateSocial = authActionClient
           ...(socialName && { socialName }),
           ...(socialLink && { socialLink }),
           ...(iconName && { iconName }),
-          ...(status && { status }),
         },
       });
       return updatedData;
@@ -205,33 +200,6 @@ export const deleteSocial = authActionClient
       return {
         message: "Sosial şəbəkə uğurla silindi",
       };
-    } catch (error) {
-      const errorMessage = (error as Error).message;
-      throw new Error(`Internal Server Error - ${errorMessage}`);
-    }
-  });
-export const toggleSocialStatus = authActionClient
-  .inputSchema(idSchema)
-  .action(async ({ parsedInput }) => {
-    try {
-      const existingData = await db.social.findUnique({
-        where: { id: parsedInput.id },
-      });
-
-      if (!existingData) {
-        throw new Error("Sosial şəbəkə tapılmadı");
-      }
-
-      const newStatus =
-        existingData.status === Status.published
-          ? Status.draft
-          : Status.published;
-
-      const updatedData = await db.social.update({
-        where: { id: parsedInput.id },
-        data: { status: newStatus },
-      });
-      return updatedData;
     } catch (error) {
       const errorMessage = (error as Error).message;
       throw new Error(`Internal Server Error - ${errorMessage}`);

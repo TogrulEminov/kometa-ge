@@ -1,23 +1,22 @@
-import React from "react";
 import FieldBlock from "./contentBlock";
 import FormInput from "@/globalElement/form/FormInput";
 
 export default function SeoContent() {
   return (
-    <FieldBlock title="SEO məlumatları" className="mt-5">
+    <FieldBlock title="SEO Information">
       <FormInput
-        label="Meta Başlıq"
-        placeholder="Meta Başlıq"
+        label="Meta Title"
+        placeholder="Meta Title"
         fieldName="metaTitle"
       />
       <FormInput
-        label="Meta məlumat"
-        placeholder="Meta məlumat"
+        label="Meta Description"
+        placeholder="Meta Description"
         fieldName="metaDescription"
       />
       <FormInput
-        label="Meta açar sözlər"
-        placeholder="Meta açar sözlər"
+        label="Meta Keywords"
+        placeholder="Meta Keywords"
         fieldName="metaKeywords"
       />
     </FieldBlock>

@@ -13,26 +13,34 @@ const formatDate = (date: Date | string) =>
     day: "2-digit",
   });
 
-export const youtubeMediaColumns: AdminTableColumn<YoutubeItems>[] = [
+export const Columns: AdminTableColumn<YoutubeItems>[] = [
   {
     title: "Title",
     dataIndex: "title",
     key: "title",
+    width: 350,
     render: (_, record) => {
       const title = record?.translations?.[0]?.title ?? "—";
       const imageSrc = getForCards(record.imageUrl);
       return (
         <div className="flex items-center gap-3">
+          {record.orderNumber && (
+            <span className="size-10 bg-gray-100 rounded-sm text-gray-700 flex items-center justify-center">
+              {record.orderNumber}
+            </span>
+          )}
           {imageSrc ? (
             <CustomImage
               src={imageSrc}
               width={40}
               height={40}
               title={title}
-              className="h-10 w-10 rounded object-cover"
+              className="size-10 rounded object-cover"
             />
           ) : (
-            <div className="h-10 w-10 rounded bg-gray-100" />
+            <div className="size-10 flex items-center justify-center rounded bg-gray-100 text-white">
+              📌
+            </div>
           )}
           <span className="font-medium">{title}</span>
         </div>
@@ -42,7 +50,13 @@ export const youtubeMediaColumns: AdminTableColumn<YoutubeItems>[] = [
   {
     title: "Url",
     dataIndex: "url",
+    width: 150,
     key: "url",
+    render: (_, record) => (
+      <a href={record.url} target="_blank">
+        {record.url}
+      </a>
+    ),
   },
   {
     title: "Created At",
@@ -63,7 +77,7 @@ export const youtubeMediaColumns: AdminTableColumn<YoutubeItems>[] = [
     render: (_, record) => (
       <Link
         href={pageRoutes.youtubeMedia.updateImage({ id: record.id })}
-        className="text-sm mx-auto flex items-center justify-center w-fit text-blue-600 hover:underline"
+        className="text-sm w-fit text-blue-600 hover:underline"
       >
         <FaFileImage size={26} />
       </Link>

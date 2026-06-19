@@ -12,6 +12,7 @@ import { CustomLocales } from "@/services/interface/type";
 import { createYoutube } from "@/actions/client/youtube/youtube.controller";
 import { pageRoutes } from "@/app/(dashboard)/_type/constant";
 import FormWrapper from "@/globalElement/form/FormWrapper";
+import LanguageComponent from "@/app/(dashboard)/_components/LanguageComponent";
 
 export default function CreateYoutube() {
   const searchParams = useSearchParams();
@@ -42,6 +43,7 @@ export default function CreateYoutube() {
   return (
     <>
       <section className={"flex flex-col gap-4 mb-5"}>
+        <LanguageComponent locale={locale} />
         <FormWrapper
           methods={generalForm}
           schema={createYoutubeSchema}

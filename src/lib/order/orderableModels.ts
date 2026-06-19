@@ -4,6 +4,7 @@ export const ORDERABLE_MODELS = [
   "service",
   "service-category",
   "directions",
+  "youtube",
 ] as const;
 
 export type OrderableModel = (typeof ORDERABLE_MODELS)[number];

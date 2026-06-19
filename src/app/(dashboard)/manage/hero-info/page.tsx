@@ -1,5 +1,4 @@
 "use client";
-import data from "@/json/language.json";
 import { useSearchParams } from "next/navigation";
 import { useServerQuery } from "@/hooks/useServerActions";
 import Content from "./_components/content";
@@ -12,8 +11,8 @@ import {
   TabsList,
   TabsTitle,
 } from "../../_components/tabs/QueryTabs";
-import { LangItem, LangTabs } from "../../_components/tabs/LangTabs";
 import UpdateImageComponent from "./_components/image";
+import LanguageComponent from "../../_components/LanguageComponent";
 export default function AboutPage() {
   const searchParams = useSearchParams();
   const locale = searchParams?.get("locale") ?? "en";
@@ -39,17 +38,7 @@ export default function AboutPage() {
         </TabsList>
         <div>
           <TabsBody value="info">
-            <LangTabs defaultLang={locale} className="mb-10">
-              {data?.map((item, index) => {
-                return (
-                  <LangItem
-                    key={index}
-                    value={item?.code}
-                    label={item?.title}
-                  />
-                );
-              })}
-            </LangTabs>
+            <LanguageComponent locale={locale} className="mb-5 space-y-5" />
             <Content
               existingData={existingData as HeroInfo}
               refetch={refetch}

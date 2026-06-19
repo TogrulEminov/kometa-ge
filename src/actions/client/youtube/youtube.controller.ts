@@ -109,9 +109,6 @@ export async function getYoutubeById({ locale, id }: GetByIDProps) {
     const whereClause: Prisma.YoutubeWhereInput = {
       isDeleted: false,
       id: id,
-      translations: {
-        some: { locale },
-      },
     };
     const existingData = await db.youtube.findFirst({
       where: whereClause,
@@ -274,7 +271,7 @@ export const deleteYoutube = authActionClient
       if (!existingYoutube) {
         throw new Error("Date not found");
       }
-      await db.categories.update({
+      await db.youtube.update({
         where: { id: id },
         data: { isDeleted: true },
       });

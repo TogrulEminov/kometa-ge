@@ -17,10 +17,11 @@ export const categoryColumns: AdminTableColumn<Category>[] = [
   {
     title: "Title",
     key: "title",
+    width: 250,
     render: (_, record) => {
       const title = record?.translations?.[0]?.title ?? "—";
       console.log(record);
-      
+
       const imageSrc = getForCards(record.imageUrl);
       console.log("img", imageSrc);
 
@@ -43,6 +44,7 @@ export const categoryColumns: AdminTableColumn<Category>[] = [
     },
   },
   {
+    width: 150,
     title: "Slug",
     dataIndex: "slug",
     key: "slug",
@@ -66,7 +68,7 @@ export const categoryColumns: AdminTableColumn<Category>[] = [
     render: (_, record) => (
       <Link
         href={pageRoutes.categories.updateImage({ id: record.id })}
-        className="text-sm mx-auto flex items-center justify-center w-fit text-blue-600 hover:underline"
+        className="text-sm mx-auto  w-fit text-blue-600 hover:underline"
       >
         <FaFileImage size={26} />
       </Link>

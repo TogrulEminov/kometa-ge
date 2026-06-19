@@ -13,7 +13,7 @@ import WhiteBlockTitleArea from "../../_components/whiteBlockTitle";
 import SearchingArea from "../../_components/whiteBlockSearch";
 import { Pagination, Spin } from "antd";
 import AdminTable from "../../_components/AdminTable";
-import { youtubeMediaColumns } from "./TableColumns";
+import { Columns } from "./TableColumns";
 import { useMessageStore } from "@/hooks/useMessageStore";
 import { useAction } from "next-safe-action/hooks";
 
@@ -72,14 +72,16 @@ export default function AdminYoutubePage() {
       >
         <AdminTable<YoutubeItems>
           onDelete={handleDelete}
-          columns={youtubeMediaColumns}
-          page="categories"
+          columns={Columns}
+          page={pageRoutes.youtubeMedia.root}
           dataItems={(data?.data ?? []) as unknown as YoutubeItems[]}
           isError={isError}
           refetch={refetch}
           locale={locale}
+          sortable={true}
           invalidateQueryKey={youtube_media_list}
           isLoading={isLoading}
+          updateLink={(id) => pageRoutes.youtubeMedia.updateContent({ id })}
         />
       </Suspense>
 

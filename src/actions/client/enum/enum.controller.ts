@@ -1,13 +1,14 @@
 "use server";
+import { Prisma } from "@/generated/prisma/client";
+import { EnumKey, Locales } from "@/generated/prisma/enums";
+import { db } from "@/lib/prisma";
+import { authActionClient } from "@/lib/safe-action/SafeAction";
+import { CustomLocales } from "@/services/interface/type";
 import { ZodError } from "zod";
-import { db } from "../../../lib/admin/prismaClient";
-import { Prisma } from "@/src/generated/prisma/client";
-import { EnumKey, Locales } from "@/src/generated/prisma/enums";
-import { formatZodErrors } from "../../../utils/format-zod-errors";
-import { createSlug } from "@/src/lib/slugifyHelper";
-import { authActionClient } from "@/src/lib/safe-action";
 import { createEnumSchema, uptadeEnumSchema } from "./enum.schema";
-import { CustomLocales } from "@/src/services/interface";
+import { createSlug } from "@/utils/createSlug";
+import { formatZodErrors } from "@/utils/format-zod-errors";
+import { idSchema } from "@/app/(dashboard)/_type/global.type";
 
 type GetProps = {
   page?: number;
@@ -46,10 +47,9 @@ export async function getEnumData({ page, pageSize, query, locale }: GetProps) {
     db.enum.findMany({
       where: whereClause,
       select: {
-        status: true,
         id: true,
         createdAt: true,
-        updatedAt: true,
+        updatedAt: true,key:true,
         translations: {
           where: {
             locale: locale,
@@ -94,7 +94,7 @@ export async function getEnumById({ locale, id }: GetByIDProps) {
       },
     };
 
-    const existingData = await db.enum.findFirst({
+    return db.enum.findFirst({
       where: whereClause,
       select: {
         id: true,
@@ -106,8 +106,6 @@ export async function getEnumById({ locale, id }: GetByIDProps) {
         },
       },
     });
-
-    return { data: existingData };
   } catch (error) {
     console.error("getPositionById error:", error);
     const errorMessage = (error as Error).message;
@@ -250,6 +248,29 @@ export const updateEnum = authActionClient
       if (error instanceof ZodError) {
         throw new Error(JSON.stringify(formatZodErrors(error)));
       }
+      const errorMessage = (error as Error).message;
+      throw new Error(`Internal Server Error - ${errorMessage}`);
+    }
+  });
+export const deleteEnum = authActionClient
+  .inputSchema(idSchema)
+  .action(async ({ parsedInput }) => {
+    try {
+      const { id } = parsedInput;
+      const existingCategory = await db.enum.findUnique({
+        where: { id: id, isDeleted: false },
+      });
+      if (!existingCategory) {
+        throw new Error("Data not found");
+      }
+      await db.enum.update({
+        where: { id: id },
+        data: { isDeleted: true },
+      });
+      return {
+        message: "Data deleted successfully",
+      };
+    } catch (error) {
       const errorMessage = (error as Error).message;
       throw new Error(`Internal Server Error - ${errorMessage}`);
     }

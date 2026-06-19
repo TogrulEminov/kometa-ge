@@ -62,16 +62,16 @@ export const upsertContact = authActionClient
             email,
             whatsapp,
             adressLink,
-            latitude: latitude ?? null,
-            longitude: longitude ?? null,
+            latitude: String(latitude) ?? null,
+            longitude: String(longitude) ?? null,
           },
           update: {
             phone,
             email,
             whatsapp,
             adressLink,
-            latitude: latitude ?? null,
-            longitude: longitude ?? null,
+            latitude: String(latitude) ?? null,
+            longitude: String(longitude) ?? null,
           },
         });
 

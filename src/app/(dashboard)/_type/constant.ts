@@ -31,10 +31,23 @@ export const DASHBOARD_ROLES: DashboardRole[] = [Role.ADMIN, Role.MODERATOR];
 export const pageRoutes = {
   categories: {
     root: "/manage/categories",
+    single: "categories",
     create: "/manage/categories/create?locale=en",
     link: "manage/categories",
     updateImage({ id }: { id: string }) {
       return `/manage/categories/update/${id}/image`;
+    },
+    updateContent({ id }: { id: string }) {
+      return `/manage/categories/update/${id}/content`;
+    },
+  },
+  sectionContent: {
+    root: "/manage/section-content",
+    single: "section-content",
+    create: "/manage/section-content/create?locale=en",
+    link: "manage/section-content",
+    updateContent({ id }: { id: string }) {
+      return `/manage/section-content/update/${id}/content`;
     },
   },
   contact: {
@@ -47,9 +60,13 @@ export const pageRoutes = {
   youtubeMedia: {
     root: "/manage/youtube-media",
     link: "manage/youtube-media",
+    single: "youtube-media",
     create: "/manage/youtube-media/create?locale=en",
     updateImage({ id }: { id: string }) {
       return `/manage/youtube-media/update/${id}/image`;
+    },
+    updateContent({ id }: { id: string }) {
+      return `/manage/youtube-media/update/${id}/content`;
     },
   },
   aboutHome: {
@@ -60,16 +77,17 @@ export const pageRoutes = {
   },
   enum: {
     root: "/manage/enum",
+    single: "enum",
     create: "/manage/enum/create?locale=en",
+    link: "manage/enum",
+    updateContent({ id }: { id: string }) {
+      return `/manage/enum/update/${id}/content`;
+    },
   },
   socials: {
     root: "/manage/socials",
-    create: "/manage/socials/create?locale=en",
   },
-  sectionContent: {
-    root: "/manage/section-content",
-    create: "/manage/section-content/create?locale=en",
-  },
+
   users: "/manage/users",
 };
 
@@ -100,26 +118,26 @@ export const menuSections: MenuSection[] = [
       },
     ],
   },
-  // {
-  //   title: "Components",
-  //   items: [
-  //     {
-  //       href: pageRoutes.enum.root,
-  //       label: "System types",
-  //       icon: LuBriefcase,
-  //     },
-  //     {
-  //       href: pageRoutes.socials.root,
-  //       label: "Social networks",
-  //       icon: LuUsers,
-  //     },
-  //     {
-  //       href: pageRoutes.sectionContent.root,
-  //       label: "Section titles",
-  //       icon: LuFileCheck,
-  //     },
-  //   ],
-  // },
+  {
+    title: "Components",
+    items: [
+      {
+        href: pageRoutes.enum.root,
+        label: "System types",
+        icon: LuBriefcase,
+      },
+      {
+        href: pageRoutes.socials.root,
+        label: "Social networks",
+        icon: LuUsers,
+      },
+      {
+        href: pageRoutes.sectionContent.root,
+        label: "Section titles",
+        icon: LuFileCheck,
+      },
+    ],
+  },
   // {
   //   title: "System",
   //   roles: [Role.ADMIN],

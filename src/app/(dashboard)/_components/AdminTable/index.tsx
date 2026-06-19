@@ -52,6 +52,7 @@ interface AdminTableProps<T extends BaseTableItem> {
   invalidateQueryKey: string;
   sortable?: boolean;
   onDelete?: (id: string) => Promise<void> | void;
+  updateLink: (id: string) => string;
 }
 
 interface RowContextValue {
@@ -121,6 +122,7 @@ function AdminTable<T extends BaseTableItem>({
   invalidateQueryKey,
   sortable = false,
   onDelete,
+  updateLink,
 }: AdminTableProps<T>) {
   const queryClient = useQueryClient();
   const { success, error } = useMessageStore();
@@ -203,11 +205,8 @@ function AdminTable<T extends BaseTableItem>({
       dataIndex: "actions",
       width: onDelete ? 200 : 140,
       render: (_: unknown, record: T) => (
-        <div className="flex items-center justify-center gap-2">
-          <UptadeButton
-            documentId={`${record.id}/content`}
-            link={`manage/${page}/update`}
-          />
+        <div className="flex items-center  gap-2">
+          <UptadeButton link={updateLink(String(record.id))} />
           {onDelete && (
             <Popconfirm
               title="Are you sure you want to delete this item?"
@@ -272,7 +271,7 @@ function AdminTable<T extends BaseTableItem>({
   }
 
   if (!isLoading && !dataSource.length) {
-    return <NoDataComponent link={`/${page}/create?locale=${locale}`} />;
+    return <NoDataComponent link={`${page}/create?locale=${locale}`} />;
   }
 
   const table = (

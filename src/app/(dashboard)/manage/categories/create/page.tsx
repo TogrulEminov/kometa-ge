@@ -13,6 +13,7 @@ import { CustomLocales } from "@/services/interface/type";
 import { createCategory } from "@/actions/client/categories/category.controller";
 import { pageRoutes } from "../../../_type/constant";
 import FormWrapper from "@/globalElement/form/FormWrapper";
+import LanguageComponent from "@/app/(dashboard)/_components/LanguageComponent";
 export default function CreateCategories() {
   const searchParams = useSearchParams();
   const locale = searchParams?.get("locale") ?? "az";
@@ -50,13 +51,7 @@ export default function CreateCategories() {
   return (
     <>
       <section className={"flex flex-col gap-4 mb-5"}>
-        <h1 className="font-medium text-[#171717] text-3xl mb-8">
-          {locale === "az"
-            ? "Azərbaycan dilində daxil  et"
-            : locale === "en"
-              ? "İngilis dilində daxil et"
-              : "Rus dilində daxil et"}
-        </h1>
+        <LanguageComponent locale={locale} />
         <FormWrapper
           methods={generalContentForm}
           schema={createCategorySchema}

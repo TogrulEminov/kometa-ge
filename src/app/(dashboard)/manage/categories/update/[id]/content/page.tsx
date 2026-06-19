@@ -19,12 +19,13 @@ import {
 } from "@/actions/client/categories/category.schema";
 import { pageRoutes } from "@/app/(dashboard)/_type/constant";
 import FormWrapper from "@/globalElement/form/FormWrapper";
+import LanguageComponent from "@/app/(dashboard)/_components/LanguageComponent";
 export default function CategriesUptadeContent() {
   const params = useParams();
   const id = Array.isArray(params?.id) ? params.id[0] : params?.id;
   const router = useRouter();
   const searchParams = useSearchParams();
-  const locale = searchParams?.get("locale") ?? "az";
+  const locale = searchParams?.get("locale") ?? "en";
   const getCategoryWrapper = async () => {
     const result = await getCategoriesById({
       locale: locale as CustomLocales,
@@ -80,23 +81,14 @@ export default function CategriesUptadeContent() {
   return (
     <>
       <section className={"flex flex-col gap-4 mb-2"}>
-        <h1 className={"text-2xl font-medium text-[#171717] mb-8"}>
-          {locale === "az"
-            ? "Azərbaycan dilində daxil  et"
-            : locale === "en"
-              ? "İngilis dilində daxil et"
-              : "Rus dilində daxil et"}
-        </h1>
+        <LanguageComponent locale={locale} />
 
         <FormWrapper
           methods={generalContentForm}
           schema={uptadeCategorySchema}
           onSubmit={onSubmit}
         >
-          <CustomForm
-            isPending={isExecuting}
-            title={translation?.title}
-          />
+          <CustomForm isPending={isExecuting} title={translation?.title} />
         </FormWrapper>
       </section>
     </>

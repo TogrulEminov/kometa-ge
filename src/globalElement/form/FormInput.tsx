@@ -35,8 +35,12 @@ export default function FormInput({
           onChange={(e) => {
             const val = e.target.value;
             if (type === "number") {
-              const numericValue = val === "" ? "" : Number(val);
-              field.onChange(numericValue);
+              if (val === "" || val === "-") {
+                field.onChange(val);
+              } else {
+                const parsed = parseFloat(val);
+                field.onChange(isNaN(parsed) ? "" : parsed);
+              }
             } else {
               field.onChange(val);
             }
