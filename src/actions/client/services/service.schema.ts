@@ -1,19 +1,10 @@
-import {
-  gallerySchema,
-  idSchema,
-  imageSchema,
-  localeSchema,
-  metaInformationSchema,
-  newInfoJsonSchema,
-} from "@/src/services/global/global.type";
+import { gallerySchema, idSchema, imageSchema, localeSchema, metaInformationSchema, newInfoJsonSchema } from "@/app/(dashboard)/_type/global.type";
 import z from "zod";
 export const createServiceSchema = z
   .object({
     title: z.string().min(1, "Title is required"),
+    slug: z.string().nullable().optional(),
     description: z.array(newInfoJsonSchema).optional(),
-    subDescription: z.string().optional(),
-    highlight: z.string().optional(),
-    enumId: z.string().min(1, "Position is required"),
   })
   .merge(localeSchema)
   .merge(imageSchema)

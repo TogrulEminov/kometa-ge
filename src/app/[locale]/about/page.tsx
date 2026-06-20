@@ -29,9 +29,10 @@ export default function AboutPage() {
             <div className="lg:col-span-8 space-y-20 lg:order-2 order-1">
               <AboutContent />
               <GeographyGrid />
-              <BranchCards />
+
               <FAQSection />
               <ServicesList />
+              <BranchCards />
             </div>
           </div>
         </div>

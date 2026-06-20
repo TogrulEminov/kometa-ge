@@ -1,3 +1,4 @@
+import deleteImageService from "@/extensions/upload/delete-image";
 import { db } from "./prisma";
 
 const IMAGE_FIELD_CONFIG = {
@@ -17,27 +18,16 @@ const IMAGE_FIELD_CONFIG = {
 
 const MODEL_MAP: { [key: string]: any } = {
   categories: db.categories,
-  "contact-enum": db.contactEnum,
   youtube: db.youtube,
-  position: db.position,
-  employee: db.employee,
-  advantages: db.advantages,
-  blog: db.blog,
   branch: db.branch,
   certificates: db.certificates,
   fag: db.faq,
   sectionContent: db.sectionContent,
-  sectioncta: db.sectionCta,
   service: db.services,
   offices: db.office,
   photoGallery: db.photoGallery,
   "work-process": db.workProcess,
-  "service-category": db.servicesCat,
-  blogCategory: db.blogCategory,
   directions: db.directions,
-  "call-action": db.callAction,
-  "price-offer": db.priceOffer,
-  "contact-message": db.contactUs,
 };
 
 function collectImageUrls(document: Record<string, unknown>): string[] {
@@ -124,20 +114,7 @@ export async function purgeDeletedItems(): Promise<PurgeDeletedResult> {
     }
   }
 
-  if (totalDeleted > 0) {
-    await revalidateAll([
-      CACHE_TAG_GROUPS.BLOG,
-      CACHE_TAG_GROUPS.PHOTO_GALLERY,
-      CACHE_TAG_GROUPS.CERTIFICATES,
-      CACHE_TAG_GROUPS.VIDEO_GALLERY,
-      CACHE_TAG_GROUPS.ABOUT,
-      CACHE_TAG_GROUPS.SERVICES_CATEGORY,
-      CACHE_TAG_GROUPS.SERVICES_MAIN,
-      CACHE_TAG_GROUPS.EMPLOYEE,
-      CACHE_TAG_GROUPS.DIRECTIONS_MAIN,
-      CACHE_TAG_GROUPS.HERO,
-    ]);
-  }
+  
 
   return {
     success: errors.length === 0,

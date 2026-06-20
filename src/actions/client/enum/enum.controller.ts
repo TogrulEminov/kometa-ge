@@ -99,7 +99,6 @@ export async function getEnumById({ locale, id }: GetByIDProps) {
       where: whereClause,
       select: {
         id: true,
-        status: true,
         createdAt: true,
         updatedAt: true,
         translations: {

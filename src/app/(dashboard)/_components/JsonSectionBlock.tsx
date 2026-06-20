@@ -1,7 +1,21 @@
 "use client";
 
-import { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { useFieldArray, useFormContext, useWatch } from "react-hook-form";
+import {
+  DndContext,
+  PointerSensor,
+  closestCenter,
+  useSensor,
+  useSensors,
+  type DragEndEvent,
+} from "@dnd-kit/core";
+import {
+  SortableContext,
+  useSortable,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
 
 import FormInput from "@/globalElement/form/FormInput";
 import FormSelect from "@/globalElement/form/FormSelect";
@@ -17,9 +31,10 @@ import {
   BiPlus,
 } from "react-icons/bi";
 import { BsLayers, BsTrash2, BsType, BsTypeBold } from "react-icons/bs";
+import { LuGripVertical } from "react-icons/lu";
 import { cn } from "@/utils/cn";
 
-interface ExtraItemField {
+export interface ExtraField {
   fieldKey: string;
   label: string;
   placeholder?: string;
@@ -27,15 +42,18 @@ interface ExtraItemField {
   icon?: React.ReactNode;
 }
 
-interface TypeConfig {
-  showSectionTitle?: boolean; // ← YENİ
+export type ExtraItemField = ExtraField;
+
+export interface TypeConfig {
+  showSectionTitle?: boolean;
   showSectionDescription?: boolean;
   richSectionDescription?: boolean;
   showItemDescription?: boolean;
   richItemDescription?: boolean;
   showItems?: boolean;
   itemKeyOptions?: { value: string; label: string }[];
-  extraItemFields?: ExtraItemField[];
+  extraMainFields?: ExtraField[];
+  extraItemFields?: ExtraField[];
 }
 
 interface JsonSectionBlockProps {
@@ -46,18 +64,120 @@ interface JsonSectionBlockProps {
   typeConfig?: Record<string, TypeConfig>;
   defaultConfig?: TypeConfig;
   limit?: number;
+  sectionSortId?: string;
+  sortableItems?: boolean;
+}
+
+export interface JsonSectionListProps {
+  fieldName: string;
+  typeOptions?: { value: string; label: string }[];
+  typeConfig?: Record<string, TypeConfig>;
+  defaultConfig?: TypeConfig;
+  limit?: number;
+  maxSections?: number;
+  sortableSections?: boolean;
+  sortableItems?: boolean;
+  addButtonLabel?: string;
 }
 
 const DEFAULT_CONFIG: TypeConfig = {
-  showSectionTitle: true, // ← default: göstərilir
+  showSectionTitle: true,
   showSectionDescription: true,
   richSectionDescription: true,
   showItemDescription: true,
   richItemDescription: false,
   showItems: true,
   itemKeyOptions: [],
+  extraMainFields: [],
   extraItemFields: [],
 };
+
+interface SortHandleContextValue {
+  setActivatorNodeRef?: (element: HTMLElement | null) => void;
+  listeners?: ReturnType<typeof useSortable>["listeners"];
+  attributes?: ReturnType<typeof useSortable>["attributes"];
+}
+
+const SortHandleContext = React.createContext<SortHandleContextValue>({});
+
+function useSortSensors() {
+  return useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: { distance: 3 },
+    }),
+  );
+}
+
+function DragHandle({
+  className,
+  label = "Sürüşdür",
+}: {
+  className?: string;
+  label?: string;
+}) {
+  const { listeners, attributes, setActivatorNodeRef } =
+    React.useContext(SortHandleContext);
+
+  return (
+    <button
+      type="button"
+      ref={setActivatorNodeRef}
+      {...listeners}
+      {...attributes}
+      aria-label={label}
+      className={cn(
+        "inline-flex size-8 cursor-grab items-center justify-center rounded-lg border transition-all active:cursor-grabbing",
+        className,
+      )}
+    >
+      <LuGripVertical className="h-4 w-4" />
+    </button>
+  );
+}
+
+function SortableShell({
+  id,
+  children,
+  className,
+}: {
+  id: string;
+  children: React.ReactNode;
+  className?: string;
+}) {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    setActivatorNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({ id });
+
+  const style: React.CSSProperties = {
+    // ✅ translate3d — GPU-da işləyir, scale yoxdur
+    transform: transform
+      ? `translate3d(${transform.x}px, ${transform.y}px, 0)`
+      : undefined,
+    transition: isDragging ? "none" : transition, // ✅ drag zamanı transition-u sıfırla
+    willChange: "transform", // ✅ GPU layer hint
+    ...(isDragging ? { position: "relative", zIndex: 10 } : {}),
+  };
+
+  return (
+    <SortHandleContext.Provider
+      value={{ setActivatorNodeRef, listeners, attributes }}
+    >
+      <div
+        ref={setNodeRef}
+        style={style}
+        className={cn(className, isDragging && "opacity-95 shadow-lg")}
+      >
+        {children}
+      </div>
+    </SortHandleContext.Provider>
+  );
+}
 
 function FieldLabel({ icon, label }: { icon: React.ReactNode; label: string }) {
   return (
@@ -70,6 +190,144 @@ function FieldLabel({ icon, label }: { icon: React.ReactNode; label: string }) {
   );
 }
 
+function renderExtraField(extraField: ExtraField, fieldPath: string) {
+  return (
+    <div key={extraField.fieldKey}>
+      <FieldLabel
+        icon={extraField.icon ?? <BsType className="w-3 h-3" />}
+        label={extraField.label}
+      />
+      {extraField.type === "richEditor" ? (
+        <FormRichEditor fieldName={fieldPath} />
+      ) : extraField.type === "textarea" ? (
+        <FormTextarea
+          placeholder={extraField.placeholder ?? ""}
+          fieldName={fieldPath}
+        />
+      ) : (
+        <FormInput
+          placeholder={extraField.placeholder ?? ""}
+          fieldName={fieldPath}
+        />
+      )}
+    </div>
+  );
+}
+
+interface SortableItemCardProps {
+  sortId: string;
+  itemIndex: number;
+  basePath: string;
+  onRemove: () => void;
+  showItemDescription: boolean;
+  richItemDescription: boolean;
+  extraItemFields: ExtraField[];
+  itemKeyOptions: { value: string; label: string }[];
+  sortable: boolean;
+}
+
+function SortableItemCard({
+  sortId,
+  itemIndex,
+  basePath,
+  onRemove,
+  showItemDescription,
+  richItemDescription,
+  extraItemFields,
+  itemKeyOptions,
+  sortable,
+}: SortableItemCardProps) {
+  const content = (
+    <>
+      <div className="flex items-center justify-between px-4 py-3 bg-slate-50 border-b border-slate-100">
+        <div className="flex items-center gap-2.5">
+          {sortable && (
+            <DragHandle
+              label="Elementi sürüşdür"
+              className="border-slate-200 bg-white text-slate-400 hover:border-blue-200 hover:bg-blue-50 hover:text-blue-600"
+            />
+          )}
+          <div className="flex items-center justify-center size-6 rounded-md bg-slate-200">
+            <BiHash className="w-3 h-3 text-slate-500" />
+          </div>
+          <span className="text-sm font-medium text-slate-600">
+            Element {itemIndex + 1}
+          </span>
+        </div>
+        <button
+          type="button"
+          onClick={onRemove}
+          className="size-7 flex items-center justify-center rounded-lg text-slate-300 hover:text-red-500 hover:bg-red-50 transition-all opacity-0 group-hover/item:opacity-100 cursor-pointer"
+        >
+          <BsTrash2 className="w-3.5 h-3.5" />
+        </button>
+      </div>
+
+      <div className="p-4 space-y-3">
+        <div>
+          <FieldLabel icon={<BsType className="w-3 h-3" />} label="Başlıq" />
+          <FormInput
+            placeholder="Element başlığı"
+            fieldName={`${basePath}.items.${itemIndex}.itemTitle`}
+          />
+        </div>
+
+        {showItemDescription && (
+          <div>
+            <FieldLabel
+              icon={<BiAlignLeft className="w-3 h-3" />}
+              label="Təsvir"
+            />
+            {richItemDescription ? (
+              <FormRichEditor
+                fieldName={`${basePath}.items.${itemIndex}.itemDescription`}
+              />
+            ) : (
+              <FormTextarea
+                fieldName={`${basePath}.items.${itemIndex}.itemDescription`}
+              />
+            )}
+          </div>
+        )}
+
+        {extraItemFields.map((extraField) =>
+          renderExtraField(
+            extraField,
+            `${basePath}.items.${itemIndex}.${extraField.fieldKey}`,
+          ),
+        )}
+
+        {itemKeyOptions.length > 0 && (
+          <div>
+            <FieldLabel icon={<BiKey className="w-3 h-3" />} label="Açar" />
+            <FormSelect
+              fieldName={`${basePath}.items.${itemIndex}.itemKey`}
+              options={itemKeyOptions}
+            />
+          </div>
+        )}
+      </div>
+    </>
+  );
+
+  if (!sortable) {
+    return (
+      <div className="group/item rounded-xl border border-slate-200 bg-white overflow-hidden hover:border-blue-200 hover:shadow-sm transition-all duration-200">
+        {content}
+      </div>
+    );
+  }
+
+  return (
+    <SortableShell
+      id={sortId}
+      className="group/item rounded-xl border border-slate-200 bg-white overflow-hidden hover:border-blue-200 hover:shadow-sm transition-all duration-200"
+    >
+      {content}
+    </SortableShell>
+  );
+}
+
 export default function JsonSectionBlock({
   fieldName,
   sectionIndex,
@@ -78,14 +336,30 @@ export default function JsonSectionBlock({
   typeConfig = {},
   defaultConfig,
   limit = 10,
+  sectionSortId,
+  sortableItems = true,
 }: JsonSectionBlockProps) {
   const { control } = useFormContext();
   const [isExpanded, setIsExpanded] = useState(true);
+  const itemSensors = useSortSensors();
 
   const basePath = `${fieldName}.${sectionIndex}`;
   const itemsArray = useFieldArray({ control, name: `${basePath}.items` });
   const dataTitle = useWatch({ control, name: `${basePath}.title` });
   const dataType = useWatch({ control, name: `${basePath}.type` });
+  const allSections = useWatch({ control, name: fieldName }) as
+    | Array<{ type?: string }>
+    | undefined;
+
+  const usedTypesByOthers = (allSections ?? [])
+    .filter((_, index) => index !== sectionIndex)
+    .map((section) => section?.type)
+    .filter(Boolean);
+
+  const availableTypeOptions = typeOptions.filter(
+    (option) =>
+      option.value === dataType || !usedTypesByOthers.includes(option.value),
+  );
 
   const activeConfig: TypeConfig = {
     ...DEFAULT_CONFIG,
@@ -101,11 +375,15 @@ export default function JsonSectionBlock({
     richItemDescription,
     showItems,
     itemKeyOptions = [],
+    extraMainFields = [],
     extraItemFields = [],
   } = activeConfig;
 
   const buildEmptyItem = () => {
-    const base: Record<string, string> = { itemTitle: "", itemDescription: "" };
+    const base: Record<string, string> = {
+      itemTitle: "",
+      itemDescription: "",
+    };
     extraItemFields.forEach((f) => {
       base[f.fieldKey] = "";
     });
@@ -113,21 +391,74 @@ export default function JsonSectionBlock({
   };
 
   const typeLabel = typeOptions.find((o) => o.value === dataType)?.label;
-
-  // Başlıq + Tip sütunlarının grid-i:
-  // showSectionTitle=false VƏ typeOptions varsa → yalnız Tip (tam en)
-  // showSectionTitle=true  VƏ typeOptions varsa → 2 sütun
-  // typeOptions yoxdursa   VƏ showSectionTitle   → yalnız Başlıq
   const showTitleCol = showSectionTitle !== false;
   const showTypeCol = typeOptions.length > 0;
   const gridCols =
     showTitleCol && showTypeCol ? "lg:grid-cols-2" : "grid-cols-1";
+  const canSortItems = Boolean(
+    sortableItems && showItems !== false && itemsArray.fields.length > 1,
+  );
 
-  return (
+  const onItemDragEnd = ({ active, over }: DragEndEvent) => {
+    if (!over || active.id === over.id) return;
+
+    const oldIndex = itemsArray.fields.findIndex(
+      (field) => field.id === active.id,
+    );
+    const newIndex = itemsArray.fields.findIndex(
+      (field) => field.id === over.id,
+    );
+
+    if (oldIndex < 0 || newIndex < 0) return;
+    itemsArray.move(oldIndex, newIndex);
+  };
+
+  const renderItemsList = () => {
+    const itemCards = itemsArray.fields.map((field, itemIndex) => (
+      <SortableItemCard
+        key={field.id}
+        sortId={field.id}
+        itemIndex={itemIndex}
+        basePath={basePath}
+        onRemove={() => itemsArray.remove(itemIndex)}
+        showItemDescription={showItemDescription !== false}
+        richItemDescription={richItemDescription === true}
+        extraItemFields={extraItemFields}
+        itemKeyOptions={itemKeyOptions}
+        sortable={canSortItems}
+      />
+    ));
+
+    if (!canSortItems) {
+      return <div className="space-y-3">{itemCards}</div>;
+    }
+
+    return (
+      <DndContext
+        sensors={itemSensors}
+        collisionDetection={closestCenter}
+        onDragEnd={onItemDragEnd}
+      >
+        <SortableContext
+          items={itemsArray.fields.map((field) => field.id)}
+          strategy={verticalListSortingStrategy}
+        >
+          <div className="space-y-3">{itemCards}</div>
+        </SortableContext>
+      </DndContext>
+    );
+  };
+
+  const blockContent = (
     <div className="rounded-2xl border border-blue-100 bg-white overflow-hidden shadow-sm hover:shadow-md hover:border-blue-200 transition-all duration-300">
-      {/* ── HEADER ── */}
-      <div className="flex items-center justify-between px-5 py-4 bg-gradient-to-r from-blue-600 to-blue-500 border-b border-blue-700/20">
+      <div className="flex items-center justify-between px-5 py-4 bg-linear-to-r from-blue-600 to-blue-500 border-b border-blue-700/20">
         <div className="flex items-center gap-3">
+          {sectionSortId && (
+            <DragHandle
+              label="Bölməni sürüşdür"
+              className="border-white/25 bg-white/15 text-white hover:border-white/40 hover:bg-white/25"
+            />
+          )}
           <span className="flex items-center justify-center size-8 rounded-lg bg-white/20 text-white text-sm font-bold border border-white/25">
             {sectionIndex + 1}
           </span>
@@ -165,10 +496,8 @@ export default function JsonSectionBlock({
         </div>
       </div>
 
-      {/* ── BODY ── */}
       {isExpanded && (
         <div className="p-5 space-y-5">
-          {/* Başlıq + Tip */}
           {(showTitleCol || showTypeCol) && (
             <div className={cn("grid grid-cols-1 gap-4", gridCols)}>
               {showTitleCol && (
@@ -191,14 +520,13 @@ export default function JsonSectionBlock({
                   />
                   <FormSelect
                     fieldName={`${basePath}.type`}
-                    options={typeOptions}
+                    options={availableTypeOptions}
                   />
                 </div>
               )}
             </div>
           )}
 
-          {/* Bölmə təsviri */}
           {showSectionDescription && (
             <div className="rounded-xl border border-blue-100 bg-blue-50/40 p-4 space-y-2">
               <FieldLabel
@@ -213,7 +541,17 @@ export default function JsonSectionBlock({
             </div>
           )}
 
-          {/* Items */}
+          {extraMainFields.length > 0 && (
+            <div className="rounded-xl border border-blue-100 bg-blue-50/40 p-4 space-y-3">
+              {extraMainFields.map((extraField) =>
+                renderExtraField(
+                  extraField,
+                  `${basePath}.${extraField.fieldKey}`,
+                ),
+              )}
+            </div>
+          )}
+
           {showItems && (
             <div className="space-y-4">
               <div className="flex items-center gap-2.5 px-4 py-3 rounded-xl bg-slate-50 border border-slate-200">
@@ -223,107 +561,17 @@ export default function JsonSectionBlock({
                 <span className="text-sm font-semibold text-slate-700">
                   Elementlər
                 </span>
+                {canSortItems && (
+                  <span className="text-xs text-slate-400">
+                    Sürüşdürərək sırala
+                  </span>
+                )}
                 <span className="ml-auto flex items-center justify-center size-6 rounded-full bg-blue-100 text-blue-700 text-xs font-bold">
                   {itemsArray.fields.length}
                 </span>
               </div>
 
-              <div className="space-y-3">
-                {itemsArray.fields.map((field, itemIndex) => (
-                  <div
-                    key={field.id}
-                    className="group/item rounded-xl border border-slate-200 bg-white overflow-hidden hover:border-blue-200 hover:shadow-sm transition-all duration-200"
-                  >
-                    <div className="flex items-center justify-between px-4 py-3 bg-slate-50 border-b border-slate-100">
-                      <div className="flex items-center gap-2.5">
-                        <div className="flex items-center justify-center size-6 rounded-md bg-slate-200">
-                          <BiHash className="w-3 h-3 text-slate-500" />
-                        </div>
-                        <span className="text-sm font-medium text-slate-600">
-                          Element {itemIndex + 1}
-                        </span>
-                      </div>
-                      <button
-                        type="button"
-                        onClick={() => itemsArray.remove(itemIndex)}
-                        className="size-7 flex items-center justify-center rounded-lg text-slate-300 hover:text-red-500 hover:bg-red-50 transition-all opacity-0 group-hover/item:opacity-100 cursor-pointer"
-                      >
-                        <BsTrash2 className="w-3.5 h-3.5" />
-                      </button>
-                    </div>
-
-                    <div className="p-4 space-y-3">
-                      <div>
-                        <FieldLabel
-                          icon={<BsType className="w-3 h-3" />}
-                          label="Başlıq"
-                        />
-                        <FormInput
-                          placeholder="Element başlığı"
-                          fieldName={`${basePath}.items.${itemIndex}.itemTitle`}
-                        />
-                      </div>
-
-                      {showItemDescription && (
-                        <div>
-                          <FieldLabel
-                            icon={<BiAlignLeft className="w-3 h-3" />}
-                            label="Təsvir"
-                          />
-                          {richItemDescription ? (
-                            <FormRichEditor
-                              fieldName={`${basePath}.items.${itemIndex}.itemDescription`}
-                            />
-                          ) : (
-                            <FormTextarea
-                              fieldName={`${basePath}.items.${itemIndex}.itemDescription`}
-                            />
-                          )}
-                        </div>
-                      )}
-
-                      {extraItemFields.map((extraField) => (
-                        <div key={extraField.fieldKey}>
-                          <FieldLabel
-                            icon={
-                              extraField.icon ?? <BsType className="w-3 h-3" />
-                            }
-                            label={extraField.label}
-                          />
-                          {extraField.type === "richEditor" ? (
-                            <FormRichEditor
-                              fieldName={`${basePath}.items.${itemIndex}.${extraField.fieldKey}`}
-                            />
-                          ) : extraField.type === "textarea" ? (
-                            <FormTextarea
-                              placeholder={extraField.placeholder ?? ""}
-                              fieldName={`${basePath}.items.${itemIndex}.${extraField.fieldKey}`}
-                            />
-                          ) : (
-                            <FormInput
-                              placeholder={extraField.placeholder ?? ""}
-                              fieldName={`${basePath}.items.${itemIndex}.${extraField.fieldKey}`}
-                            />
-                          )}
-                        </div>
-                      ))}
-
-                      {itemKeyOptions.length > 0 && (
-                        <div>
-                          <FieldLabel
-                            icon={<BiKey className="w-3 h-3" />}
-                            label="Açar"
-                          />
-                          <FormSelect
-                            fieldName={`${basePath}.items.${itemIndex}.itemKey`}
-                            options={itemKeyOptions}
-                          />
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                ))}
-              </div>
+              {renderItemsList()}
 
               {itemsArray.fields.length < limit && (
                 <button
@@ -340,7 +588,6 @@ export default function JsonSectionBlock({
             </div>
           )}
 
-          {/* Footer */}
           <div className="flex items-center justify-end pt-4 border-t border-slate-100">
             <button
               type="button"
@@ -355,85 +602,153 @@ export default function JsonSectionBlock({
       )}
     </div>
   );
+
+  if (!sectionSortId) {
+    return blockContent;
+  }
+
+  return <SortableShell id={sectionSortId}>{blockContent}</SortableShell>;
 }
-// <JsonSectionBlock
-//   key={field.id}
-//   fieldName="description"
-//   sectionIndex={index}
-//   onRemove={() => remove(index)}
-//   typeOptions={[
-//     {
-//       value: "advantages",
-//       label: "Advantages",
-//     },
-//     {
-//       value: "main",
-//       label: "Main",
-//     },
-//     {
-//       value: "faq",
-//       label: "FAQ",
-//     },
-//     {
-//       value: "statistics",
-//       label: "Statistics",
-//     },
-//     {
-//       value: "strategicGoals",
-//       label: "Strategic Goals",
-//     },
-//   ]}
-//   typeConfig={{
-//     advantages: {
-//       showSectionDescription: true,
-//       richSectionDescription: true,
-//       showItems: true,
-//       showItemDescription: true,
-//     },
-//     main: {
-//       showSectionDescription: true,
-//       richSectionDescription: true,
-//       showItems: false,
-//     },
-//     faq: {
-//       showSectionDescription: true,
-//       richSectionDescription: false,
-//       showItems: true,
-//       showItemDescription: true,
-//     },
-//     strategicGoals: {
-//       showItems: true,
-//       showSectionDescription: false,
-//       itemKeyOptions: [
-//         {
-//           value: "mission",
-//           label: "Mission",
-//         },
-//         {
-//           value: "vision",
-//           label: "Vision",
-//         },
-//       ],
-//     },
-//     statistics: {
-//       showSectionDescription: false,
-//       showItems: true,
-//       showItemDescription: false,
-//       extraItemFields: [
-//         {
-//           fieldKey: "itemValue",
-//           label: "Value",
-//           placeholder: "e.g. 500+",
-//           type: "input",
-//           icon: <Hash className="w-3 h-3" />,
-//         },
-//         {
-//           fieldKey: "itemSuffix",
-//           label: "Suffix",
-//           placeholder: "e.g. + , K+",
-//           type: "input",
-//         },
-//       ],
-//     },
-//   }}
-// />;
+
+export function JsonSectionList({
+  fieldName,
+  typeOptions,
+  typeConfig,
+  defaultConfig,
+  limit,
+  maxSections,
+  sortableSections = true,
+  sortableItems = true,
+  addButtonLabel = "Add New Section",
+}: JsonSectionListProps) {
+  const { control } = useFormContext();
+  const sectionSensors = useSortSensors();
+  const { fields, append, remove, move } = useFieldArray({
+    control,
+    name: fieldName,
+  });
+
+  const watchedSections = useWatch({ control, name: fieldName }) as
+    | Array<{ type?: string }>
+    | undefined;
+
+  const usedTypes = useMemo(
+    () =>
+      watchedSections?.map((section) => section?.type).filter(Boolean) ?? [],
+    [watchedSections],
+  );
+
+  const availableTypes = useMemo(
+    () =>
+      typeOptions?.filter((option) => !usedTypes.includes(option.value)) ?? [],
+    [typeOptions, usedTypes],
+  );
+
+  const canAddSection = useMemo(() => {
+    if (maxSections && fields.length >= maxSections) return false;
+    if (typeOptions?.length) return availableTypes.length > 0;
+    return true;
+  }, [availableTypes.length, fields.length, maxSections, typeOptions?.length]);
+
+  const onSectionDragEnd = ({ active, over }: DragEndEvent) => {
+    if (!over || active.id === over.id) return;
+
+    const oldIndex = fields.findIndex((field) => field.id === active.id);
+    const newIndex = fields.findIndex((field) => field.id === over.id);
+
+    if (oldIndex < 0 || newIndex < 0) return;
+    move(oldIndex, newIndex);
+  };
+
+  const sectionBlocks = fields.map((field, index) => (
+    <JsonSectionBlock
+      key={field.id}
+      fieldName={fieldName}
+      sectionIndex={index}
+      sectionSortId={
+        sortableSections && fields.length > 1 ? field.id : undefined
+      }
+      onRemove={() => remove(index)}
+      typeOptions={typeOptions}
+      typeConfig={typeConfig}
+      defaultConfig={defaultConfig}
+      limit={limit}
+      sortableItems={sortableItems}
+    />
+  ));
+
+  const addButton = canAddSection ? (
+    <button
+      type="button"
+      onClick={() =>
+        append({
+          title: "",
+          description: "",
+          items: [],
+          type: availableTypes[0]?.value ?? "",
+        })
+      }
+      className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-blue-500 text-white cursor-pointer hover:bg-blue-600 transition-all text-sm font-semibold"
+    >
+      <BiPlus className="w-4 h-4" />
+      {addButtonLabel}
+    </button>
+  ) : null;
+
+  if (!sortableSections || fields.length < 2) {
+    return (
+      <div className="space-y-4">
+        {sectionBlocks}
+        {addButton}
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-4">
+      <DndContext
+        sensors={sectionSensors}
+        collisionDetection={closestCenter}
+        onDragEnd={onSectionDragEnd}
+      >
+        <SortableContext
+          items={fields.map((field) => field.id)}
+          strategy={verticalListSortingStrategy}
+        >
+          <div className="space-y-4">{sectionBlocks}</div>
+        </SortableContext>
+      </DndContext>
+      {addButton}
+    </div>
+  );
+}
+
+/*
+ * ─── JsonSectionBlock / JsonSectionList istifadə ───────────────────────────
+ *
+ * Tövsiyə olunan (section + item sort avtomatik):
+ *
+ * <JsonSectionList
+ *   fieldName="description"
+ *   typeOptions={[...SECTION_TYPE_OPTIONS]}
+ *   typeConfig={SECTION_TYPE_CONFIG}
+ *   maxSections={6}                 // optional
+ *   sortableSections={true}         // default: true — bölmələri sürüşdür
+ *   sortableItems={true}            // default: true — item-ləri sürüşdür
+ * />
+ *
+ * Manual istifadə (yalnız item sort):
+ *
+ * {fields.map((field, index) => (
+ *   <JsonSectionBlock
+ *     key={field.id}
+ *     fieldName="description"
+ *     sectionIndex={index}
+ *     sectionSortId={field.id}       // section sort üçün SortableContext lazımdır
+ *     onRemove={() => remove(index)}
+ *     sortableItems={true}
+ *   />
+ * ))}
+ *
+ * Sıralama react-hook-form move() ilə index-ə görə yenilənir.
+ */

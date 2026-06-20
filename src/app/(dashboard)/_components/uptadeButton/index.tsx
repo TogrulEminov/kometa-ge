@@ -11,9 +11,9 @@ const UptadeButton = ({ link }: Props) => {
   return (
     <Link
       href={link}
-      className="flex items-center gap-2 px-4 py-2 bg-blue-300 text-blue-600 rounded-lg text-sm font-medium  transition-colors cursor-pointer"
+      className="inline-flex items-center gap-1.5 rounded-lg border border-blue-200 bg-blue-50 px-3 py-2 text-sm font-medium text-blue-700 transition-all hover:border-blue-300 hover:bg-blue-100"
     >
-      <LuPencil className="w-4 h-4" />
+      <LuPencil className="h-4 w-4" />
       Edit
     </Link>
   );

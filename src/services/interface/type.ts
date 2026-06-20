@@ -1,3 +1,5 @@
+import { NewInfoJson } from "@/app/(dashboard)/_type/global.type";
+
 export const Role = {
   USER: "user",
   ADMIN: "admin",
@@ -56,9 +58,7 @@ export interface User {
 export interface jsonItem {
   itemTitle?: string | null;
   itemDescription?: string | null;
-  itemValue?: string | null;
-  itemSuffix?: string | null;
-  itemKey?: "mission" | "vision";
+  [key: string]: unknown;
 }
 
 export interface newInfoJson {
@@ -364,4 +364,236 @@ export type AboutHomeType = {
   updatedAt: Date;
 
   translations: AboutHomeTranslationType[];
+};
+export type FeaturesTranslationType = {
+  id: string;
+  title: string;
+  subTitle: string | null;
+  description: newInfoJson[] | null;
+  locale: CustomLocales;
+  documentId: string | null;
+  createdAt: Date;
+  updatedAt: Date;
+};
+
+export type FeaturesType = {
+  id: string;
+  userId: string | null;
+  key: StaticKey;
+  createdAt: Date;
+  updatedAt: Date;
+  imageUrl?: FileType | null;
+  imageId: number | null;
+  translations: FeaturesTranslationType[];
+};
+export type AboutMainTranslationType = {
+  id: string;
+  title: string;
+  hightlight: string | null;
+  subTitle: string | null;
+  shortDescription: string | null;
+  description: NewInfoJson[] | null;
+  locale: CustomLocales;
+  documentId: string | null;
+  createdAt: Date;
+  updatedAt: Date;
+};
+
+export type AboutMainType = {
+  id: string;
+  imageId: number | null;
+  userId: string | null;
+  key: StaticKey;
+  createdAt: Date;
+  updatedAt: Date;
+  imageUrl?: FileType | null;
+  gallery?: FileType[] | null;
+  translations: AboutMainTranslationType[];
+  branches: BranchItem[];
+  serviceId: string | null;
+  service: ServicesType | null;
+};
+
+export type ServicesTranslationType = {
+  id: string;
+  title: string;
+  slug: string | null;
+  description: NewInfoJson[] | null;
+  locale: CustomLocales;
+  documentId: string | null;
+  seo: Seo | null;
+  seoId: string | null;
+  createdAt: Date;
+  updatedAt: Date;
+};
+
+export type ServicesType = {
+  id: string;
+  isDeleted: boolean;
+  imageId: number | null;
+  orderNumber: number;
+  userId: string | null;
+  createdAt: Date;
+  updatedAt: Date;
+  imageUrl?: FileType | null;
+  gallery: FileType[];
+  user?: User | null;
+  translations: ServicesTranslationType[];
+  subServices: SubServicesType[];
+};
+
+export type SubServicesTranslationType = {
+  id: string;
+  title: string;
+  slug: string | null;
+  description: NewInfoJson | null;
+  locale: CustomLocales;
+  documentId: string | null;
+  seoId: string | null;
+  seo: Seo | null;
+  createdAt: Date;
+  updatedAt: Date;
+};
+
+export type SubServicesType = {
+  id: string;
+  isDeleted: boolean;
+  imageId: number | null;
+  orderNumber: number;
+  userId: string | null;
+  servicesId: string | null;
+  iconsUrl: string | null;
+  createdAt: Date;
+  updatedAt: Date;
+  imageUrl?: FileType | null;
+  gallery: FileType[];
+  user?: User | null;
+  services?: ServicesType | null;
+  translations: SubServicesTranslationType[];
+};
+
+export type DirectionsTranslationType = {
+  id: string;
+  title: string;
+  navTitle: string;
+  slug: string;
+  shortDescription: string | null;
+  description: NewInfoJson[] | null;
+  locale: CustomLocales;
+  documentId: string | null;
+  seoId: string | null;
+  seo: Seo | null;
+  createdAt: Date;
+  updatedAt: Date;
+};
+interface Route {
+  from: string;
+  to: string;
+}
+export type DirectionsType = {
+  id: string;
+  isDeleted: boolean;
+  imageId: number | null;
+  orderNumber: number;
+  userId: string | null;
+  route: Route;
+  createdAt: Date;
+  updatedAt: Date;
+  imageUrl?: FileType | null;
+  user?: User | null;
+  translations: DirectionsTranslationType[];
+};
+
+export type BranchesStatus = "ACTIVE" | "PLANNED";
+export type TypeStatus = "office" | "warehouse";
+interface BranchTranslation {
+  countryName: string;
+  locale: CustomLocales;
+  id: string;
+  documentId: string;
+  createdAt: string;
+  updatedAt: string;
+}
+// branch
+export type BranchItem = {
+  id: string;
+  status: BranchesStatus;
+  isoCode: string;
+  isDeleted: boolean;
+  countryName: string;
+  createdAt: string;
+  updatedAt: string;
+  orderNumber: number;
+  translations: BranchTranslation[];
+};
+// office
+type OfficeTranslation = {
+  address: string;
+  locale: CustomLocales;
+  id: string;
+  createdAt: string;
+  updatedAt: string;
+  city: string;
+};
+export type Office = {
+  id: string;
+  documentId: string;
+  type: TypeStatus;
+  isDeleted: boolean;
+  branchId: string;
+  createdAt: string;
+  orderNumber: number;
+  branch: BranchItem;
+  updatedAt: string;
+  translations: OfficeTranslation[];
+};
+
+export type PhotoGalleryTranslationType = {
+  id: string;
+  title: string;
+  slug?: string | null;
+  description?: string | null;
+  locale: CustomLocales;
+  documentId: string | null;
+  createdAt: Date;
+  updatedAt: Date;
+};
+
+export type PhotoGalleryType = {
+  id: string;
+  isDeleted: boolean;
+  imageId: number | null;
+  orderNumber: number;
+  userId: string | null;
+  createdAt: Date;
+  updatedAt: Date;
+  imageUrl?: FileType | null;
+  gallery: FileType[];
+  user?: User | null;
+  translations: PhotoGalleryTranslationType[];
+};
+
+export type CertificatesTranslationType = {
+  id: string;
+  title: string;
+  slug?: string | null;
+  description?: string | null;
+  locale: CustomLocales;
+  documentId: string | null;
+  createdAt: Date;
+  updatedAt: Date;
+};
+
+export type CertificatesType = {
+  id: string;
+  isDeleted: boolean;
+  imageId: number | null;
+  orderNumber: number;
+  userId: string | null;
+  createdAt: Date;
+  updatedAt: Date;
+  imageUrl?: FileType | null;
+  gallery: FileType[];
+  user?: User | null;
+  translations: PhotoGalleryTranslationType[];
 };

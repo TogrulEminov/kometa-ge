@@ -34,7 +34,7 @@ const MultiImageView: React.FC<MultiImageViewProps> = ({
       },
       {
         onSuccess: () => {
-          message.success("Şəkil uğurla silindi.");
+          message.success("Image deleted successfully.");
           // ✅ Uğurlu silmədən sonra ID-ni çıxar
           setDeletingIds((prev) => {
             const newSet = new Set(prev);
@@ -45,7 +45,7 @@ const MultiImageView: React.FC<MultiImageViewProps> = ({
         },
         onError: (error) => {
           console.error("Delete API error:", (error as Error).message);
-          message.error("Fayl silinərkən xəta baş verdi");
+          message.error("Error deleting file");
           // ✅ Xəta baş verdikdə də ID-ni çıxar
           setDeletingIds((prev) => {
             const newSet = new Set(prev);
@@ -60,14 +60,14 @@ const MultiImageView: React.FC<MultiImageViewProps> = ({
   if (!selectedImages?.length) {
     return (
       <div className="flex justify-center items-center h-48 bg-gray-200 text-gray-800 text-lg font-bold rounded-lg shadow-md hover:bg-gray-300 cursor-pointer no-image">
-        🚫 Göstəriləcək şəkil yoxdur
+        🚫 No image to display
       </div>
     );
   }
 
   return (
     <ReactFancyBox>
-      <FieldBlock title="Əvvəlki şəkillər">
+      <FieldBlock title="Previous images">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
           {selectedImages?.map((img, idx) => {
             // ✅ Bu şəklin silinmə vəziyyətini yoxla
@@ -90,7 +90,7 @@ const MultiImageView: React.FC<MultiImageViewProps> = ({
                     onClick={() => handleRemove(Number(img.id))}
                     className="min-w-9 h-9 cursor-pointer disabled:bg-gray-500 disabled:cursor-not-allowed px-4 rounded-md bg-red-500 text-white flex items-center justify-center shadow-[0_4px_6px_rgba(0,0,0,0.1)] transition-all hover:bg-red-600"
                   >
-                    {isDeleting ? "Silinir..." : "Sil"}
+                    {isDeleting ? "Deleting..." : "Delete"}
                   </button>
 
                   <a
@@ -98,7 +98,7 @@ const MultiImageView: React.FC<MultiImageViewProps> = ({
                     data-fancybox="gallery-multi"
                     className="min-w-9 h-9 px-4 rounded-md bg-white flex items-center justify-center shadow-[0_4px_6px_rgba(0,0,0,0.1)] hover:bg-gray-100 transition-all"
                   >
-                    Önizləmə
+                    Preview
                   </a>
                 </div>
               </div>

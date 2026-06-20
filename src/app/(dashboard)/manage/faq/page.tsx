@@ -8,7 +8,7 @@ import { usePaginationQuery } from "@/hooks/usePaginationQuery";
 import { useServerQuery } from "@/hooks/useServerActions";
 import { faq_list } from "../../_type/query-key";
 import { CustomLocales, FaqItem } from "@/services/interface/type";
-import { pageRoutes } from "../../_type/constant";
+import { pageModels, pageRoutes } from "../../_type/constant";
 import AdminTable from "../../_components/AdminTable";
 import { Columns } from "./Columns";
 import { useAction } from "next-safe-action/hooks";
@@ -33,9 +33,6 @@ export default function ContentAdminPage() {
   const page = Number(data?.paginations?.page) || 1;
   const pageSize = Number(data?.paginations?.pageSize) || 12;
   const totalPages = Number(data?.paginations?.totalPages) || 1;
-
-  console.log(data);
-
   const { execute: deleteData } = useAction(deleteFag, {});
   const handleDelete = async (id: string) => {
     await deleteData({ id: id as string });
@@ -65,7 +62,7 @@ export default function ContentAdminPage() {
           isError={isError}
           refetch={refetch}
           sortable={true}
-          model={pageRoutes.faq.single}
+          model={pageModels.faq}
           locale={locale}
           invalidateQueryKey={faq_list}
           isLoading={isLoading}

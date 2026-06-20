@@ -43,7 +43,6 @@ export async function getSocials({
       db.social.findMany({
         where: {
           ...whereClause,
-          status: status,
         },
         orderBy: { createdAt: "asc" },
         skip: skip,

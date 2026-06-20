@@ -6,9 +6,12 @@ export const ORDERABLE_MODEL_MAP: Record<
   (typeof db)[keyof typeof db]
 > = {
   faq: db.faq,
-  "work-process": db.workProcess,
   service: db.services,
-  "service-category": db.subServices,
+  subServices: db.subServices,
   directions: db.directions,
   youtube: db.youtube,
+  branch: db.branch,
+  office: db.office,
+  photoGallery: db.photoGallery,
+  certificates: db.certificates,
 };

@@ -5,13 +5,17 @@ import {
   LuBriefcase,
   LuUsers,
   LuVideo,
-  LuImage,
-  LuMonitor,
+  LuFolderOpen,
+  LuRoute,
+  LuBuilding,
 } from "react-icons/lu";
 import { Role } from "@/services/interface/type";
 import { GiKnightBanner } from "react-icons/gi";
-import { FaG, FaNetworkWired, FaQuestion } from "react-icons/fa6";
-import { BsInfo } from "react-icons/bs";
+import { FaNetworkWired, FaQuestion, FaServicestack } from "react-icons/fa6";
+import { BsFileSlides, BsInfo } from "react-icons/bs";
+import { IoIosStarHalf } from "react-icons/io";
+import { IoInformation } from "react-icons/io5";
+import { AiOutlineBranches } from "react-icons/ai";
 
 export type DashboardRole = typeof Role.ADMIN | typeof Role.MODERATOR;
 
@@ -33,7 +37,6 @@ export const DASHBOARD_ROLES: DashboardRole[] = [Role.ADMIN, Role.MODERATOR];
 export const pageRoutes = {
   categories: {
     root: "/manage/categories",
-    single: "categories",
     create: "/manage/categories/create?locale=en",
     link: "manage/categories",
     updateImage({ id }: { id: string }) {
@@ -45,7 +48,6 @@ export const pageRoutes = {
   },
   sectionContent: {
     root: "/manage/section-content",
-    single: "section-content",
     create: "/manage/section-content/create?locale=en",
     link: "manage/section-content",
     updateContent({ id }: { id: string }) {
@@ -55,14 +57,51 @@ export const pageRoutes = {
   contact: {
     root: "/manage/contact",
   },
-  services: {
+  servicesMain: {
     root: "/manage/services-main",
     create: "/manage/services-main/create?locale=en",
+    link: "manage/services-main",
+    updateImage({ id }: { id: string }) {
+      return `/manage/services-main/update/${id}/image`;
+    },
+    updateContent({ id }: { id: string }) {
+      return `/manage/services-main/update/${id}/content`;
+    },
+    updateGallery({ id }: { id: string }) {
+      return `/manage/services-main/update/${id}/gallery`;
+    },
+  },
+  photoGallery: {
+    root: "/manage/photo-gallery",
+    create: "/manage/photo-gallery/create?locale=en",
+    link: "manage/photo-gallery",
+    updateImage({ id }: { id: string }) {
+      return `/manage/photo-gallery/update/${id}/image`;
+    },
+    updateGallery({ id }: { id: string }) {
+      return `/manage/photo-gallery/update/${id}/gallery`;
+    },
+    updateContent({ id }: { id: string }) {
+      return `/manage/photo-gallery/update/${id}/content`;
+    },
+  },
+  subServices: {
+    root: "/manage/sub-services",
+    create: "/manage/sub-services/create?locale=en",
+    link: "manage/sub-services",
+    updateImage({ id }: { id: string }) {
+      return `/manage/sub-services/update/${id}/image`;
+    },
+    updateContent({ id }: { id: string }) {
+      return `/manage/sub-services/update/${id}/content`;
+    },
+    updateGallery({ id }: { id: string }) {
+      return `/manage/sub-services/update/${id}/gallery`;
+    },
   },
   youtubeMedia: {
     root: "/manage/youtube-media",
     link: "manage/youtube-media",
-    single: "youtube-media",
     create: "/manage/youtube-media/create?locale=en",
     updateImage({ id }: { id: string }) {
       return `/manage/youtube-media/update/${id}/image`;
@@ -71,8 +110,20 @@ export const pageRoutes = {
       return `/manage/youtube-media/update/${id}/content`;
     },
   },
-  aboutHome: {
-    root: "/manage/about-home",
+  directions: {
+    root: "/manage/directions",
+    create: "/manage/directions/create?locale=en",
+    link: "manage/directions",
+    updateImage({ id }: { id: string }) {
+      return `/manage/directions/update/${id}/image`;
+    },
+    updateContent({ id }: { id: string }) {
+      return `/manage/directions/update/${id}/content`;
+    },
+  },
+
+  aboutPage: {
+    root: "/manage/about-page",
   },
   heroInfos: {
     root: "/manage/hero-info",
@@ -83,18 +134,49 @@ export const pageRoutes = {
   workProcess: {
     root: "/manage/work-process",
   },
+  features: {
+    root: "/manage/features",
+  },
   enum: {
     root: "/manage/enum",
-    single: "enum",
     create: "/manage/enum/create?locale=en",
     link: "manage/enum",
     updateContent({ id }: { id: string }) {
       return `/manage/enum/update/${id}/content`;
     },
   },
+  certificates: {
+    root: "/manage/certificates",
+    create: "/manage/certificates/create?locale=en",
+    link: "manage/certificates",
+    updateImage({ id }: { id: string }) {
+      return `/manage/certificates/update/${id}/image`;
+    },
+    updateGallery({ id }: { id: string }) {
+      return `/manage/certificates/update/${id}/gallery`;
+    },
+    updateContent({ id }: { id: string }) {
+      return `/manage/certificates/update/${id}/content`;
+    },
+  },
+  branches: {
+    root: "/manage/branches",
+    create: "/manage/branches/create?locale=en",
+    link: "manage/branches",
+    updateContent({ id }: { id: string }) {
+      return `/manage/branches/update/${id}/content`;
+    },
+  },
+  offices: {
+    root: "/manage/offices",
+    create: "/manage/offices/create?locale=en",
+    link: "manage/offices",
+    updateContent({ id }: { id: string }) {
+      return `/manage/offices/update/${id}/content`;
+    },
+  },
   faq: {
     root: "/manage/faq",
-    single: "faq",
     create: "/manage/faq/create?locale=en",
     link: "manage/faq",
     updateContent({ id }: { id: string }) {
@@ -108,9 +190,23 @@ export const pageRoutes = {
   users: "/manage/users",
 };
 
+export const pageModels = {
+  services: "service",
+  faq: "faq",
+  enum: "enum",
+  subServices: "subServices",
+  youtube: "youtube",
+  sectionContent: "sectionContent",
+  categories: "categories",
+  directions: "directions",
+  branches: "branch",
+  offices: "office",
+  photoGallery: "photoGallery",
+  certificates: "certificates",
+};
 export const menuSections: MenuSection[] = [
   {
-    title: "Əsas səhifələr",
+    title: "Main Pages",
     items: [
       {
         href: pageRoutes.categories.root,
@@ -118,15 +214,31 @@ export const menuSections: MenuSection[] = [
         icon: LuFileCheck,
       },
       { href: pageRoutes.contact.root, label: "Contact", icon: LuMail },
+      { href: pageRoutes.aboutPage.root, label: "About", icon: IoInformation },
       {
         href: pageRoutes.youtubeMedia.root,
         label: "Youtube videos",
         icon: LuVideo,
       },
+      {
+        href: pageRoutes.directions.root,
+        label: "Directions",
+        icon: LuRoute,
+      },
+      {
+        href: pageRoutes.photoGallery.root,
+        label: "Photo Gallery",
+        icon: BsFileSlides,
+      },
+      {
+        href: pageRoutes.certificates.root,
+        label: "Certificates",
+        icon: LuFileCheck,
+      },
     ],
   },
   {
-    title: "Main pages",
+    title: "Home page",
     items: [
       {
         href: pageRoutes.heroInfos.root,
@@ -144,9 +256,44 @@ export const menuSections: MenuSection[] = [
         icon: FaNetworkWired,
       },
       {
+        href: pageRoutes.features.root,
+        label: "Features",
+        icon: IoIosStarHalf,
+      },
+      {
         href: pageRoutes.faq.root,
         label: "FAQ",
         icon: FaQuestion,
+      },
+    ],
+  },
+  {
+    title: "Services",
+    items: [
+      {
+        href: pageRoutes.servicesMain.root,
+        label: "Services main",
+        icon: FaServicestack,
+      },
+      {
+        href: pageRoutes.subServices.root,
+        label: "Sub Services",
+        icon: LuFolderOpen,
+      },
+    ],
+  },
+  {
+    title: "Global areas",
+    items: [
+      {
+        href: pageRoutes.branches.root,
+        label: "Branches",
+        icon: AiOutlineBranches,
+      },
+      {
+        href: pageRoutes.offices.root,
+        label: "Offices",
+        icon: LuBuilding,
       },
     ],
   },

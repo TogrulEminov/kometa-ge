@@ -87,7 +87,12 @@ function SortableRow(props: RowProps) {
 
   return (
     <RowContext.Provider value={{ setActivatorNodeRef, listeners, attributes }}>
-      <tr {...props} ref={setNodeRef} style={style} />
+      <tr
+        {...props}
+        ref={setNodeRef}
+        style={style}
+        className={`${props.className ?? ""} ${isDragging ? "admin-table-row--dragging" : ""}`.trim()}
+      />
     </RowContext.Provider>
   );
 }
@@ -102,11 +107,33 @@ function DragHandle() {
       ref={setActivatorNodeRef}
       {...listeners}
       {...attributes}
-      className="cursor-grab active:cursor-grabbing text-gray-400 hover:text-blue-600 p-1"
+      className="inline-flex size-8 cursor-grab items-center justify-center rounded-lg border border-slate-200 bg-slate-50 text-slate-400 transition-all hover:border-blue-200 hover:bg-blue-50 hover:text-blue-600 active:cursor-grabbing"
       aria-label="Sürüşdür"
     >
-      <LuGripVertical className="w-4 h-4" />
+      <LuGripVertical className="h-4 w-4" />
     </button>
+  );
+}
+
+function AdminTableHeader({
+  count,
+  canSort,
+}: {
+  count: number;
+  canSort: boolean;
+}) {
+  return (
+    <div className="admin-table__header">
+      <div className="flex items-center gap-3">
+        <span className="admin-table__title">Records</span>
+        <span className="admin-table__badge">{count}</span>
+      </div>
+      {canSort && (
+        <span className="admin-table__meta">
+          Drag rows to change order
+        </span>
+      )}
+    </div>
   );
 }
 
@@ -194,7 +221,7 @@ function AdminTable<T extends BaseTableItem>({
         title: "",
         key: "sort",
         dataIndex: "sort",
-        width: 48,
+        width: 56,
         render: () => <DragHandle />,
       });
     }
@@ -203,13 +230,16 @@ function AdminTable<T extends BaseTableItem>({
       title: "Actions",
       key: "actions",
       dataIndex: "actions",
-      width: onDelete ? 200 : 140,
+      width: onDelete ? 180 : 120,
       render: (_: unknown, record: T) => (
-        <div className="flex items-center  gap-2">
+        <div className="flex items-center gap-2">
           <UptadeButton link={updateLink(String(record.id))} />
           {onDelete && (
             <Popconfirm
-              title="Are you sure you want to delete this item?"
+              title="Delete this item?"
+              description="This action cannot be undone."
+              okText="Delete"
+              cancelText="Cancel"
               okButtonProps={{
                 danger: true,
                 loading: deletingId === record.id,
@@ -220,7 +250,7 @@ function AdminTable<T extends BaseTableItem>({
               <button
                 type="button"
                 disabled={deletingId === record.id}
-                className="flex items-center gap-2 rounded-lg bg-red-50 px-3 py-2 text-sm font-medium text-red-600 transition-colors hover:bg-red-100 disabled:cursor-not-allowed disabled:opacity-50"
+                className="inline-flex items-center gap-1.5 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm font-medium text-red-600 transition-all hover:border-red-300 hover:bg-red-100 disabled:cursor-not-allowed disabled:opacity-50"
                 aria-label="Sil"
               >
                 <LuTrash2 className="h-4 w-4" />
@@ -233,7 +263,15 @@ function AdminTable<T extends BaseTableItem>({
     });
 
     return mapped;
-  }, [canSort, columns, page, onDelete, deletingId, handleDelete]);
+  }, [
+    canSort,
+    columns,
+    page,
+    onDelete,
+    deletingId,
+    handleDelete,
+    updateLink,
+  ]);
 
   const onDragEnd = ({ active, over }: DragEndEvent) => {
     if (!over || active.id === over.id) return;
@@ -261,11 +299,13 @@ function AdminTable<T extends BaseTableItem>({
 
   if (isError) {
     return (
-      <div className="bg-red-50 border border-red-200 rounded-xl p-6 text-center">
-        <div className="text-red-600 font-semibold text-lg mb-2">
+      <div className="rounded-2xl border border-red-200 bg-red-50 p-8 text-center shadow-sm">
+        <div className="mb-2 text-lg font-semibold text-red-600">
           Xəta baş verdi
         </div>
-        <p className="text-red-500 text-sm">Veri yüklənərkən problem yarandı</p>
+        <p className="text-sm text-red-500">
+          Veri yüklənərkən problem yarandı
+        </p>
       </div>
     );
   }
@@ -281,7 +321,9 @@ function AdminTable<T extends BaseTableItem>({
       dataSource={dataSource}
       loading={isLoading || isExecuting || deletingId !== null}
       pagination={false}
-      scroll={{ x: true }}
+      scroll={{ x: "max-content" }}
+      size="middle"
+      rootClassName="admin-table__inner"
       components={
         canSort
           ? {
@@ -294,25 +336,30 @@ function AdminTable<T extends BaseTableItem>({
     />
   );
 
+  const content = (
+    <div className="admin-table">
+      <AdminTableHeader count={dataSource.length} canSort={canSort} />
+      {table}
+    </div>
+  );
+
   if (!canSort) {
-    return <div className="admin-table">{table}</div>;
+    return content;
   }
 
   return (
-    <div className="admin-table">
-      <DndContext
-        sensors={sensors}
-        collisionDetection={closestCenter}
-        onDragEnd={onDragEnd}
+    <DndContext
+      sensors={sensors}
+      collisionDetection={closestCenter}
+      onDragEnd={onDragEnd}
+    >
+      <SortableContext
+        items={dataSource.map((item) => String(item.id))}
+        strategy={verticalListSortingStrategy}
       >
-        <SortableContext
-          items={dataSource.map((item) => String(item.id))}
-          strategy={verticalListSortingStrategy}
-        >
-          {table}
-        </SortableContext>
-      </DndContext>
-    </div>
+        {content}
+      </SortableContext>
+    </DndContext>
   );
 }
 

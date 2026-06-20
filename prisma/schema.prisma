@@ -34,6 +34,10 @@ model User {
   subServices         SubServices[]
   enums               Enum[]
   directions          Directions[]
+  aboutMains          AboutMain[]
+  branches            Branch[]
+  photoGalleries      PhotoGallery[]
+  certificates        Certificates[]
 
   @@unique([email])
   @@map("user")
@@ -89,28 +93,38 @@ model Verification {
 }
 
 model File {
-  id              Int          @id @default(autoincrement())
-  fileKey         String       @unique
-  originalName    String
-  mimeType        String
-  fileSize        Int
-  publicUrl       String
-  published       Boolean      @default(false)
-  createdAt       DateTime     @default(now())
-  updatedAt       DateTime     @updatedAt
-  seo             Seo?         @relation(name: "seoImg")
-  categories      Categories?  @relation(name: "CategoriesImg")
-  heroInfo        HeroInfo?    @relation(name: "HeroImg")
-  aboutHome       AboutHome?   @relation(name: "AboutImg")
-  workProcess     WorkProcess? @relation(name: "WorkProcess")
-  youtube         Youtube?     @relation(name: "youtubeFile")
-  servicesImg     Services?    @relation(name: "servicesImage")
-  servicesGallery Services?    @relation(name: "servicesMainGallery", fields: [servicesId], references: [id])
-  servicesId      String?
-  subServicesImg  SubServices? @relation(name: "subServicesImage")
-  subServices     SubServices? @relation(name: "subServicesMainGallery", fields: [subServicesId], references: [id])
-  subServicesId   String?
-  directions      Directions?  @relation(name: "directionsImage")
+  id                 Int           @id @default(autoincrement())
+  fileKey            String        @unique
+  originalName       String
+  mimeType           String
+  fileSize           Int
+  publicUrl          String
+  published          Boolean       @default(false)
+  createdAt          DateTime      @default(now())
+  updatedAt          DateTime      @updatedAt
+  seo                Seo?          @relation(name: "seoImg")
+  categories         Categories?   @relation(name: "CategoriesImg")
+  heroInfo           HeroInfo?     @relation(name: "HeroImg")
+  aboutHome          AboutHome?    @relation(name: "AboutImg")
+  workProcess        WorkProcess?  @relation(name: "WorkProcess")
+  youtube            Youtube?      @relation(name: "youtubeFile")
+  servicesImg        Services?     @relation(name: "servicesImage")
+  servicesGallery    Services?     @relation(name: "servicesMainGallery", fields: [servicesId], references: [id])
+  servicesId         String?
+  subServicesImg     SubServices?  @relation(name: "subServicesImage")
+  subServices        SubServices?  @relation(name: "subServicesMainGallery", fields: [subServicesId], references: [id])
+  subServicesId      String?
+  directions         Directions?   @relation(name: "directionsImage")
+  features           Features?     @relation(name: "FeaturesImg")
+  aboutMainImg       AboutMain?    @relation(name: "AboutMainImg")
+  aboutMainGallery   AboutMain?    @relation(name: "AboutMainGallery", fields: [aboutMainId], references: [id])
+  aboutMainId        String?
+  photoGallerySingle PhotoGallery? @relation(name: "photoImage")
+  photoGalleryImages PhotoGallery? @relation(name: "photoGallery", fields: [photoGalleryId], references: [id])
+  photoGalleryId     String?
+  certificates       Certificates? @relation(name: "cretificatesImage")
+  certificatesImages Certificates? @relation(name: "certificatesGallery", fields: [certificatesId], references: [id])
+  certificatesId     String?
 
   @@index([createdAt, mimeType])
 }
@@ -299,15 +313,15 @@ model AboutHomeTranslations {
 }
 
 model Features {
-  id String @id @default(cuid())
-
+  id           String                 @id @default(cuid())
+  imageId      Int?                   @unique
+  imageUrl     File?                  @relation("FeaturesImg", fields: [imageId], references: [id], onDelete: SetNull)
   translations FeaturesTranslations[]
   user         User?                  @relation(fields: [userId], references: [id])
   userId       String?
   key          StaticKey              @unique @default(main)
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt    DateTime               @default(now())
+  updatedAt    DateTime               @updatedAt
 
   @@index([createdAt])
   @@index([userId])
@@ -478,10 +492,10 @@ model Services {
   user         User?                  @relation(fields: [userId], references: [id])
   userId       String?
   gallery      File[]                 @relation("servicesMainGallery")
-
-  createdAt   DateTime      @default(now())
-  updatedAt   DateTime      @updatedAt
-  subServices SubServices[]
+  subServices  SubServices[]
+  aboutMains   AboutMain[]
+  createdAt    DateTime               @default(now())
+  updatedAt    DateTime               @updatedAt
 
   @@index([isDeleted, orderNumber])
   @@index([userId, isDeleted])
@@ -625,4 +639,193 @@ model DirectionsTranslations {
   @@index([slug])
   @@index([title])
   @@index([seoId])
+}
+
+model AboutMain {
+  id           String                  @id @default(cuid())
+  imageId      Int?                    @unique
+  imageUrl     File?                   @relation("AboutMainImg", fields: [imageId], references: [id], onDelete: SetNull)
+  translations AboutMainTranslations[]
+  user         User?                   @relation(fields: [userId], references: [id])
+  userId       String?
+  key          StaticKey               @unique @default(main)
+  gallery      File[]                  @relation("AboutMainGallery")
+  branches     Branch[]
+  createdAt    DateTime                @default(now())
+  updatedAt    DateTime                @updatedAt
+  service      Services?               @relation(fields: [serviceId], references: [id])
+  serviceId    String?
+
+  @@index([createdAt])
+  @@index([userId])
+}
+
+model AboutMainTranslations {
+  id               String     @id @default(cuid())
+  title            String
+  hightlight       String?
+  subTitle         String?
+  shortDescription String?
+  description      Json?
+  locale           Locales    @default(en)
+  document         AboutMain? @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  documentId       String?
+  createdAt        DateTime   @default(now())
+  updatedAt        DateTime   @updatedAt
+
+  @@unique([documentId, locale])
+  @@index([locale])
+  @@index([documentId])
+  @@index([title])
+}
+
+enum BranchStatus {
+  ACTIVE
+  PLANNED
+}
+
+// branches
+model Branch {
+  id           String              @id @default(cuid())
+  isoCode      String              @unique
+  status       BranchStatus        @default(ACTIVE)
+  isDeleted    Boolean             @default(false)
+  createdAt    DateTime            @default(now())
+  updatedAt    DateTime            @updatedAt
+  translations BranchTranslation[]
+  user         User?               @relation(fields: [userId], references: [id])
+  userId       String?
+  orderNumber  Int?                @default(1)
+  offices      Office[]
+  aboutMain    AboutMain?          @relation(fields: [aboutMainId], references: [id])
+  aboutMainId  String?
+
+  @@index([isoCode])
+  @@index([status])
+  @@index([isDeleted])
+  @@index([createdAt])
+  @@index([userId])
+  @@index([isDeleted, status])
+}
+
+model BranchTranslation {
+  id          String   @id @default(cuid())
+  countryName String
+  locale      Locales  @default(en)
+  branch      Branch?  @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  documentId  String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@unique([documentId, locale])
+  @@index([locale])
+  @@index([documentId])
+  @@index([countryName])
+}
+
+enum BranchType {
+  office
+  warehouse
+}
+
+model Office {
+  id           String              @id @default(cuid())
+  isDeleted    Boolean             @default(false)
+  branch       Branch?             @relation(fields: [branchId], references: [id], onDelete: Cascade)
+  branchId     String?
+  type         BranchType?         @default(office)
+  createdAt    DateTime            @default(now())
+  updatedAt    DateTime            @updatedAt
+  orderNumber  Int?                @default(1)
+  translations OfficeTranslation[]
+
+  @@index([branchId])
+  @@index([isDeleted])
+  @@index([orderNumber])
+}
+
+model OfficeTranslation {
+  id         String   @id @default(cuid())
+  city       String
+  address    String?
+  locale     Locales
+  office     Office?  @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  documentId String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@unique([documentId, locale])
+  @@index([documentId])
+  @@index([locale])
+  @@index([city])
+}
+
+model PhotoGallery {
+  id           String                     @id @default(cuid())
+  isDeleted    Boolean                    @default(false)
+  imageId      Int?                       @unique
+  imageUrl     File?                      @relation("photoImage", fields: [imageId], references: [id], onDelete: SetNull)
+  orderNumber  Int                        @default(1)
+  translations PhotoGalleryTranslations[]
+  user         User?                      @relation(fields: [userId], references: [id])
+  userId       String?
+  gallery      File[]                     @relation("photoGallery")
+  createdAt    DateTime                   @default(now())
+  updatedAt    DateTime                   @updatedAt
+
+  @@index([isDeleted, orderNumber])
+  @@index([userId, isDeleted])
+}
+
+model PhotoGalleryTranslations {
+  id          String        @id @default(cuid())
+  title       String
+  slug        String?
+  description String?
+  locale      Locales       @default(en)
+  document    PhotoGallery? @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  documentId  String?
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  @@unique([documentId, locale])
+  @@index([locale])
+  @@index([documentId])
+  @@index([slug])
+  @@index([title])
+}
+
+model Certificates {
+  id           String                     @id @default(cuid())
+  isDeleted    Boolean                    @default(false)
+  imageId      Int?                       @unique
+  imageUrl     File?                      @relation("cretificatesImage", fields: [imageId], references: [id], onDelete: SetNull)
+  orderNumber  Int                        @default(1)
+  translations CertificatesTranslations[]
+  user         User?                      @relation(fields: [userId], references: [id])
+  userId       String?
+  gallery      File[]                     @relation("certificatesGallery")
+  createdAt    DateTime                   @default(now())
+  updatedAt    DateTime                   @updatedAt
+
+  @@index([isDeleted, orderNumber])
+  @@index([userId, isDeleted])
+}
+
+model CertificatesTranslations {
+  id          String        @id @default(cuid())
+  title       String
+  slug        String?
+  description String?
+  locale      Locales       @default(en)
+  document    Certificates? @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  documentId  String?
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  @@unique([documentId, locale])
+  @@index([locale])
+  @@index([documentId])
+  @@index([slug])
+  @@index([title])
 }

@@ -1,6 +1,7 @@
 "use server";
 
 import { z } from "zod";
+import type { Prisma } from "@/generated/prisma/client";
 import { authActionClient } from "@/lib/safe-action/SafeAction";
 import { db } from "@/lib/prisma";
 import { ORDERABLE_MODEL_MAP } from "@/lib/order/orderableModelMap";
@@ -22,7 +23,7 @@ type OrderableDelegate = {
   update: (args: {
     where: { id: string | number };
     data: { orderNumber: number };
-  }) => Promise<unknown>;
+  }) => Prisma.PrismaPromise<unknown>;
 };
 
 export const updateOrderAction = authActionClient

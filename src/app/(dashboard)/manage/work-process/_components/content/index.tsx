@@ -23,6 +23,7 @@ import { parseJSON } from "@/utils/parseJson";
 import { upsertProcessInfo } from "@/actions/client/process/process.controller";
 import { BiPlus } from "react-icons/bi";
 import JsonSingleBlock from "@/app/(dashboard)/_components/JsonSingle";
+import { JsonSectionList } from "@/app/(dashboard)/_components/JsonSectionBlock";
 interface Props {
   existingData: WorkProcessItem | undefined;
   refetch: () => void;
@@ -71,30 +72,10 @@ export default function Content({ existingData, refetch }: Props) {
           <FieldBlock>
             <FormInput label="Title" fieldName="title" />
             <FormInput label="Sub Title" fieldName="subTitle" />
-            {fields.map((field, index) => (
-              <JsonSingleBlock
-                key={field.id}
-                fieldName="description"
-                sectionIndex={index}
-                onRemove={() => remove(index)}
-                defaultConfig={{
-                  showDescription: true,
-                  richDescription: false,
-                  showItems: false,
-                }}
-              />
-            ))}
-
-            {fields.length < 6 && (
-              <button
-                type="button"
-                onClick={() => append({ title: "", description: "" })}
-                className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-blue-500 text-white cursor-pointer hover:bg-blue-600 transition-all text-sm font-semibold"
-              >
-                <BiPlus className="w-4 h-4" />
-                Add New Section
-              </button>
-            )}
+            <JsonSingleBlock
+              fieldName="description"
+              addLabel="Add New Section"
+            />
           </FieldBlock>
         </div>
 

@@ -94,6 +94,7 @@ export default function SocialCreateModal({
           <div>
             <FormInput
               label="Link"
+              type="url"
               placeholder="https://facebook.com/yourpage"
               fieldName="socialLink"
             />

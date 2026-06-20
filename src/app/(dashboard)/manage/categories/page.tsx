@@ -10,7 +10,7 @@ import AdminTable from "@/app/(dashboard)/_components/AdminTable";
 import { usePaginationQuery } from "@/hooks/usePaginationQuery";
 import { useServerQuery } from "@/hooks/useServerActions";
 import type { Category, CustomLocales } from "@/services/interface/type";
-import { pageRoutes } from "../../_type/constant";
+import { pageModels, pageRoutes } from "../../_type/constant";
 import { categories_content_list } from "../../_type/query-key";
 import SearchingArea from "../../_components/whiteBlockSearch";
 import WhiteBlockTitleArea from "../../_components/whiteBlockTitle";
@@ -70,7 +70,6 @@ export default function AdminCategoriesPage() {
           onDelete={handleDelete}
           columns={categoryColumns}
           page={pageRoutes.categories.root}
-          model={categories_content_list}
           dataItems={(data?.data ?? []) as unknown as Category[]}
           isError={isError}
           refetch={refetch}

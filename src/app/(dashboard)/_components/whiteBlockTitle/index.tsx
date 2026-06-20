@@ -25,7 +25,7 @@ const WhiteBlockTitleArea = ({ link, title, disabled = false }: Props) => {
           {title}
         </h3>
         <p className="text-sm text-gray-500 mt-1">Manage information</p>
-      </div>  
+      </div>
       {!disabled && (
         <div className="flex items-center gap-3">
           <button

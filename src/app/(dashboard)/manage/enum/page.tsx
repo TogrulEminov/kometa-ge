@@ -7,16 +7,16 @@ import SearchingArea from "../../_components/whiteBlockSearch";
 import { Spin } from "antd";
 import { usePaginationQuery } from "@/hooks/usePaginationQuery";
 import { useServerQuery } from "@/hooks/useServerActions";
-import { enum_list, section_content_list } from "../../_type/query-key";
+import { enum_list } from "../../_type/query-key";
 
-import { CustomLocales, Enum, SectionContent } from "@/services/interface/type";
+import { CustomLocales, Enum } from "@/services/interface/type";
 import { pageRoutes } from "../../_type/constant";
 import AdminTable from "../../_components/AdminTable";
 import { Columns } from "./Columns";
 import { useAction } from "next-safe-action/hooks";
 import { deleteEnum, getEnumData } from "@/actions/client/enum/enum.controller";
 
-export default function SectionContentAdminPage() {
+export default function ContentAdminPage() {
   const { queryParams, handleChange, locale } = usePaginationQuery();
   const { data, isLoading, isError, refetch } = useServerQuery(
     enum_list,
@@ -37,7 +37,7 @@ export default function SectionContentAdminPage() {
   const totalPages = Number(data?.paginations?.totalPages) || 1;
 
   console.log(data);
-  
+
   const { execute: deleteData } = useAction(deleteEnum, {});
   const handleDelete = async (id: string) => {
     await deleteData({ id: id as string });

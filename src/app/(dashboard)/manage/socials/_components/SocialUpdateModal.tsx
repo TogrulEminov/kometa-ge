@@ -3,7 +3,6 @@ import { useEffect } from "react";
 import { Modal, Spin, Space } from "antd";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-
 import { useAction } from "next-safe-action/hooks";
 import { useServerQuery } from "@/hooks/useServerActions";
 import {
@@ -87,6 +86,7 @@ export default function SocialUpdateModal({
       confirmLoading={isExecuting}
       width={650}
       okText="Update"
+      footer={null}
       cancelText="Cancel"
       okButtonProps={{
         size: "large",
@@ -125,6 +125,7 @@ export default function SocialUpdateModal({
             <div>
               <FormInput
                 label="Link"
+                type="url"
                 placeholder="https://facebook.com/yourpage"
                 fieldName="socialLink"
               />
@@ -168,8 +169,6 @@ export default function SocialUpdateModal({
                 </p>
               </div>
             )}
-
-             
 
             {/* Actions */}
             <div className="flex justify-end gap-3 pt-2">

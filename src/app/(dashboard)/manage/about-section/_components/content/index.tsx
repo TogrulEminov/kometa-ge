@@ -1,6 +1,6 @@
 "use client";
 import { useSearchParams } from "next/navigation";
-import { useFieldArray, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { AboutHomeType, CustomLocales } from "@/services/interface/type";
 import { useAction } from "next-safe-action/hooks";
@@ -10,19 +10,55 @@ import FormInput from "@/globalElement/form/FormInput";
 import NavigateBtn from "@/app/(dashboard)/_components/navigateBtn";
 import SubmitAdminButton from "@/app/(dashboard)/_components/submitBtn";
 import { parseJSON } from "@/utils/parseJson";
-import { BiHash, BiPlus } from "react-icons/bi";
+import { BiHash } from "react-icons/bi";
 import {
   UpsertAboutSectionInfoInput,
   upsertAboutSectionInfoSchema,
 } from "@/actions/client/aboutSection/aboutSection.schema";
 import { NewInfoJson } from "@/app/(dashboard)/_type/global.type";
 import { upsertAboutSectionInfo } from "@/actions/client/aboutSection/aboutSection.controller";
-import JsonSectionBlock from "@/app/(dashboard)/_components/JsonSectionBlock";
+import { JsonSectionList } from "@/app/(dashboard)/_components/JsonSectionBlock";
 import FormRichEditor from "@/globalElement/form/FormRichEditor";
 interface Props {
   existingData: AboutHomeType | undefined;
   refetch: () => void;
 }
+
+const ABOUT_SECTION_TYPE_OPTIONS = [
+  { value: "advantages", label: "Advantages" },
+  { value: "statistics", label: "Statistics" },
+];
+
+const ABOUT_SECTION_TYPE_CONFIG = {
+  advantages: {
+    showSectionDescription: false,
+    richSectionDescription: false,
+    showItems: true,
+    showItemDescription: false,
+  },
+  statistics: {
+    showSectionDescription: false,
+    showItems: true,
+    showItemDescription: false,
+    showSectionTitle: false,
+    extraItemFields: [
+      {
+        fieldKey: "itemValue",
+        label: "Value",
+        placeholder: "e.g. 500+",
+        type: "input" as const,
+        icon: <BiHash className="w-3 h-3" />,
+      },
+      {
+        fieldKey: "itemSuffix",
+        label: "Suffix",
+        placeholder: "e.g. + , K+",
+        type: "input" as const,
+      },
+    ],
+  },
+};
+
 export default function Content({ existingData, refetch }: Props) {
   const searchParams = useSearchParams();
   const locale = searchParams?.get("locale") ?? "en";
@@ -39,7 +75,7 @@ export default function Content({ existingData, refetch }: Props) {
     },
   });
 
-  const { formState, control } = generalFormInput;
+  const { formState } = generalFormInput;
   const { isDirty } = formState;
 
   const { execute, isExecuting } = useAction(upsertAboutSectionInfo, {
@@ -47,10 +83,6 @@ export default function Content({ existingData, refetch }: Props) {
       console.log(data);
       refetch();
     },
-  });
-  const { fields, append, remove } = useFieldArray({
-    control,
-    name: "features",
   });
   const onSubmit = async (data: UpsertAboutSectionInfoInput) => {
     await execute(data);
@@ -69,67 +101,12 @@ export default function Content({ existingData, refetch }: Props) {
             <FormInput label="Title" fieldName="title" />
             <FormInput label="Sub Title" fieldName="subTitle" />
             <FormRichEditor label="Description" fieldName="description" />
-            {fields.map((field, index) => (
-              <JsonSectionBlock
-                key={field.id}
-                fieldName="features"
-                sectionIndex={index}
-                onRemove={() => remove(index)}
-                typeOptions={[
-                  {
-                    value: "advantages",
-                    label: "Advantages",
-                  },
-                  {
-                    value: "statistics",
-                    label: "Statistics",
-                  },
-                ]}
-                typeConfig={{
-                  advantages: {
-                    showSectionDescription: false,
-                    richSectionDescription: false,
-                    showItems: true,
-                    showItemDescription: false,
-                  },
-
-                  statistics: {
-                    showSectionDescription: false,
-                    showItems: true,
-                    showItemDescription: false,
-                    showSectionTitle:false,
-                    extraItemFields: [
-                      {
-                        fieldKey: "itemValue",
-                        label: "Value",
-                        placeholder: "e.g. 500+",
-                        type: "input",
-                        icon: <BiHash className="w-3 h-3" />,
-                      },
-                      {
-                        fieldKey: "itemSuffix",
-                        label: "Suffix",
-                        placeholder: "e.g. + , K+",
-                        type: "input",
-                      },
-                    ],
-                  },
-                }}
-              />
-            ))}
-
-            {fields.length < 6 && (
-              <button
-                type="button"
-                onClick={() =>
-                  append({ title: "", description: "", items: [], type: "" })
-                }
-                className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-blue-500 text-white cursor-pointer hover:bg-blue-600 transition-all text-sm font-semibold"
-              >
-                <BiPlus className="w-4 h-4" />
-                Add New Section
-              </button>
-            )}
+            <JsonSectionList
+              fieldName="features"
+              typeOptions={ABOUT_SECTION_TYPE_OPTIONS}
+              typeConfig={ABOUT_SECTION_TYPE_CONFIG}
+              maxSections={6}
+            />
           </FieldBlock>
         </div>
 

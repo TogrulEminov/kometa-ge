@@ -8,7 +8,7 @@ import {
   getYoutube,
 } from "@/actions/client/youtube/youtube.controller";
 import { CustomLocales, YoutubeItems } from "@/services/interface/type";
-import { pageRoutes } from "../../_type/constant";
+import { pageModels, pageRoutes } from "../../_type/constant";
 import WhiteBlockTitleArea from "../../_components/whiteBlockTitle";
 import SearchingArea from "../../_components/whiteBlockSearch";
 import { Pagination, Spin } from "antd";
@@ -79,6 +79,7 @@ export default function AdminYoutubePage() {
           refetch={refetch}
           locale={locale}
           sortable={true}
+          model={pageModels.youtube}
           invalidateQueryKey={youtube_media_list}
           isLoading={isLoading}
           updateLink={(id) => pageRoutes.youtubeMedia.updateContent({ id })}

@@ -1,10 +1,13 @@
 export const ORDERABLE_MODELS = [
   "faq",
-  "work-process",
   "service",
-  "service-category",
+  "subServices",
   "directions",
   "youtube",
+  "branch",
+  "office",
+  "photoGallery",
+  "certificates",
 ] as const;
 
 export type OrderableModel = (typeof ORDERABLE_MODELS)[number];

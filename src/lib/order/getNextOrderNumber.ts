@@ -3,15 +3,19 @@ import { OrderableModel } from "./orderableModels";
 
 type OrderableAggregateDelegate = {
   aggregate: (args: {
+    where: { isDeleted: false };
     _max: { orderNumber: true };
   }) => Promise<{ _max: { orderNumber: number | null } }>;
 };
 
-export async function getNextOrderNumber(model: OrderableModel): Promise<number> {
+export async function getNextOrderNumber(
+  model: OrderableModel,
+): Promise<number> {
   const prismaModel = ORDERABLE_MODEL_MAP[
     model
   ] as unknown as OrderableAggregateDelegate;
   const result = await prismaModel.aggregate({
+    where: { isDeleted: false },
     _max: { orderNumber: true },
   });
 

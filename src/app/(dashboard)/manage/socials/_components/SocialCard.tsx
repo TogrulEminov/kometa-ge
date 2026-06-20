@@ -15,7 +15,7 @@ interface Props {
 }
 
 export default function SocialCard({ social, onEdit, onRefetch }: Props) {
-  const { success, error } = useMessageStore();
+  const { success } = useMessageStore();
 
   const { execute: deleteData, isExecuting: isDeleting } = useAction(
     deleteSocial,
@@ -36,16 +36,6 @@ export default function SocialCard({ social, onEdit, onRefetch }: Props) {
       className="group relative overflow-hidden border border-gray-200 hover:border-blue-400 hover:shadow-lg transition-all duration-300"
       styles={{ body: { padding: "20px" } }}
     >
-      {/* Status Badge - Top Right */}
-      <div className="absolute top-3 right-3">
-        <Tag
-          color={social.status === "published" ? "success" : "default"}
-          className="m-0"
-        >
-          {social.status === "published" ? "Aktiv" : "Deaktiv"}
-        </Tag>
-      </div>
-
       {/* Main Content */}
       <div className="flex flex-col items-center pt-2">
         {/* Icon */}

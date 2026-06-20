@@ -53,22 +53,26 @@ export const gallerySchema = z
   })
   .merge(idSchema);
 
-export const jsonItemSchema = z.object({
-  itemTitle: z.string().nullable().optional(),
-  itemDescription: z.string().nullable().optional(),
-  itemValue: z.string().nullable().optional(),
-  itemSuffix: z.string().nullable().optional(),
-  itemKey: z.enum(["mission", "vision"]).optional(),
-});
+export const jsonItemSchema = z
+  .object({
+    itemTitle: z.string().nullable().optional(),
+    itemDescription: z.string().nullable().optional(),
+  })
+  .passthrough();
 
-export const newInfoJsonSchema = z.object({
-  title: z.string(),
-  type: z.string().optional(),
-  description: z.string().nullable().optional(),
-  items: z.array(jsonItemSchema),
-});
+export const newInfoJsonSchema = z
+  .object({
+    title: z.string(),
+    type: z.string().optional(),
+    description: z.string().nullable().optional(),
+    items: z.array(jsonItemSchema),
+  })
+  .passthrough();
 
-export type JsonItem = z.infer<typeof jsonItemSchema>;
+export type JsonItem = {
+  itemTitle?: string | null;
+  itemDescription?: string | null;
+} & Record<string, unknown>;
 export type NewInfoJson = z.infer<typeof newInfoJsonSchema>;
 
 export type PaginationInput = z.infer<typeof paginationSchema>;
