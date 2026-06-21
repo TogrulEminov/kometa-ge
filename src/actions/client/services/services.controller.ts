@@ -15,6 +15,8 @@ import {
   imageSchema,
 } from "@/app/(dashboard)/_type/global.type";
 import { getNextOrderNumber } from "@/lib/order/getNextOrderNumber";
+import { revalidateAll } from "@/helper/revalidate";
+import { CACHE_TAG_GROUPS } from "@/actions/ui/cachetags";
 type GetProps = {
   page: number;
   query?: string;
@@ -115,12 +117,14 @@ export async function getServicesById({ locale, id }: GetByIDProps) {
         updatedAt: true,
         imageUrl: FILE_SELECT,
         gallery: FILE_SELECT,
+        iconUrl: true,
         translations: {
           where: { locale },
           select: {
             id: true,
             title: true,
             description: true,
+            shortDescription: true,
             slug: true,
             locale: true,
             seo: {
@@ -153,6 +157,8 @@ export const createServices = authActionClient
         metaDescription,
         metaKeywords,
         slug,
+        shortDescription,
+        iconUrl,
       } = parsedInput;
 
       const customSlug = slug || createSlug(title);
@@ -174,9 +180,11 @@ export const createServices = authActionClient
         await publishSingleFile({ newFileId: imageId }, prisma);
         const nextOrder = await getNextOrderNumber("service");
         await publishGalleryFiles({ newFileIds: galleryIds }, prisma);
+        await revalidateAll(CACHE_TAG_GROUPS.SERVICES);
         return prisma.services.create({
           data: {
             orderNumber: nextOrder,
+            iconUrl: iconUrl,
             gallery: {
               connect: galleryIds?.map((id) => ({ id: Number(id) })),
             },
@@ -187,6 +195,7 @@ export const createServices = authActionClient
                 locale: locale,
                 slug: customSlug,
                 description: JSON.stringify(description),
+                shortDescription: shortDescription,
                 seo: {
                   create: {
                     metaTitle: metaTitle,
@@ -222,15 +231,19 @@ export const uptadeServices = authActionClient
         metaKeywords,
         id,
         slug,
+        shortDescription,
+        iconUrl,
       } = parsedInput;
 
       const customSlug = slug || createSlug(title);
 
       const finalSlug = customSlug;
+      await revalidateAll(CACHE_TAG_GROUPS.SERVICES);
       return db.$transaction(async (prisma) => {
         const updatedData = await prisma.services.update({
           where: { id: id },
           data: {
+            iconUrl: iconUrl,
             translations: {
               upsert: {
                 where: {
@@ -241,6 +254,7 @@ export const uptadeServices = authActionClient
                   locale,
                   slug: finalSlug,
                   description: JSON.stringify(description),
+                  shortDescription: shortDescription,
                   seo: {
                     create: {
                       metaTitle: metaTitle,
@@ -255,6 +269,7 @@ export const uptadeServices = authActionClient
                   locale,
                   slug: finalSlug,
                   description: JSON.stringify(description),
+                  shortDescription: shortDescription,
                   seo: {
                     update: {
                       metaTitle: metaTitle,
@@ -301,6 +316,7 @@ export const uptadeServicesImage = authActionClient
           { newFileId: imageId, previousFileId: existingData.imageId },
           prisma,
         );
+        await revalidateAll(CACHE_TAG_GROUPS.SERVICES);
         return (prisma as typeof db).services.update({
           where: { id: id },
           data: {
@@ -351,6 +367,7 @@ export const updateServicesGallery = authActionClient
           },
           tx,
         );
+        await revalidateAll(CACHE_TAG_GROUPS.SERVICES);
         return (tx as typeof db).services.update({
           where: { id: id },
           data: {
@@ -375,6 +392,7 @@ export const deleteServices = authActionClient
       if (!existingData) {
         throw new Error("Service not found");
       }
+      await revalidateAll(CACHE_TAG_GROUPS.SERVICES);
       await db.services.update({
         where: { id: id },
         data: { isDeleted: true },

@@ -29,13 +29,13 @@ export default function CreatePage() {
       imageId: undefined,
       galleryIds: [],
       description: [],
+      iconUrl: null,
       locale: locale as CustomLocales,
     },
   });
 
   const { execute, isExecuting } = useAction(createServices, {
-    onSuccess: (data) => {
-      console.log("succes", data);
+    onSuccess: () => {
       router.push(pageRoutes.servicesMain.root);
       router.refresh();
       generalContentForm.reset();

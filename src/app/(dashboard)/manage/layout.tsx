@@ -19,7 +19,16 @@ export default async function AdminDashboarLayout({
     redirect("/auth/login");
   }
   return (
-    <DashboardProvider>
+    <DashboardProvider
+      initialSession={{
+        user: {
+          id: session.user.id,
+          name: session.user.name,
+          email: session.user.email,
+          role: session.user.role,
+        },
+      }}
+    >
       <Sidebar />
       <Header />
       <Suspense fallback={null}>

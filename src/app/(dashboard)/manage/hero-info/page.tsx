@@ -13,6 +13,7 @@ import {
 } from "../../_components/tabs/QueryTabs";
 import UpdateImageComponent from "./_components/image";
 import LanguageComponent from "../../_components/LanguageComponent";
+import UpdateVideoComponent from "./_components/video";
 export default function AboutPage() {
   const searchParams = useSearchParams();
   const locale = searchParams?.get("locale") ?? "en";
@@ -35,6 +36,7 @@ export default function AboutPage() {
         <TabsList variant="pills" className="mb-6">
           <TabsTitle value="info">Information</TabsTitle>
           <TabsTitle value="files">Image</TabsTitle>
+          <TabsTitle value="video">Video</TabsTitle>
         </TabsList>
         <div>
           <TabsBody value="info">
@@ -46,6 +48,12 @@ export default function AboutPage() {
           </TabsBody>
           <TabsBody value="files">
             <UpdateImageComponent
+              existingData={existingData as HeroInfo}
+              refetch={refetch}
+            />
+          </TabsBody>
+          <TabsBody value="video">
+            <UpdateVideoComponent
               existingData={existingData as HeroInfo}
               refetch={refetch}
             />

@@ -7,6 +7,7 @@ import SubmitAdminButton from "../../_components/submitBtn";
 import FormInput from "@/globalElement/form/FormInput";
 import FormSelect from "@/globalElement/form/FormSelect";
 import FormTextarea from "@/globalElement/form/FormTextarea";
+import FormRichEditor from "@/globalElement/form/FormRichEditor";
 interface Props {
   title?: string;
   isPending: boolean;
@@ -47,9 +48,8 @@ export default function CustomForm({ isPending, title }: Props) {
             fieldName="key"
           />
 
-          <FormTextarea
-            label="Short Description"
-            placeholder="Enter a short description"
+          <FormRichEditor
+            label="Description"
             fieldName="description"
           />
         </FieldBlock>

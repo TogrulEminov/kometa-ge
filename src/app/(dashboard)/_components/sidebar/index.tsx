@@ -3,18 +3,17 @@ import React, { useMemo } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { LuArrowRight } from "react-icons/lu";
-import { authClient } from "@/lib/auth/auth-client";
+import { useAdminSession } from "@/app/(dashboard)/manage/AdminSessionProvider";
 import { useToggleState } from "@/lib/rich-editor/zustand/functions";
 import { getMenuSectionsForRole } from "@/app/(dashboard)/_type/constant";
 
 const Sidebar = () => {
   const pathname = usePathname();
-  const { useSession } = authClient;
-  const { data: session } = useSession();
+  const { session } = useAdminSession();
   const isSidebarOpen = useToggleState("admin-sidebar");
 
   const menuSections = useMemo(
-    () => getMenuSectionsForRole(session?.user?.role),
+    () => getMenuSectionsForRole(session?.user?.role ?? undefined),
     [session?.user?.role],
   );
 

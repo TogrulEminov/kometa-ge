@@ -170,11 +170,9 @@ export default function Content({ existingData, refetch }: Props) {
       shortDescription: existingTr?.shortDescription,
       locale: locale as CustomLocales,
       branches: existingData?.branches?.map((branch) => branch.id) || [],
-      serviceId: existingData?.serviceId || undefined,
     },
   });
-  console.log(generalFormInput.watch("serviceId"));
-  
+
   const { formState } = generalFormInput;
   const { isDirty } = formState;
   const { execute, isExecuting } = useAction(upsetAbouMainInfo, {
@@ -192,28 +190,7 @@ export default function Content({ existingData, refetch }: Props) {
       locale: locale as CustomLocales,
     },
   });
-  const { data: servicesData, isLoading: servicesLoading } = useServerQuery(
-    services_main_list,
-    getServices,
-    {
-      params: {
-        page: 1,
-        pageSize: 100,
-        locale: locale as CustomLocales,
-      },
-    },
-  );
-  const enumServicesOptions = useDropdownOptions(
-    servicesData?.data?.flatMap((item) =>
-      item.translations.map((tr) => ({
-        ...tr,
-        value: item.id,
-        label: tr.title,
-      })),
-    ) || [],
-    "value",
-    "label",
-  );
+
   const enumOptions = useDropdownOptions(
     data?.data?.flatMap((item) =>
       item.translations.map((tr) => ({
@@ -246,13 +223,6 @@ export default function Content({ existingData, refetch }: Props) {
               options={enumOptions}
               loading={isLoading}
               mode="multiple"
-            />
-            <FormSelect
-              fieldName="serviceId"
-              label="Service"
-              placeholder="Select Service"
-              options={enumServicesOptions}
-              loading={servicesLoading}
             />
             <FormRichEditor
               label="Short description"

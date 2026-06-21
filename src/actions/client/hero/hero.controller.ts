@@ -4,10 +4,12 @@ import { db } from "@/lib/prisma";
 import { authActionClient } from "@/lib/safe-action/SafeAction";
 import { CustomLocales } from "@/services/interface/type";
 import { ZodError } from "zod";
-import { upsertHeroInfoSchema } from "./hero.schema";
+import { upsertHeroInfoSchema, videoSchema } from "./hero.schema";
 import { createSlug } from "@/utils/createSlug";
 import { imageSchema } from "@/app/(dashboard)/_type/global.type";
 import { publishSingleFile } from "@/helper/publishFiles";
+import { revalidateAll } from "@/helper/revalidate";
+import { CACHE_TAG_GROUPS } from "@/actions/ui/cachetags";
 type GetProps = {
   locale: CustomLocales;
 };
@@ -16,6 +18,21 @@ export async function getHeroInfo({ locale }: GetProps) {
     where: { key: "main" },
     include: {
       imageUrl: FILE_SELECT,
+      videoUrl: FILE_SELECT,
+      service: {
+        select: {
+          id: true,
+          translations: {
+            where: {
+              locale: locale,
+            },
+            select: {
+              id: true,
+              title: true,
+            },
+          },
+        },
+      },
       translations: {
         where: { locale },
       },
@@ -26,7 +43,7 @@ export const upsertHeroInfo = authActionClient
   .inputSchema(upsertHeroInfoSchema)
   .action(async ({ parsedInput }) => {
     try {
-      const { title, description, subTitle, locale } = parsedInput;
+      const { title, description, subTitle, serviceId, locale } = parsedInput;
 
       const custom_slug = createSlug(title);
 
@@ -36,10 +53,18 @@ export const upsertHeroInfo = authActionClient
           select: { id: true },
         });
 
+        const heroData = { serviceId: serviceId ?? null };
+
         if (!mainRecord) {
           mainRecord = await prisma.heroInfo.create({
-            data: { key: "main" },
-            select: { id: true },
+            data: { key: "main", ...heroData },
+            select: { id: true, serviceId: true },
+          });
+        } else {
+          mainRecord = await prisma.heroInfo.update({
+            where: { id: mainRecord.id },
+            data: heroData,
+            select: { id: true, serviceId: true },
           });
         }
 
@@ -72,6 +97,7 @@ export const upsertHeroInfo = authActionClient
           translations: [translation],
         };
       });
+      await revalidateAll(CACHE_TAG_GROUPS.HERO);
 
       return {
         success: true,
@@ -107,7 +133,6 @@ export const uptadeHeroImage = authActionClient
       if (!existingData) {
         throw new Error("Category not found");
       }
-
       const uptadeData = await db.$transaction(async (tx) => {
         await publishSingleFile(
           {
@@ -124,7 +149,52 @@ export const uptadeHeroImage = authActionClient
           },
         });
       });
+      await revalidateAll(CACHE_TAG_GROUPS.HERO);
 
+      return {
+        success: true,
+        code: "SUCCESS",
+        data: uptadeData,
+        message: "Uptade is successfully",
+      };
+    } catch (error) {
+      const errorMessage = (error as Error).message;
+      throw new Error(`Internal Server Error - ${errorMessage}`);
+    }
+  });
+export const uptadeHeroVideo = authActionClient
+  .inputSchema(videoSchema)
+  .action(async ({ parsedInput }) => {
+    try {
+      const { videoId } = parsedInput;
+      const existingData = await db.heroInfo.findFirst({
+        where: { key: "main" },
+        select: {
+          id: true,
+          videoId: true,
+        },
+      });
+      if (!existingData) {
+        throw new Error("Category not found");
+      }
+
+      const uptadeData = await db.$transaction(async (tx) => {
+        await publishSingleFile(
+          {
+            newFileId: videoId,
+            previousFileId: existingData.videoId,
+          },
+          tx,
+        );
+
+        return (tx as typeof db).heroInfo.update({
+          where: { key: "main" },
+          data: {
+            videoId: Number(videoId),
+          },
+        });
+      });
+      await revalidateAll(CACHE_TAG_GROUPS.HERO);
       return {
         success: true,
         code: "SUCCESS",

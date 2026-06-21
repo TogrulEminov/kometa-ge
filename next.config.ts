@@ -13,7 +13,7 @@ const nextConfig: NextConfig = {
   poweredByHeader: true,
   trailingSlash: false,
   compress: true,
-  // cacheComponents: true,
+  cacheComponents: true,
   productionBrowserSourceMaps: false,
 
   generateBuildId: async () => {

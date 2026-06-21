@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useCallback, useEffect, useState } from "react";
-import { useDropzone, type Accept } from "react-dropzone";
+import { useDropzone, type FileRejection } from "react-dropzone";
 import { useFormContext } from "react-hook-form";
 import {
   LuFile,
@@ -13,6 +13,7 @@ import {
 } from "react-icons/lu";
 import { useDeleteData, usePostData } from "@/hooks/useApi";
 import type { FileType } from "@/services/interface/type";
+import { parseAccept } from "@/utils/parseUploadAccept";
 import ReactFancyBox from "@/lib/fancybox";
 
 interface DefaultPreview {
@@ -34,11 +35,6 @@ type UploadPreview = {
   url?: string;
   mimeType?: string;
 };
-
-function parseAccept(acceptType: string): Accept | undefined {
-  if (!acceptType || acceptType === "*/*") return undefined;
-  return { [acceptType]: [] };
-}
 
 const SingleUploadImage: React.FC<SingleUploadProps> = ({
   fieldName,
@@ -107,8 +103,11 @@ const SingleUploadImage: React.FC<SingleUploadProps> = ({
               mimeType: data.mimeType ?? file.type,
             });
           },
-          onError: () => {
-            setError("An error occurred while uploading the file");
+          onError: (err) => {
+            setError(
+              (err as Error).message ||
+                "An error occurred while uploading the file",
+            );
             setFileId(null);
             setPreview(null);
           },
@@ -126,8 +125,20 @@ const SingleUploadImage: React.FC<SingleUploadProps> = ({
     [uploadSelectedFile],
   );
 
+  const onDropRejected = useCallback((fileRejections: FileRejection[]) => {
+      const rejection = fileRejections[0];
+      const message = rejection?.errors[0]?.message;
+
+      setError(
+        message
+          ? `File rejected: ${message}`
+          : "Unsupported file type. Please check the allowed format.",
+      );
+  }, []);
+
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
+    onDropRejected,
     multiple: false,
     disabled: isUploading || isRemoving,
     accept: parseAccept(acceptType),

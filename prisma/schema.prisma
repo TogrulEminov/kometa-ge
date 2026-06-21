@@ -125,6 +125,7 @@ model File {
   certificates       Certificates? @relation(name: "cretificatesImage")
   certificatesImages Certificates? @relation(name: "certificatesGallery", fields: [certificatesId], references: [id])
   certificatesId     String?
+  heroInfoVideo      HeroInfo?     @relation(name: "VideoImg")
 
   @@index([createdAt, mimeType])
 }
@@ -245,15 +246,21 @@ enum StaticKey {
 
 // hero
 model HeroInfo {
-  id           String                 @id @default(cuid())
-  imageId      Int?                   @unique
-  imageUrl     File?                  @relation("HeroImg", fields: [imageId], references: [id], onDelete: SetNull)
+  id       String @id @default(cuid())
+  imageId  Int?   @unique
+  imageUrl File?  @relation("HeroImg", fields: [imageId], references: [id], onDelete: SetNull)
+
+  videoId  Int?  @unique
+  videoUrl File? @relation("VideoImg", fields: [videoId], references: [id], onDelete: SetNull)
+
   createdAt    DateTime               @default(now())
   updatedAt    DateTime               @updatedAt
   translations HeroInfoTranslations[]
   user         User?                  @relation(fields: [userId], references: [id])
   userId       String?
   key          StaticKey              @unique @default(main)
+  service      Services?              @relation(fields: [serviceId], references: [id])
+  serviceId    String?
 
   @@index([createdAt])
   @@index([userId])
@@ -493,26 +500,27 @@ model Services {
   userId       String?
   gallery      File[]                 @relation("servicesMainGallery")
   subServices  SubServices[]
-  aboutMains   AboutMain[]
   createdAt    DateTime               @default(now())
   updatedAt    DateTime               @updatedAt
-
+  heroInfos    HeroInfo[]
+  iconUrl      String?
   @@index([isDeleted, orderNumber])
   @@index([userId, isDeleted])
 }
 
 model ServicesTranslations {
-  id          String    @id @default(cuid())
-  title       String
-  slug        String?
-  description Json?
-  locale      Locales   @default(en)
-  document    Services? @relation(fields: [documentId], references: [id], onDelete: Cascade)
-  documentId  String?
-  seo         Seo?      @relation(fields: [seoId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  seoId       String?
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  id               String    @id @default(cuid())
+  title            String
+  slug             String?
+  description      Json?
+  shortDescription String?
+  locale           Locales   @default(en)
+  document         Services? @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  documentId       String?
+  seo              Seo?      @relation(fields: [seoId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  seoId            String?
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
 
   @@unique([documentId, locale])
   @@index([locale])
@@ -653,8 +661,6 @@ model AboutMain {
   branches     Branch[]
   createdAt    DateTime                @default(now())
   updatedAt    DateTime                @updatedAt
-  service      Services?               @relation(fields: [serviceId], references: [id])
-  serviceId    String?
 
   @@index([createdAt])
   @@index([userId])

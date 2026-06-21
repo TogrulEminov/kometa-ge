@@ -2,22 +2,26 @@
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useState } from "react";
-import SessionQuerySync from "./SessionQuerySync";
+import AdminSessionProvider, {
+  type AdminSessionData,
+} from "./AdminSessionProvider";
 
 export default function DashboardProvider({
   children,
+  initialSession,
 }: Readonly<{
   children: React.ReactNode;
+  initialSession: AdminSessionData | null;
 }>) {
   const [queryClient] = useState(
     () =>
       new QueryClient({
         defaultOptions: {
           queries: {
-            staleTime: 1000,
+            staleTime: 30 * 1000,
             gcTime: 5 * 60 * 1000,
-            refetchOnWindowFocus: true,
-            refetchOnMount: "always",
+            refetchOnWindowFocus: false,
+            refetchOnMount: true,
             refetchOnReconnect: true,
             retry: 1,
           },
@@ -30,8 +34,12 @@ export default function DashboardProvider({
 
   return (
     <QueryClientProvider client={queryClient}>
-      <SessionQuerySync queryClient={queryClient} />
-      {children}
+      <AdminSessionProvider
+        initialSession={initialSession}
+        queryClient={queryClient}
+      >
+        {children}
+      </AdminSessionProvider>
     </QueryClientProvider>
   );
 }

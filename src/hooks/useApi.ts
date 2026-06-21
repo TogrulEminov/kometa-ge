@@ -47,7 +47,7 @@ const handleResponse = async <T>(response: Response): Promise<T> => {
       ? `${errorBody.message}\n${errorBody.errors
           .map((e) => `- ${e.field}: ${e.message}`)
           .join("\n")}`
-      : errorBody.message;
+      : (errorBody as { details?: string }).details || errorBody.message;
 
     throw new Error(errorMessage);
   }

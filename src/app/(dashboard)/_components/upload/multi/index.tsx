@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { useDropzone, type Accept } from "react-dropzone";
+import { useDropzone } from "react-dropzone";
 import { useFormContext } from "react-hook-form";
 import {
   LuCircleAlert,
@@ -11,6 +11,7 @@ import {
 } from "react-icons/lu";
 import { useDeleteData, usePostData } from "@/hooks/useApi";
 import type { FileType } from "@/services/interface/type";
+import { parseAccept } from "@/utils/parseUploadAccept";
 
 interface DefaultFile {
   id: number;
@@ -36,11 +37,6 @@ type UploadItem = {
   mimeType?: string;
   status: "uploading" | "done" | "error";
 };
-
-function parseAccept(acceptType: string): Accept | undefined {
-  if (!acceptType || acceptType === "*/*") return undefined;
-  return { [acceptType]: [] };
-}
 
 const MultiUploadImage: React.FC<MultiUploadProps> = ({
   fieldName,

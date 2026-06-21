@@ -8,7 +8,7 @@ import { useAction } from "next-safe-action/hooks";
 import WhiteBlockTitleArea from "../../_components/whiteBlockTitle";
 import { User } from "@/services/interface/type";
 import { deleteUser, getUsers } from "@/actions/auth/auth.action";
-import { authClient } from "@/lib/auth/auth-client";
+import { useAdminSession } from "@/app/(dashboard)/manage/AdminSessionProvider";
 import { useMessageStore } from "@/hooks/useMessageStore";
 import { useServerQuery } from "@/hooks/useServerActions";
 import UserFormModal from "./_components/UserFormModal";
@@ -19,7 +19,7 @@ const USERS_QUERY_KEY = "users-list";
 
 export default function UsersPage() {
   const { success, error } = useMessageStore();
-  const { data: session } = authClient.useSession();
+  const { session } = useAdminSession();
   const [modalOpen, setModalOpen] = useState(false);
   const [resetPasswordOpen, setResetPasswordOpen] = useState(false);
   const [editingUser, setEditingUser] = useState<User | null>(null);
@@ -27,7 +27,7 @@ export default function UsersPage() {
   const [deletingId, setDeletingId] = useState<string | null>(null);
 
   const currentUserId = session?.user?.id;
-  const currentUserRole = session?.user?.role;
+  const currentUserRole = session?.user?.role ?? undefined;
 
   const { data, isLoading, isError, refetch } = useServerQuery(
     USERS_QUERY_KEY,

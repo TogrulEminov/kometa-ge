@@ -12,5 +12,59 @@
     "title": "Məlumat tapılmadı",
     "description": "Burada hələ heç bir məlumat mövcud deyil. Tezliklə yenilənəcək!",
     "btn": "Ana səhifəyə qayıt"
+  },
+  "atoms": {
+    "buttons": {
+      "contact_us": "Contact us",
+      "read_more": "Read more"
+    },
+    "components": {
+      "tracking": {
+        "placeholder": "Enter your tracking id",
+        "button": "Track"
+      },
+      "callActionHero": {
+        "title": "Book Shipment",
+        "description":"Let us know how to get back to you.",
+        "form":{
+          "pickup_location":"Pickup location",
+          "delivery_location":"Delivery location",
+          "email_address":"Email address",
+          "telephone":"Telephone",
+          "message":"Message",
+          "submit":"Submit"
+        }
+      },
+      "header":{
+        "button":"Request a quote",
+        "pages":{
+          "about":"About",
+          "certificates":"Certificates",
+          "services":"Services",
+          "directions":"Directions",
+          "media":"Media",
+          "photoGallery":"Photo Gallery",
+          "videoGallery":"Video Gallery",
+          "contact":"Contact"
+        }
+      },
+      "footer":{
+        "main_links_title":"Main Links",
+        "services_title":"Services",
+        "directions_title":"Directions",
+        "contact_title":"Contact",
+        "site_by":"Site by",
+        "main_links":{
+          "about":"About Us",
+          "services":"Services",
+          "directions":"Directions",
+          "photo_gallery":"Photo Gallery",
+          "video_gallery":"Video Gallery",
+          "contact":"Contact",
+          "privacy_policy":"Privacy Policy",
+          "terms_of_service":"Terms of Service"
+        }
+      }
+    }
   }
 }

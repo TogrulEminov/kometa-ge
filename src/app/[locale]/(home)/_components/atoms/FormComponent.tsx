@@ -1,88 +1,89 @@
 "use client";
-import { Modal } from "antd";
-import { useTranslations } from "next-intl";
-import { useForm } from "react-hook-form";
 import {
   CallActionInputType,
   callActionSchema,
 } from "@/actions/ui/form.schema";
-import { zodResolver } from "@hookform/resolvers/zod";
-import FormWrapper from "@/globalElement/form/FormWrapper";
-import type { CSSProperties } from "react";
-import FormSelect from "@/globalElement/form/FormSelect";
-import { COUNTRY_SELECT_OPTIONS } from "@/utils/countryOptions";
 import FormInput from "@/globalElement/form/FormInput";
 import FormPhone from "@/globalElement/form/FormPhone";
+import FormSelect from "@/globalElement/form/FormSelect";
 import FormTextarea from "@/globalElement/form/FormTextarea";
-
-interface ShipmentModalProps {
-  open: boolean;
-  onClose?: () => void;
-}
+import FormWrapper from "@/globalElement/form/FormWrapper";
+import { COUNTRY_SELECT_OPTIONS } from "@/utils/countryOptions";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useTranslations } from "next-intl";
+import { useForm } from "react-hook-form";
+import type { CSSProperties } from "react";
 
 const noFocusStyle: CSSProperties = {
   outline: "none",
   boxShadow: "none",
 };
 
-const fieldBaseStyle: CSSProperties = {
-  backgroundColor: "#f3f4f6",
-  border: "none",
-  borderRadius: "12px",
-  ...noFocusStyle,
-};
-
 const selectStyles = {
   root: {
-    ...fieldBaseStyle,
-    height: "48px",
-    color: "#1c1e29",
+    backgroundColor: "transparent",
+    border: "none",
+    borderBottom: "1px solid white",
+    borderRadius: 0,
+    color: "white",
+    ...noFocusStyle,
   },
   placeholder: {
-    color: "#9ca3af",
+    color: "rgba(255, 255, 255, 0.5)",
   },
 };
 
 const inputStyles = {
   root: {
-    ...fieldBaseStyle,
+    backgroundColor: "transparent",
+    border: "none",
+    borderBottom: "1px solid white",
+    borderRadius: 0,
+    ...noFocusStyle,
   },
   input: {
-    ...fieldBaseStyle,
-    color: "#1c1e29",
+    backgroundColor: "transparent",
+    border: "none",
+    color: "white",
     fontSize: "14px",
     fontWeight: 400,
-    padding: "12px 16px",
-    height: "48px",
+    padding: "0 0 10px 0",
     width: "100%",
+    ...noFocusStyle,
   },
 };
 
 const inputClassNames = {
-  input: "[&::placeholder]:text-gray-400!",
+  input: "[&::placeholder]:text-white/50!",
 };
 
 const textareaStyles = {
   root: {
-    ...fieldBaseStyle,
+    backgroundColor: "transparent",
+    border: "none",
+    borderBottom: "1px solid white",
+    borderRadius: 0,
+    ...noFocusStyle,
   },
   textarea: {
-    ...fieldBaseStyle,
-    color: "#1c1e29",
+    backgroundColor: "transparent",
+    border: "none",
+    color: "white",
     fontSize: "14px",
     fontWeight: 400,
-    padding: "12px 16px",
+    padding: "0 0 10px 0",
     width: "100%",
     minHeight: "100px",
     resize: "none" as const,
+    ...noFocusStyle,
   },
 };
 
 const textareaClassNames = {
-  textarea: "[&::placeholder]:text-gray-400!",
+  textarea: "[&::placeholder]:text-white/50!",
 };
 
-export default function ShipmentModal({ open, onClose }: ShipmentModalProps) {
+export default function FormComponent() {
   const t = useTranslations("atoms.components.callActionHero");
 
   const generalForm = useForm<CallActionInputType>({
@@ -96,40 +97,16 @@ export default function ShipmentModal({ open, onClose }: ShipmentModalProps) {
     },
   });
 
-  const onSubmit = async (data: CallActionInputType) => {
+  const onSubmit = (data: CallActionInputType) => {
     console.log(data);
   };
-
   return (
-    <Modal
-      open={open}
-      onCancel={onClose}
-      footer={null}
-      centered
-      width={800}
-      destroyOnHidden
-      zIndex={1300}
-      style={{ top: 0 }}
-      styles={{
-        mask: {
-          backdropFilter: "blur(10px)",
-          backgroundColor: "rgba(0,0,0,0.5)",
-          zIndex: 1300,
-        },
-        wrapper: {
-          zIndex: 1300,
-        },
-      }}
-    >
-      <div className="mb-5">
-        <strong className="text-3xl sm:text-4xl font-black uppercase text-[#1c1e29]">
-          {t("title")}
-        </strong>
-        <p className="mt-2 text-sm text-gray-500">{t("description")}</p>
-      </div>
-
-      <div className="h-px w-full bg-gray-200 mb-5" />
-
+    <div className="bg-[#B11226] rounded-2xl  min-h-100 p-7 lg:-mt-68 text-white">
+      <strong className="text-2xl block font-bold uppercase mb-1">
+        {t("title")}
+      </strong>
+      <p className="text-white/70 text-sm mb-4">{t("description")}</p>
+      <hr className="border-white/20 mb-5" />
       <FormWrapper
         methods={generalForm}
         schema={callActionSchema}
@@ -183,12 +160,12 @@ export default function ShipmentModal({ open, onClose }: ShipmentModalProps) {
         <div className="flex items-end col-span-2">
           <button
             type="submit"
-            className="w-full cursor-pointer bg-[#B11226] hover:bg-[#8f0e1e] text-white font-semibold uppercase tracking-wider text-sm py-3 rounded-xl transition-colors duration-200"
+            className="w-full cursor-pointer bg-white text-[#B11226] hover:bg-gray-100 font-semibold uppercase tracking-wider text-sm py-3 rounded-lg transition-colors duration-200"
           >
             {t("form.submit")}
           </button>
         </div>
       </FormWrapper>
-    </Modal>
+    </div>
   );
 }

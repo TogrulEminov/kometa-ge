@@ -11,7 +11,6 @@ export const upsertAboutMainInfoSchema = z
     hightlight: z.string().nullable().optional(),
     shortDescription: z.string().nullable().optional(),
     branches: z.array(z.string()).nullable().optional(),
-    serviceId: z.string().nullable().optional(),
     description: z.array(newInfoJsonSchema).nullable().optional(),
   })
   .merge(localeSchema)

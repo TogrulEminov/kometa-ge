@@ -19,20 +19,7 @@ export async function getAboutMainInfo({ locale }: GetProps) {
     include: {
       imageUrl: FILE_SELECT,
       gallery: FILE_SELECT,
-      service: {
-        select: {
-          id: true,
-          translations: {
-            where: {
-              locale: locale,
-            },
-            select: {
-              id: true,
-              title: true,
-            },
-          },
-        },
-      },
+
       branches: {
         where: {
           isDeleted: false,
@@ -61,7 +48,6 @@ export const upsetAbouMainInfo = authActionClient
         hightlight,
         shortDescription,
         branches,
-        serviceId,
       } = parsedInput;
 
       return db.$transaction(async (prisma) => {
@@ -73,10 +59,7 @@ export const upsetAbouMainInfo = authActionClient
         if (!mainRecord) {
           mainRecord = await prisma.aboutMain.create({
             data: {
-              key: "main",
-              ...(serviceId && {
-                serviceId: serviceId,
-              }),
+              key: "main", 
               ...(branches?.length && {
                 branches: {
                   connect: branches.map((branch) => ({ id: branch })),
@@ -89,9 +72,6 @@ export const upsetAbouMainInfo = authActionClient
           await prisma.aboutMain.update({
             where: { id: mainRecord.id },
             data: {
-              ...(serviceId && {
-                serviceId: serviceId,
-              }),
               branches: {
                 set: branches.map((branch) => ({ id: branch })),
               },

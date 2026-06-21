@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useMemo } from "react";
 import { BiPlus } from "react-icons/bi";
 import { LuArrowRight, LuLayoutDashboard } from "react-icons/lu";
-import { authClient } from "@/lib/auth/auth-client";
+import { useAdminSession } from "@/app/(dashboard)/manage/AdminSessionProvider";
 import {
   getCreateLinkForRoute,
   getMenuSectionsForRole,
@@ -12,10 +12,10 @@ import {
 import WhiteBlockTitleArea from "../../_components/whiteBlockTitle";
 
 export default function DashboardPage() {
-  const { data: session, isPending } = authClient.useSession();
+  const { session, isPending } = useAdminSession();
 
   const menuSections = useMemo(
-    () => getMenuSectionsForRole(session?.user?.role),
+    () => getMenuSectionsForRole(session?.user?.role ?? undefined),
     [session?.user?.role],
   );
 

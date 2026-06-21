@@ -34,7 +34,7 @@ const ReactFancyBox = ({
       NativeFancybox.unbind(container);
       NativeFancybox.close();
     };
-  }, [delegate]);
+  }, [delegate, options]);
 
   return (
     <div ref={containerRef} className={className}>

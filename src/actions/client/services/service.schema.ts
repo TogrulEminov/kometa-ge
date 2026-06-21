@@ -4,7 +4,9 @@ export const createServiceSchema = z
   .object({
     title: z.string().min(1, "Title is required"),
     slug: z.string().nullable().optional(),
+    shortDescription: z.string().nullable().optional(),
     description: z.array(newInfoJsonSchema).optional(),
+    iconUrl: z.string().nullable().optional(),
   })
   .merge(localeSchema)
   .merge(imageSchema)

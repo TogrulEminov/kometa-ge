@@ -59,6 +59,7 @@ export default function CategriesUptadeContent() {
       metaDescription: seo?.metaDescription || "",
       metaKeywords: seo?.metaKeywords || "",
       locale: locale as CustomLocales,
+      iconUrl: existingData?.iconUrl || null,
     },
   });
   const { execute, isExecuting } = useAction(uptadeServices, {

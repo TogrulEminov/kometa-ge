@@ -29,10 +29,31 @@ export type StaticKey = (typeof StaticKey)[keyof typeof StaticKey];
 
 export const SectionKey = {
   services: "services",
+  directions: "directions",
+  process: "process",
+  blog: "blog",
   media: "media",
+  branches: "branches",
+  testimonials: "testimonials",
+  faq: "faq",
+  employee: "employee",
   contact: "contact",
 } as const;
 export type SectionKey = (typeof SectionKey)[keyof typeof SectionKey];
+
+export const CategoryKey = {
+  home: "home",
+  directions: "directions",
+  services: "services",
+  blog: "blog",
+  about: "about",
+  certificates: "certificates",
+  videoGallery: "videoGallery",
+  photoGallery: "photoGallery",
+  media: "media",
+  contact: "contact",
+} as const;
+export type CategoryKey = (typeof CategoryKey)[keyof typeof CategoryKey];
 
 export const SocialMediaKey = {
   facebook: "facebook",
@@ -229,6 +250,10 @@ export interface HeroInfo {
   translations: HeroInfoTranslation[];
   createdAt: Date | string;
   updatedAt: Date | string;
+  serviceId: string | null;
+  service: ServicesType | null;
+  videoId: number | null;
+  videoUrl: FileType | null;
 }
 // youtube
 interface YoutubeTranslations {
@@ -412,14 +437,13 @@ export type AboutMainType = {
   gallery?: FileType[] | null;
   translations: AboutMainTranslationType[];
   branches: BranchItem[];
-  serviceId: string | null;
-  service: ServicesType | null;
 };
 
 export type ServicesTranslationType = {
   id: string;
   title: string;
   slug: string | null;
+  shortDescription: string | null;
   description: NewInfoJson[] | null;
   locale: CustomLocales;
   documentId: string | null;
@@ -442,6 +466,7 @@ export type ServicesType = {
   user?: User | null;
   translations: ServicesTranslationType[];
   subServices: SubServicesType[];
+  iconUrl?: string | null;
 };
 
 export type SubServicesTranslationType = {

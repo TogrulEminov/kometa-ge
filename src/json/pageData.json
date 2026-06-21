@@ -2,82 +2,81 @@
   "categories": [
     {
       "value": "home",
-      "label": "Ana səhifə"
+      "label": "Home"
     },
     {
       "value": "directions",
-      "label": "İstiqamətlər"
+      "label": "Directions"
     },
     {
       "value": "services",
-      "label": "Xidmətlərimiz"
+      "label": "Services"
     },
     {
       "value": "blog",
-      "label": "Bloqlar"
+      "label": "Blogs"
     },
     {
       "value": "about",
-      "label": "Haqqımızda"
+      "label": "About Us"
     },
     {
       "value": "certificates",
-      "label": "Sertifikatlar"
+      "label": "Certificates"
     },
     {
       "value": "videoGallery",
-      "label": "Video qalereya"
+      "label": "Video Gallery"
     },
     {
       "value": "photoGallery",
-      "label": "Foto qalereya"
+      "label": "Photo Gallery"
     },
     {
       "value": "media",
-      "label": "Media səhifəsi"
+      "label": "Media Page"
     },
     {
       "value": "contact",
-      "label": "Əlaqə"
+      "label": "Contact"
     }
   ],
   "sectionsContent": [
     {
       "value": "services",
-      "label": "Xidmətlər bölümü"
+      "label": "Services Section"
     },
     {
       "value": "directions",
-      "label": "İstiqamətlər bölümü"
+      "label": "Directions Section"
     },
     {
       "value": "process",
-      "label": "Prosess bölümü"
+      "label": "Process Section"
     },
-
     {
       "value": "blog",
-      "label": "Bloqlar bölümü"
+      "label": "Blog Section"
     },
     {
       "value": "media",
-      "label": "Media bölümü"
+      "label": "Media Section"
     },
     {
       "value": "branches",
-      "label": "Filiallar bölümü"
+      "label": "Branches Section"
     },
     {
       "value": "testimonials",
-      "label": "Rəy bölümü"
+      "label": "Testimonials Section"
     },
     {
-      "value": "fag",
-      "label": "Suallar bölümü"
+      "value": "faq",
+      "label": "FAQ Section"
     },
     {
       "value": "employee",
-      "label": "Əməkdaşlar bölümü"
+      "label": "Employees Section"
     }
   ]
 }

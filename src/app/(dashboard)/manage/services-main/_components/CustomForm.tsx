@@ -1,12 +1,14 @@
 import FieldBlock from "../../../_components/contentBlock";
 import SingleUploadImage from "../../../_components/upload/single";
 import NavigateBtn from "../../../_components/navigateBtn";
-import { useFormContext } from "react-hook-form";
+import { useFormContext, useWatch } from "react-hook-form";
 import SubmitAdminButton from "../../../_components/submitBtn";
 import FormInput from "@/globalElement/form/FormInput";
 import SeoContent from "@/app/(dashboard)/_components/SeoContent";
 import MultiUploadImage from "@/app/(dashboard)/_components/upload/multi";
 import { JsonSectionList } from "@/app/(dashboard)/_components/JsonSectionBlock";
+import FormTextarea from "@/globalElement/form/FormTextarea";
+import { DynamicIcon } from "@/utils/DynamicIcon";
 interface Props {
   isPending: boolean;
   title?: string | null;
@@ -119,7 +121,7 @@ const SECTION_TYPE_CONFIG = {
       },
     ],
   },
- 
+
   process: {
     showSectionDescription: true,
     richSectionDescription: false,
@@ -134,7 +136,6 @@ const SECTION_TYPE_CONFIG = {
       },
     ],
   },
- 
 };
 
 export default function CustomForm({
@@ -143,7 +144,8 @@ export default function CustomForm({
   isImage = false,
 }: Props) {
   const generalContentForm = useFormContext();
-
+  const { control } = generalContentForm;
+  const watchedIconUrl = useWatch({ control, name: "iconUrl" });
   return (
     <>
       <div className={"flex flex-col space-y-5"}>
@@ -159,6 +161,22 @@ export default function CustomForm({
             }}
           />
           <FormInput label="Slug" placeholder="Enter slug" fieldName="slug" />
+          <FormInput
+            label="Icon URL"
+            placeholder="Enter icon URL"
+            fieldName="iconUrl"
+          />
+
+          {watchedIconUrl && (
+            <div className="flex items-center justify-center gap-2 size-20 bg-blue-500 text-white rounded-sm">
+              <DynamicIcon iconName={watchedIconUrl} className="size-10" />
+            </div>
+          )}
+          <FormTextarea
+            label="Short Description"
+            placeholder="Enter short description"
+            fieldName="shortDescription"
+          />
           <JsonSectionList
             fieldName="description"
             typeOptions={[...SECTION_TYPE_OPTIONS]}
