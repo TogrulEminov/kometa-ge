@@ -10,7 +10,7 @@ import {
   purgeAllSoftDeleted,
   purgeSoftDeletedByModule,
   runFullCleanup,
-} from "@/services/cleanup.service";
+} from "@/actions/client/delete/cleanup.service";
 
 const moduleKeySchema = z.object({
   moduleKey: z.string().refine(isCleanupModuleKey, "Invalid cleanup module"),

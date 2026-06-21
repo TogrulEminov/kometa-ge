@@ -3,7 +3,7 @@
 import { headers } from "next/headers";
 import { auth } from "@/lib/auth/auth";
 import { Role } from "@/services/interface/type";
-import { getCleanupStats, getUnpublishedFiles } from "@/services/cleanup.service";
+import { getCleanupStats, getUnpublishedFiles } from "@/actions/client/delete/cleanup.service";
 
 async function assertAdmin() {
   const session = await auth.api.getSession({

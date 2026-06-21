@@ -8,7 +8,7 @@ import { useAction } from "next-safe-action/hooks";
 import { useMessageStore } from "@/hooks/useMessageStore";
 import { purgeAllDeletedAction, purgeModuleDeletedAction } from "@/actions/cleanup/cleanup.action";
 import type { CleanupModuleKey } from "@/lib/cleanup/cleanup.types";
-import type { CleanupStats } from "@/services/cleanup.service";
+import type { CleanupStats } from "@/actions/client/delete/cleanup.service";
 
 interface Props {
   stats?: CleanupStats;

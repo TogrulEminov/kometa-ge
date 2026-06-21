@@ -1,4 +1,4 @@
-import { runFullCleanup } from "@/services/cleanup.service";
+import { runFullCleanup } from "@/actions/client/delete/cleanup.service";
 import { NextRequest, NextResponse } from "next/server";
 
 function isAuthorized(request: NextRequest): boolean {

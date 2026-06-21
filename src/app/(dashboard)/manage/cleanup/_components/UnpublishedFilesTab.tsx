@@ -12,7 +12,7 @@ import {
   deleteUnpublishedFilesAction,
 } from "@/actions/cleanup/cleanup.action";
 import { getUnpublishedFilesQuery } from "@/actions/cleanup/cleanup.queries";
-import type { UnpublishedFileItem } from "@/services/cleanup.service";
+import type { UnpublishedFileItem } from "@/actions/client/delete/cleanup.service";
 import { getForCards } from "@/utils/getFullimageUrl";
 import ReactFancyBox from "@/lib/fancybox";
 

@@ -599,3 +599,7 @@ export type CertificatesType = {
   user?: User | null;
   translations: PhotoGalleryTranslationType[];
 };
+
+export type SectionLocale = {
+  locale: CustomLocales;
+};

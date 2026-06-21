@@ -2,4 +2,4 @@ export {
   countDeletedItems,
   purgeDeletedItems,
   type PurgeDeletedResult,
-} from "@/services/cleanup.service";
+} from "@/actions/client/delete/cleanup.service";
