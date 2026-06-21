@@ -8,6 +8,7 @@ import {
   LuFolderOpen,
   LuRoute,
   LuBuilding,
+  LuTrash2,
 } from "react-icons/lu";
 import { Role } from "@/services/interface/type";
 import { GiKnightBanner } from "react-icons/gi";
@@ -35,6 +36,9 @@ export interface MenuSection {
 export const DASHBOARD_ROLES: DashboardRole[] = [Role.ADMIN, Role.MODERATOR];
 
 export const pageRoutes = {
+  dashboard: {
+    root: "/manage/dashboard",
+  },
   categories: {
     root: "/manage/categories",
     create: "/manage/categories/create?locale=en",
@@ -187,6 +191,10 @@ export const pageRoutes = {
     root: "/manage/socials",
   },
 
+  cleanup: {
+    root: "/manage/cleanup",
+  },
+
   users: "/manage/users",
 };
 
@@ -317,18 +325,24 @@ export const menuSections: MenuSection[] = [
       },
     ],
   },
-  // {
-  //   title: "System",
-  //   roles: [Role.ADMIN],
-  //   items: [
-  //     {
-  //       href: pageRoutes.users,
-  //       label: "Users",
-  //       icon: LuUsers,
-  //       roles: [Role.ADMIN],
-  //     },
-  //   ],
-  // },
+  {
+    title: "System",
+    roles: [Role.ADMIN],
+    items: [
+      {
+        href: pageRoutes.users,
+        label: "Users",
+        icon: LuUsers,
+        roles: [Role.ADMIN],
+      },
+      {
+        href: pageRoutes.cleanup.root,
+        label: "System cleanup",
+        icon: LuTrash2,
+        roles: [Role.ADMIN],
+      },
+    ],
+  },
 ];
 
 function canAccess(
@@ -354,4 +368,20 @@ export function getMenuSectionsForRole(userRole?: string): MenuSection[] {
       items: section.items.filter((item) => canAccess(item.roles, userRole)),
     }))
     .filter((section) => section.items.length > 0);
+}
+
+export function getCreateLinkForRoute(root: string): string | undefined {
+  for (const route of Object.values(pageRoutes)) {
+    if (
+      typeof route === "object" &&
+      "root" in route &&
+      route.root === root &&
+      "create" in route &&
+      typeof route.create === "string"
+    ) {
+      return route.create;
+    }
+  }
+
+  return undefined;
 }

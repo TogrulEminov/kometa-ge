@@ -8,6 +8,8 @@ import {
 import { headers } from "next/headers";
 import {
   loginValidation,
+  resetOwnPasswordSchema,
+  resetUserPasswordSchema,
   updateUserPasssword,
   upsertUserSchema,
   userIdSchema,
@@ -48,10 +50,6 @@ export const loginAdminPanel = actionClient
 //   });
 export const logoutUser = actionClient.action(async () => {
   await auth.api.signOut({ headers: await headers() });
-  // Revoke all other sessions
-  await auth.api.revokeSessions({
-    headers: await headers(),
-  });
 });
 export const getUsers = async () => {
   return db.user.findMany();
@@ -77,9 +75,8 @@ export const createUserAction = superAdminAction
       headers: await headers(),
       body: {
         email: email,
-        password: password,
+        password: password!,
         name: name,
-
         data: { role: role },
       },
     });
@@ -89,6 +86,14 @@ export const uptadeUser = superAdminAction
   .inputSchema(upsertUserSchema)
   .action(async ({ parsedInput }) => {
     const { email, name, role, id, password } = parsedInput;
+
+    if (!id) {
+      return {
+        success: false,
+        code: "INVALID_INPUT",
+        error: "User id is required",
+      };
+    }
 
     const existingUser = await db.user.findUnique({
       where: { id },
@@ -102,13 +107,7 @@ export const uptadeUser = superAdminAction
       };
     }
 
-    if (password) {
-      await auth.api.setUserPassword({
-        headers: await headers(),
-        body: { userId: id, newPassword: password },
-      });
-    }
-    return auth.api.adminUpdateUser({
+    const updatedUser = await auth.api.adminUpdateUser({
       headers: await headers(),
       body: {
         userId: id,
@@ -119,7 +118,46 @@ export const uptadeUser = superAdminAction
         },
       },
     });
+
+    if (password && password.length >= 8) {
+      await auth.api.setUserPassword({
+        headers: await headers(),
+        body: {
+          userId: id,
+          newPassword: password,
+        },
+      });
+    }
+
+    return updatedUser;
   });
+
+export const resetUserPassword = superAdminAction
+  .inputSchema(resetUserPasswordSchema)
+  .action(async ({ parsedInput }) => {
+    const { id, password } = parsedInput;
+
+    const existingUser = await db.user.findUnique({
+      where: { id },
+    });
+
+    if (!existingUser) {
+      return {
+        success: false,
+        code: "NOT_FOUND",
+        error: "USER not found",
+      };
+    }
+
+    return auth.api.setUserPassword({
+      headers: await headers(),
+      body: {
+        userId: id,
+        newPassword: password,
+      },
+    });
+  });
+
 export const deleteUser = superAdminAction
   .inputSchema(userIdSchema)
   .action(async ({ parsedInput, ctx }) => {
@@ -180,6 +218,32 @@ export async function getUsersById({ id }: GetByIDProps) {
     };
   }
 }
+
+export const resetOwnPasswordAction = authActionClient
+  .inputSchema(resetOwnPasswordSchema)
+  .action(async ({ parsedInput, ctx }) => {
+    const userId = ctx.userId;
+
+    const existingUser = await db.user.findUnique({
+      where: { id: userId },
+    });
+
+    if (!existingUser) {
+      return {
+        success: false,
+        code: "NOT_FOUND",
+        error: "User not found",
+      };
+    }
+
+    return auth.api.setUserPassword({
+      headers: await headers(),
+      body: {
+        userId,
+        newPassword: parsedInput.password,
+      },
+    });
+  });
 
 export const uptadeUserPassAction = authActionClient
   .inputSchema(updateUserPasssword)

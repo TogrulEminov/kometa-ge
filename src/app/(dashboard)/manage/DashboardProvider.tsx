@@ -2,6 +2,7 @@
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useState } from "react";
+import SessionQuerySync from "./SessionQuerySync";
 
 export default function DashboardProvider({
   children,
@@ -28,6 +29,9 @@ export default function DashboardProvider({
   );
 
   return (
-    <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+    <QueryClientProvider client={queryClient}>
+      <SessionQuerySync queryClient={queryClient} />
+      {children}
+    </QueryClientProvider>
   );
 }

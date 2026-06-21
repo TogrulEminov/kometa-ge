@@ -1,5 +1,6 @@
 import { v4 as uuidv4 } from "uuid";
 import * as r2UploadService from "./r2-upload";
+import { applyImageWatermark } from "./apply-image-watermark";
 import sharp from "sharp";
 import path from "path";
 
@@ -44,13 +45,14 @@ export async function uploadImage(file: File, apiEndpoint?: string) {
 
       try {
         processedBuffer = await image.webp({ lossless: true }).toBuffer();
+        processedBuffer = await applyImageWatermark(processedBuffer);
 
         finalMimeType = "image/webp";
         finalFileName = `${path.parse(file.name).name}.webp`;
       } catch (sharpError) {
         console.warn(
           `Sharp processing failed for ${file.name}. Using original file type.`,
-          sharpError
+          sharpError,
         );
       }
     }

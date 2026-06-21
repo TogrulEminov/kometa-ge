@@ -6,6 +6,8 @@ export const Role = {
   MODERATOR: "moderator",
 } as const;
 
+export type Role = (typeof Role)[keyof typeof Role];
+
 export const Status = {
   published: "published",
   draft: "draft",

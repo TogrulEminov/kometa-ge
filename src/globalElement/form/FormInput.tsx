@@ -1,3 +1,4 @@
+import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
 import { Input, type InputProps } from "antd";
 import { FieldWrapper } from "./FieldsWrapper";
 
@@ -20,36 +21,55 @@ export default function FormInput({
   wrapperClassName,
   ...rest
 }: FormInputProps) {
+  const isPassword = type === "password";
+
   return (
     <FieldWrapper
       fieldName={fieldName}
       label={label}
       className={wrapperClassName}
     >
-      {(field, fieldState) => (
-        <Input
-          {...field}
-          {...rest}
-          id={field.id}
-          type={type}
-          onChange={(e) => {
-            const val = e.target.value;
-            if (type === "number") {
-              if (val === "" || val === "-") {
-                field.onChange(val);
-              } else {
-                const parsed = parseFloat(val);
-                field.onChange(isNaN(parsed) ? "" : parsed);
+      {(field, fieldState) => {
+        const sharedProps = {
+          ...field,
+          ...rest,
+          id: field.id,
+          suffix,
+          className: `${className ?? ""} ${fieldState.invalid ? "ant-input-status-error" : ""}`.trim(),
+          status: fieldState.invalid ? ("error" as const) : undefined,
+        };
+
+        if (isPassword) {
+          return (
+            <Input.Password
+              {...sharedProps}
+              iconRender={(visible) =>
+                visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
               }
-            } else {
-              field.onChange(val);
-            }
-          }}
-          suffix={suffix}
-          className={`${className} ${fieldState.invalid ? "ant-input-status-error" : ""}`}
-          status={fieldState.invalid ? "error" : ""}
-        />
-      )}
+            />
+          );
+        }
+
+        return (
+          <Input
+            {...sharedProps}
+            type={type}
+            onChange={(e) => {
+              const val = e.target.value;
+              if (type === "number") {
+                if (val === "" || val === "-") {
+                  field.onChange(val);
+                } else {
+                  const parsed = parseFloat(val);
+                  field.onChange(isNaN(parsed) ? "" : parsed);
+                }
+              } else {
+                field.onChange(val);
+              }
+            }}
+          />
+        );
+      }}
     </FieldWrapper>
   );
 }
