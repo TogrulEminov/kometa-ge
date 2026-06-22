@@ -7,6 +7,8 @@ import { ZodError } from "zod";
 import { imageSchema } from "@/app/(dashboard)/_type/global.type";
 import { publishSingleFile } from "@/helper/publishFiles";
 import { upsertAboutSectionInfoSchema } from "./aboutSection.schema";
+import { revalidateAll } from "@/helper/revalidate";
+import { CACHE_TAG_GROUPS } from "@/actions/ui/cachetags";
 type GetProps = {
   locale: CustomLocales;
 };
@@ -68,7 +70,7 @@ export const upsertAboutSectionInfo = authActionClient
           translations: [translation],
         };
       });
-
+      await revalidateAll(CACHE_TAG_GROUPS.ABOUT_HOME);
       return {
         success: true,
         data: result,
@@ -120,7 +122,7 @@ export const uptadeAboutSectionInfoImage = authActionClient
           },
         });
       });
-
+      await revalidateAll(CACHE_TAG_GROUPS.ABOUT_HOME);
       return {
         success: true,
         code: "SUCCESS",

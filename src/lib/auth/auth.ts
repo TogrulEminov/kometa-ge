@@ -13,10 +13,10 @@ export const auth = betterAuth({
     joins: true,
   },
   plugins: [
-    nextCookies(),
     admin({
       defaultRole: "admin",
     }),
+    nextCookies(),
   ],
   user: {
     additionalFields: {

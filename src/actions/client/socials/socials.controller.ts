@@ -6,6 +6,8 @@ import { Status } from "@/services/interface/type";
 import { ZodError } from "zod";
 import { createSocialSchema, updateSocialSchema } from "./social.schema";
 import { idSchema } from "@/app/(dashboard)/_type/global.type";
+import { revalidateAll } from "@/helper/revalidate";
+import { CACHE_TAG_GROUPS } from "@/actions/ui/cachetags";
 
 type GetProps = {
   page?: number;
@@ -117,6 +119,7 @@ export const createSocial = authActionClient
           iconName,
         },
       });
+      await revalidateAll(CACHE_TAG_GROUPS.SOCIAL_MEDIA);
       return newData;
     } catch (error) {
       if (error instanceof ZodError) {
@@ -175,6 +178,7 @@ export const updateSocial = authActionClient
           ...(iconName && { iconName }),
         },
       });
+      await revalidateAll(CACHE_TAG_GROUPS.SOCIAL_MEDIA);
       return updatedData;
     } catch (error) {
       const errorMessage = (error as Error).message;
@@ -196,6 +200,7 @@ export const deleteSocial = authActionClient
       await db.social.delete({
         where: { id: parsedInput.id },
       });
+      await revalidateAll(CACHE_TAG_GROUPS.SOCIAL_MEDIA);
       return {
         message: "Sosial şəbəkə uğurla silindi",
       };

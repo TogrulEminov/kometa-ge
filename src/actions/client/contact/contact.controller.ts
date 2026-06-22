@@ -7,6 +7,8 @@ import { ZodError } from "zod";
 import { z } from "zod";
 import { upsertContactSchema } from "./contact.schema";
 import { formatZodErrors } from "@/utils/format-zod-errors";
+import { revalidateAll } from "@/helper/revalidate";
+import { CACHE_TAG_GROUPS } from "@/actions/ui/cachetags";
 
 // --- GET CONTACT ---
 export const getContact = authActionClient
@@ -99,7 +101,7 @@ export const upsertContact = authActionClient
           translations: [translation],
         };
       });
-
+      await revalidateAll(CACHE_TAG_GROUPS.CONTACT_INFORMATION);
       return {
         data: result,
         message: "Məlumat uğurla yadda saxlandı",

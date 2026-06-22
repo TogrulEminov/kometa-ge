@@ -16,7 +16,8 @@
   "atoms": {
     "buttons": {
       "contact_us": "Contact us",
-      "read_more": "Read more"
+      "read_more": "Read more",
+      "get_started": "Get started"
     },
     "components": {
       "tracking": {
@@ -64,6 +65,19 @@
           "privacy_policy":"Privacy Policy",
           "terms_of_service":"Terms of Service"
         }
+      },
+      "fag":{
+        "contact_us":"Contact us",
+        "still_have_questions":"Still have questions?"
+      },
+      "cta":{
+        "request_a_callback":"Request a callback",
+        "leave_your_phone_number":"Leave your phone number and our team will contact you within 24 hours. Fast, reliable and professional support guaranteed.",
+        "send_request":"Send request",
+        "address":"Address",
+        "email":"Email",
+        "phone":"Phone",
+        "whatsapp":"Whatsapp"
       }
     }
   }

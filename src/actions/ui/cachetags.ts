@@ -1,4 +1,5 @@
 export const CACHE_TAG_GROUPS = {
+    ABOUT_MAIN: "about_main_cache",
     HERO: "hero_section_cache", 
     SERVICES: "services_cache",
     DIRECTIONS: "directions_cache",
@@ -14,6 +15,7 @@ export const CACHE_TAG_GROUPS = {
     SOCIAL_MEDIA: "social_media_cache",
     SECTION_CONTENT: "section_content_cache",
     CATEGORIES: "categories_cache",
+    ENUM: "enum_cache",
   } as const;
   
   export type CacheTag = (typeof CACHE_TAG_GROUPS)[keyof typeof CACHE_TAG_GROUPS];

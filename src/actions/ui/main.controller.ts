@@ -15,7 +15,7 @@ import {
   YoutubeWhereInput,
 } from "@/generated/prisma/models";
 
-export async function   fetchHeroInfo({ locale }: { locale: CustomLocales }) {
+export async function fetchHeroInfo({ locale }: { locale: CustomLocales }) {
   "use cache";
   cacheLife("hours");
   cacheTag(CACHE_TAG_GROUPS.HERO);
@@ -27,14 +27,13 @@ export async function   fetchHeroInfo({ locale }: { locale: CustomLocales }) {
           locale: locale,
         },
       },
-     
     },
     select: {
       id: true,
       imageUrl: FILE_SELECT,
       videoUrl: FILE_SELECT,
       service: {
-        where:{
+        where: {
           isDeleted: false,
           translations: {
             some: {
@@ -47,7 +46,12 @@ export async function   fetchHeroInfo({ locale }: { locale: CustomLocales }) {
           imageUrl: FILE_SELECT,
           translations: {
             where: { locale },
-            select: { title: true, slug: true, shortDescription: true, locale: true },
+            select: {
+              title: true,
+              slug: true,
+              shortDescription: true,
+              locale: true,
+            },
           },
         },
       },
@@ -351,7 +355,11 @@ export async function fetchVideoGallery({
     },
   };
 }
-export async function fetchAboutHomeInfo(locale: CustomLocales) {
+export async function fetchAboutHomeInfo({
+  locale,
+}: {
+  locale: CustomLocales;
+}) {
   "use cache";
   cacheLife("hours");
   cacheTag(CACHE_TAG_GROUPS.ABOUT_HOME);
@@ -382,7 +390,7 @@ export async function fetchAboutHomeInfo(locale: CustomLocales) {
     },
   });
 }
-export async function fetchFeaturesInfo(locale: CustomLocales) {
+export async function fetchFeaturesInfo({locale}:{locale: CustomLocales}) {
   "use cache";
   cacheLife("hours");
   cacheTag(CACHE_TAG_GROUPS.FEATURES);
@@ -442,12 +450,13 @@ export async function fetchWorkProcessInfo(locale: CustomLocales) {
     },
   });
 }
-export async function fetchFag(locale: CustomLocales) {
+export async function fetchFag({locale}: {locale: CustomLocales}) {
   "use cache";
   cacheLife("hours");
   cacheTag(CACHE_TAG_GROUPS.FAQ);
   return db.faq.findMany({
     where: {
+      isDeleted: false,
       translations: {
         some: {
           locale: locale,

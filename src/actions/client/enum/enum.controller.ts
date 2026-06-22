@@ -9,6 +9,8 @@ import { createEnumSchema, uptadeEnumSchema } from "./enum.schema";
 import { createSlug } from "@/utils/createSlug";
 import { formatZodErrors } from "@/utils/format-zod-errors";
 import { idSchema } from "@/app/(dashboard)/_type/global.type";
+import { revalidateAll } from "@/helper/revalidate";
+import { CACHE_TAG_GROUPS } from "@/actions/ui/cachetags";
 
 type GetProps = {
   page?: number;
@@ -172,7 +174,7 @@ export const createEnum = authActionClient
       if (existingData) {
         throw new Error("Bu başlıqla (slug) məlumat artıq mövcuddur");
       }
-
+      await revalidateAll(CACHE_TAG_GROUPS.ENUM);
       const newData = await db.enum.create({
         data: {
           key: key || "contact",
@@ -232,7 +234,7 @@ export const updateEnum = authActionClient
 
         return result;
       });
-
+      await revalidateAll(CACHE_TAG_GROUPS.ENUM);
       return updatedData;
     } catch (error) {
       console.error("updatePosition error:", error);
@@ -258,6 +260,7 @@ export const deleteEnum = authActionClient
         where: { id: id },
         data: { isDeleted: true },
       });
+      await revalidateAll(CACHE_TAG_GROUPS.ENUM);
       return {
         message: "Data deleted successfully",
       };

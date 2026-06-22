@@ -10,6 +10,8 @@ import {
 } from "./section.schema";
 import { createSlug } from "@/utils/createSlug";
 import { idSchema } from "@/app/(dashboard)/_type/global.type";
+import { revalidateAll } from "@/helper/revalidate";
+import { CACHE_TAG_GROUPS } from "@/actions/ui/cachetags";
 
 type GetProps = {
   page: number;
@@ -145,6 +147,7 @@ export const createSectionContent = authActionClient
           },
         },
       });
+      await revalidateAll(CACHE_TAG_GROUPS.SECTION_CONTENT);
       return newData;
     } catch (error) {
       if (error instanceof ZodError) {
@@ -222,6 +225,7 @@ export const uptadeSectionContent = authActionClient
 
         return updatedData;
       });
+      await revalidateAll(CACHE_TAG_GROUPS.SECTION_CONTENT);
       return uptadeData;
     } catch (error) {
       const errorMessage = (error as Error).message;

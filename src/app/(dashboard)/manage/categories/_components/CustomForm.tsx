@@ -1,19 +1,40 @@
 import FieldBlock from "../../../_components/contentBlock";
 import SingleUploadImage from "../../../_components/upload/single";
 import NavigateBtn from "../../../_components/navigateBtn";
-import CreateButton from "../../../_components/createButton";
 import { useFormContext } from "react-hook-form";
 import SubmitAdminButton from "../../../_components/submitBtn";
 import FormInput from "@/globalElement/form/FormInput";
 import FormSelect from "@/globalElement/form/FormSelect";
 import { categories } from "@/json/pageData.json";
 import SeoContent from "@/app/(dashboard)/_components/SeoContent";
-import FormRichEditor from "@/globalElement/form/FormRichEditor";
+import { JsonSectionList } from "@/app/(dashboard)/_components/JsonSectionBlock";
 interface Props {
   isPending: boolean;
   title?: string | null;
   isImage?: boolean;
 }
+
+const SECTION_TYPE_OPTIONS = [
+  { value: "sectionContent", label: "Section Info" },
+  { value: "banner", label: "Banner" },
+] as const;
+
+const SECTION_TYPE_CONFIG = {
+  banner: {
+    showSectionDescription: true,
+    richSectionDescription: false,
+    showItems: false,
+    showItemDescription: false,
+    showSectionTitle: false,
+  },
+  sectionContent: {
+    showSectionDescription: true,
+    richSectionDescription: true,
+    showItems: false,
+    showItemDescription: false,
+    showSectionTitle: true,
+  },
+};
 export default function CustomForm({
   isPending,
   title,
@@ -41,9 +62,10 @@ export default function CustomForm({
             fieldName="slug"
             options={categories}
           />
-          <FormRichEditor
+          <JsonSectionList
             fieldName="description"
-            label="Detailed Information"
+            typeOptions={[...SECTION_TYPE_OPTIONS]}
+            typeConfig={SECTION_TYPE_CONFIG}
           />
         </FieldBlock>
         <div className={"flex flex-col space-y-5"}>

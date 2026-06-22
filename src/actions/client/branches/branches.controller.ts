@@ -8,6 +8,8 @@ import { ZodError } from "zod";
 import { createBranchSchema, updateBranchSchema } from "./branches.schema";
 import { idSchema } from "@/app/(dashboard)/_type/global.type";
 import { getNextOrderNumber } from "@/lib/order/getNextOrderNumber";
+import { revalidateAll } from "@/helper/revalidate";
+import { CACHE_TAG_GROUPS } from "@/actions/ui/cachetags";
 
 type GetProps = {
   page?: number;
@@ -132,6 +134,7 @@ export const createBranch = authActionClient
       }
 
       const orderNumber = await getNextOrderNumber("branch");
+      await revalidateAll(CACHE_TAG_GROUPS.ABOUT_MAIN);
       return db.branch.create({
         data: {
           isoCode: isoCode,
@@ -195,7 +198,8 @@ export const updateBranch = authActionClient
             translations: { where: { locale: locale } },
           },
         });
-
+        await revalidateAll(CACHE_TAG_GROUPS.ABOUT_MAIN);
+        return updated;
       });
     } catch (error) {
       if (error instanceof ZodError) {
@@ -227,6 +231,7 @@ export const deleteBranch = authActionClient
         where: { id: id },
         data: { isDeleted: true },
       });
+      await revalidateAll(CACHE_TAG_GROUPS.ABOUT_MAIN);
       return {
         message: "Branch deleted successfully",
       };

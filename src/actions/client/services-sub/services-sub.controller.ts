@@ -18,6 +18,8 @@ import {
   imageSchema,
 } from "@/app/(dashboard)/_type/global.type";
 import { getNextOrderNumber } from "@/lib/order/getNextOrderNumber";
+import { revalidateAll } from "@/helper/revalidate";
+import { CACHE_TAG_GROUPS } from "@/actions/ui/cachetags";
 type GetProps = {
   page: number;
   query?: string;
@@ -198,6 +200,7 @@ export const createSubServices = authActionClient
         if (galleryIds) {
           await publishGalleryFiles({ newFileIds: galleryIds }, prisma);
         }
+        await revalidateAll(CACHE_TAG_GROUPS.SUB_SERVICES);
         const nextOrder = await getNextOrderNumber("subServices");
         return prisma.subServices.create({
           data: {
@@ -303,7 +306,7 @@ export const uptadeSubServices = authActionClient
             },
           },
         });
-
+        await revalidateAll(CACHE_TAG_GROUPS.SUB_SERVICES);
         return updatedData;
       });
     } catch (error) {
@@ -336,6 +339,7 @@ export const uptadeSubServicesImage = authActionClient
           { newFileId: imageId, previousFileId: existingData.imageId },
           prisma,
         );
+        await revalidateAll(CACHE_TAG_GROUPS.SUB_SERVICES);
         return (prisma as typeof db).subServices.update({
           where: { id: id },
           data: {
@@ -386,6 +390,7 @@ export const updateSubServicesGallery = authActionClient
           },
           tx,
         );
+        await revalidateAll(CACHE_TAG_GROUPS.SUB_SERVICES);
         return (tx as typeof db).subServices.update({
           where: { id: id },
           data: {
@@ -414,6 +419,7 @@ export const deleteSubServices = authActionClient
         where: { id: id },
         data: { isDeleted: true },
       });
+      await revalidateAll(CACHE_TAG_GROUPS.SUB_SERVICES);
       return {
         message: "Service deleted successfully",
       };

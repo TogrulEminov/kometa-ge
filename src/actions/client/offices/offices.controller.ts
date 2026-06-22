@@ -7,6 +7,8 @@ import { ZodError } from "zod";
 import { createOfficeSchema, updateOfficeSchema } from "./offices.schema";
 import { idSchema } from "@/app/(dashboard)/_type/global.type";
 import { getNextOrderNumber } from "@/lib/order/getNextOrderNumber";
+import { revalidateAll } from "@/helper/revalidate";
+import { CACHE_TAG_GROUPS } from "@/actions/ui/cachetags";
 type GetProps = {
   page?: number;
   query?: string;
@@ -137,6 +139,7 @@ export const createOffice = authActionClient
       }
 
       const orderNumber = await getNextOrderNumber("office");
+      await revalidateAll(CACHE_TAG_GROUPS.ABOUT_MAIN);
       return db.office.create({
         data: {
           orderNumber: orderNumber,
@@ -178,6 +181,7 @@ export const updateOffice = authActionClient
       const { city, address, type, locale, id, branchId } = parsedInput;
 
       return db.$transaction(async (prisma) => {
+        await revalidateAll(CACHE_TAG_GROUPS.ABOUT_MAIN);
         return prisma.office.update({
           where: { id: id },
           data: {
@@ -228,7 +232,7 @@ export const deleteOffice = authActionClient
       if (!existingOffice) {
         throw new Error("Office not found");
       }
-
+      await revalidateAll(CACHE_TAG_GROUPS.ABOUT_MAIN);
       await db.office.update({
         where: { id: id },
         data: { isDeleted: true },

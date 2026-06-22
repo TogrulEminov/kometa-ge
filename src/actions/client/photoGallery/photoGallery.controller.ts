@@ -18,6 +18,8 @@ import {
   imageSchema,
 } from "@/app/(dashboard)/_type/global.type";
 import { getNextOrderNumber } from "@/lib/order/getNextOrderNumber";
+import { CACHE_TAG_GROUPS } from "@/actions/ui/cachetags";
+import { revalidateAll } from "@/helper/revalidate";
 type GetProps = {
   page: number;
   query?: string;
@@ -156,6 +158,7 @@ export const createPhotoGallery = authActionClient
         if (galleryIds) {
           await publishGalleryFiles({ newFileIds: galleryIds }, prisma);
         }
+        await revalidateAll(CACHE_TAG_GROUPS.PHOTO_GALLERY);
         return prisma.photoGallery.create({
           data: {
             orderNumber: nextOrder,
@@ -216,7 +219,7 @@ export const uptadePhotoGallery = authActionClient
             },
           },
         });
-
+        await revalidateAll(CACHE_TAG_GROUPS.PHOTO_GALLERY);
         return updatedData;
       });
     } catch (error) {
@@ -249,6 +252,7 @@ export const uptadePhotoGalleryImage = authActionClient
           { newFileId: imageId, previousFileId: existingData.imageId },
           prisma,
         );
+        await revalidateAll(CACHE_TAG_GROUPS.PHOTO_GALLERY);
         return (prisma as typeof db).photoGallery.update({
           where: { id: id },
           data: {
@@ -282,6 +286,7 @@ export const updatePhotoGalleryGallery = authActionClient
           },
           tx,
         );
+        await revalidateAll(CACHE_TAG_GROUPS.PHOTO_GALLERY);
         return (tx as typeof db).photoGallery.update({
           where: { id: id },
           data: {

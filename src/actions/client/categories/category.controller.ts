@@ -11,6 +11,8 @@ import { publishSingleFile } from "@/helper/publishFiles";
 import { db } from "@/lib/prisma";
 import { authActionClient } from "@/lib/safe-action/SafeAction";
 import { idSchema, imageSchema } from "@/app/(dashboard)/_type/global.type";
+import { CACHE_TAG_GROUPS } from "@/actions/ui/cachetags";
+import { revalidateAll } from "@/helper/revalidate";
 type GetProps = {
   page: number;
   query: string;
@@ -158,7 +160,7 @@ export const createCategory = authActionClient
         if (imageId) {
           await publishSingleFile({ newFileId: imageId }, tx);
         }
-
+        await revalidateAll(CACHE_TAG_GROUPS.CATEGORIES);
         return (tx as typeof db).categories.create({
           data: {
             imageId: imageId ? Number(imageId) : null,
@@ -240,7 +242,7 @@ export const uptadeCategory = authActionClient
       if (!existingCategory) {
         throw new Error("Category not found");
       }
-
+      await revalidateAll(CACHE_TAG_GROUPS.CATEGORIES);
       const uptadeData = await db.$transaction(async (prisma: any) => {
         const updatedData = await prisma.categories.update({
           where: { id },
@@ -318,7 +320,7 @@ export const uptadeCategoryImage = authActionClient
           },
           tx,
         );
-
+        await revalidateAll(CACHE_TAG_GROUPS.CATEGORIES);
         return (tx as typeof db).categories.update({
           where: { id: id },
           data: {
@@ -371,6 +373,7 @@ export const deleteCategory = authActionClient
         where: { id: id },
         data: { isDeleted: true },
       });
+      await revalidateAll(CACHE_TAG_GROUPS.CATEGORIES);
       return {
         message: "Category deleted successfully",
       };

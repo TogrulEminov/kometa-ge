@@ -1,24 +1,28 @@
+import { fetchDirections, fetchSectionByKeys } from "@/actions/ui/main.controller";
 import SectionContentComponent from "@/components/SectionContent";
 import DirectionsCard from "@/globalElement/cards/DirectionsCard";
-import ServiceCard from "@/globalElement/cards/ServicesCard";
+import { DirectionsType, SectionLocale } from "@/services/interface/type";
 
-export default function HomeDirectionsSection() {
+export default async function HomeDirectionsSection({ locale }: SectionLocale) {
+  const directions = await fetchDirections({ pageNumber: 1, locale });
+  const sectionInfo = await fetchSectionByKeys({ key: "directions", locale });
+  const sectionTr = sectionInfo?.translations?.[0];
+  if (!directions?.data?.length || !sectionInfo?.translations?.length) return null;
+ console.log(directions);
   return (
     <section className="pt-0 pb-20">
       <div className="container">
         <SectionContentComponent
-          title="Our International Transport Network"
+          title={sectionTr?.title ?? ""}
           type="vertical"
           rootClass="[&_article]:max-w-4xl!"
-          subTitle={"Directions"}
-          description={
-            "Kometa KZ operates a broad logistics network, carrying out road and rail transportation between Asia and Europe. We provide flexible solutions for FTL, LTL, and heavy cargo transport, ensuring safe and timely delivery of goods to various destinations."
-          }
+          subTitle={sectionTr?.subTitle}
+          description={sectionTr?.description ?? ""}
         />
 
         <div className="grid lg:grid-cols-3 gap-5">
-          {Array.from({ length: 3 }).map((item, i) => {
-            return <DirectionsCard key={i} />;
+          {directions?.data?.map((item, i) => {
+            return <DirectionsCard key={i}  item={item as DirectionsType} />;
           })}
         </div>
       </div>

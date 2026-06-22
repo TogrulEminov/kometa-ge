@@ -1,3 +1,5 @@
+"use client";
+
 export default function CopyRight() {
   const currentYear = new Date().getFullYear();
 

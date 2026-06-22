@@ -10,7 +10,7 @@ import {
   getCategoriesById,
   uptadeCategory,
 } from "@/actions/client/categories/category.controller";
-import { Category, CustomLocales } from "@/services/interface/type";
+import { Category, CustomLocales, newInfoJson } from "@/services/interface/type";
 import { useServerQueryById } from "@/hooks/useServerActions";
 import { categories_content_list } from "@/app/(dashboard)/_type/query-key";
 import {
@@ -20,6 +20,8 @@ import {
 import { pageRoutes } from "@/app/(dashboard)/_type/constant";
 import FormWrapper from "@/globalElement/form/FormWrapper";
 import LanguageComponent from "@/app/(dashboard)/_components/LanguageComponent";
+import { parseJSON } from "@/utils/parseJson";
+import { NewInfoJson } from "@/app/(dashboard)/_type/global.type";
 export default function CategriesUptadeContent() {
   const params = useParams();
   const id = Array.isArray(params?.id) ? params.id[0] : params?.id;
@@ -56,7 +58,7 @@ export default function CategriesUptadeContent() {
     values: {
       id: existingData?.id,
       title: translation?.title || "",
-      description: translation?.description,
+      description: parseJSON<NewInfoJson>(translation?.description)?.data || [],
       slug: existingData?.slug || "",
       metaTitle: seo?.metaTitle || "",
       metaDescription: seo?.metaDescription || "",

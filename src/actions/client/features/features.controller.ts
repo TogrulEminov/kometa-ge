@@ -7,6 +7,8 @@ import { ZodError } from "zod";
 import { imageSchema } from "@/app/(dashboard)/_type/global.type";
 import { publishSingleFile } from "@/helper/publishFiles";
 import { upsertFeaturesInfoSchema } from "./features.schema";
+import { revalidateAll } from "@/helper/revalidate";
+import { CACHE_TAG_GROUPS } from "@/actions/ui/cachetags";
 type GetProps = {
   locale: CustomLocales;
 };
@@ -66,7 +68,7 @@ export const upsertFeaturesInfo = authActionClient
           translations: [translation],
         };
       });
-
+      await revalidateAll(CACHE_TAG_GROUPS.FEATURES);
       return {
         success: true,
         data: result,
@@ -110,7 +112,7 @@ export const uptadeFeaturesImage = authActionClient
           },
           tx,
         );
-
+        await revalidateAll(CACHE_TAG_GROUPS.FEATURES);
         return (tx as typeof db).features.update({
           where: { key: "main" },
           data: {

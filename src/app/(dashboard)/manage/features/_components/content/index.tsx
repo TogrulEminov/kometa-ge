@@ -49,6 +49,13 @@ const FEATURES_TYPE_CONFIG = {
     showItems: false,
     showItemDescription: false,
     showSectionTitle: true,
+    extraMainFields: [
+      {
+        fieldKey: "subTitle",
+        label: "Section subTitle",
+        type: "input" as const,
+      },
+    ],
   },
 };
 

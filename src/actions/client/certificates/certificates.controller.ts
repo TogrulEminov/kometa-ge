@@ -18,6 +18,8 @@ import {
   createCertificatesSchema,
   uptadeCertificatesSchema,
 } from "./certificates.schema";
+import { revalidateAll } from "@/helper/revalidate";
+import { CACHE_TAG_GROUPS } from "@/actions/ui/cachetags";
 type GetProps = {
   page: number;
   query?: string;
@@ -156,6 +158,7 @@ export const createCertificates = authActionClient
         if (galleryIds) {
           await publishGalleryFiles({ newFileIds: galleryIds }, prisma);
         }
+        await revalidateAll(CACHE_TAG_GROUPS.CERTIFICATES);
         return prisma.certificates.create({
           data: {
             orderNumber: nextOrder,
@@ -216,7 +219,7 @@ export const uptadeCertificates = authActionClient
             },
           },
         });
-
+        await revalidateAll(CACHE_TAG_GROUPS.CERTIFICATES);
         return updatedData;
       });
     } catch (error) {
@@ -249,6 +252,7 @@ export const uptadeCertificatesImage = authActionClient
           { newFileId: imageId, previousFileId: existingData.imageId },
           prisma,
         );
+        await revalidateAll(CACHE_TAG_GROUPS.CERTIFICATES);
         return (prisma as typeof db).certificates.update({
           where: { id: id },
           data: {
@@ -282,6 +286,7 @@ export const updateCertificatesGallery = authActionClient
           },
           tx,
         );
+        await revalidateAll(CACHE_TAG_GROUPS.CERTIFICATES);
         return (tx as typeof db).certificates.update({
           where: { id: id },
           data: {
@@ -310,6 +315,7 @@ export const deleteCertificates = authActionClient
         where: { id: id },
         data: { isDeleted: true },
       });
+      await revalidateAll(CACHE_TAG_GROUPS.CERTIFICATES);
       return {
         message: "Certificates deleted successfully",
       };

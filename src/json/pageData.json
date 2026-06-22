@@ -54,29 +54,19 @@
       "value": "process",
       "label": "Process Section"
     },
-    {
-      "value": "blog",
-      "label": "Blog Section"
-    },
+
     {
       "value": "media",
       "label": "Media Section"
     },
+
     {
-      "value": "branches",
-      "label": "Branches Section"
-    },
-    {
-      "value": "testimonials",
-      "label": "Testimonials Section"
+      "value": "contact",
+      "label": "Contact Section"
     },
     {
       "value": "faq",
       "label": "FAQ Section"
-    },
-    {
-      "value": "employee",
-      "label": "Employees Section"
     }
   ]
 }

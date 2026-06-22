@@ -28,7 +28,7 @@ export default function CreateCategories() {
       metaDescription: "",
       metaKeywords: "",
       imageId: undefined,
-      description: null,
+      description: [],
       locale: locale as CustomLocales,
     },
   });

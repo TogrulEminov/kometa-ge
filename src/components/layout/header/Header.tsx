@@ -1,17 +1,22 @@
 "use client";
 
-import { Suspense, useState } from "react";
+import dynamic from "next/dynamic";
+import { useState } from "react";
 import { useMotionValueEvent, useScroll } from "motion/react";
 import { cn } from "@/utils/cn";
 import HeaderTop from "./HeaderTop";
 import HeaderBottom from "./HeaderBottom";
-import ShipmentModal from "@/app/[locale]/(home)/_components/atoms/FormModal";
 import {
   DirectionsType,
   IContactInformation,
   ServicesType,
   Social,
 } from "@/services/interface/type";
+
+const ShipmentModal = dynamic(
+  () => import("@/app/[locale]/(home)/_components/atoms/FormModal"),
+  { ssr: false },
+);
 
 export default function Header({
   contactInfo,
@@ -53,9 +58,7 @@ export default function Header({
           services={services}
         />
       </header>
-      <Suspense fallback={null}>
-        <ShipmentModal open={isOpen} onClose={() => setIsOpen(false)} />
-      </Suspense>
+      <ShipmentModal open={isOpen} onClose={() => setIsOpen(false)} />
     </>
   );
 }

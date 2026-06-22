@@ -185,7 +185,7 @@ model Categories {
 model CategoriesTranslations {
   id          String      @id @default(cuid())
   title       String
-  description String?
+  description Json?
   locale      Locales     @default(en)
   document    Categories? @relation(fields: [documentId], references: [id], onDelete: Cascade)
   documentId  String?
@@ -204,7 +204,7 @@ model CategoriesTranslations {
 // section
 model SectionContent {
   id           String                       @id @default(cuid())
-  key          String?                      @unique
+  key          String?                      
   translations SectionContentTranslations[]
   user         User?                        @relation(fields: [userId], references: [id])
   userId       String?

@@ -14,7 +14,7 @@ export default async function HomeServicesSection({
   const services = await fetchServices({ pageNumber: 1, locale });
   const sectionInfo = await fetchSectionByKeys({ key: "services", locale });
   const sectionTr = sectionInfo?.translations?.[0];
-  if (!services || !sectionInfo?.translations?.length) return null;
+  if (!services?.data?.length || !sectionInfo?.translations?.length) return null;
   return (
     <section className="py-10 lg:py-20">
       <div className="container">

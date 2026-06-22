@@ -88,6 +88,8 @@ export interface newInfoJson {
   title: string;
   type?: string | undefined;
   description?: string | null;
+  subTitle?: string | null;
+  [key: string]: unknown;
   items: jsonItem[];
 }
 
@@ -180,7 +182,7 @@ export type Category = {
 export type CategoryTranslation = {
   id: string;
   title: string;
-  description: string | null;
+  description: newInfoJson[] | null;
   locale: CustomLocales;
   documentId: string | null;
   document?: Category | null;

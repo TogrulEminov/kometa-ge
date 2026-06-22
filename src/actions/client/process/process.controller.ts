@@ -7,6 +7,8 @@ import { ZodError } from "zod";
 import { imageSchema } from "@/app/(dashboard)/_type/global.type";
 import { publishSingleFile } from "@/helper/publishFiles";
 import { upsertProcessInfoSchema } from "./process.schema";
+import { revalidateAll } from "@/helper/revalidate";
+import { CACHE_TAG_GROUPS } from "@/actions/ui/cachetags";
 type GetProps = {
   locale: CustomLocales;
 };
@@ -60,7 +62,7 @@ export const upsertProcessInfo = authActionClient
             locale,
           },
         });
-
+        await revalidateAll(CACHE_TAG_GROUPS.WORK_PROCESS);
         return {
           ...mainRecord,
           translations: [translation],
@@ -118,7 +120,7 @@ export const uptadeProcessImage = authActionClient
           },
         });
       });
-
+      await revalidateAll(CACHE_TAG_GROUPS.WORK_PROCESS);
       return {
         success: true,
         code: "SUCCESS",

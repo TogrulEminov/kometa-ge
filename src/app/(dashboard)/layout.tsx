@@ -55,7 +55,12 @@ export default function DashboardGroupLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang={"ka"} className="scroll-smooth" suppressHydrationWarning>
+    <html
+      lang={"ka"}
+      className="scroll-smooth"
+      data-scroll-behavior="smooth"
+      suppressHydrationWarning
+    >
       <body
         className={`${inter.variable} antialiased`}
         suppressHydrationWarning

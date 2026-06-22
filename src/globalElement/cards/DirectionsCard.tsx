@@ -56,59 +56,70 @@
 //   );
 // }
 import { Link } from "@/i18n/navigation";
-import { useTranslations } from "next-intl";
 import { JSX } from "react";
 import CustomImage from "../CustomImage";
 import { FaRoute } from "react-icons/fa";
+import { DirectionsType } from "@/services/interface/type";
+import { getForCards } from "@/utils/getFullimageUrl";
+import { useTranslations } from "next-intl";
 
 type HeadingTag = "strong" | "h3";
 
 interface CardProps {
   heading?: HeadingTag;
   className?: string;
+  item: DirectionsType;
 }
 
 export default function DirectionsCard({
   className,
   heading = "strong",
+  item,
 }: CardProps) {
+  const itemTr = item?.translations?.[0];
+  const imageUrl = getForCards(item?.imageUrl);
   const Tag = heading as keyof JSX.IntrinsicElements;
   const isHeading = heading !== "strong";
-
-
+  const t = useTranslations("atoms");
   return (
-    <Link href={""} className={`group relative block ${className}`}>
+    <Link
+      href={`/directions/${itemTr?.slug}`}
+      className={`group relative block ${className}`}
+    >
       <div className="relative mx-4">
         <div className="relative aspect-4/3 rounded-xl overflow-hidden shadow-lg">
-          <CustomImage
-            width={800}
-            height={600}
-            src={"https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=800&h=500&fit=crop"}
-            title={""}
-            className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-700"
-          />
+          {imageUrl ? (
+            <CustomImage
+              width={800}
+              height={600}
+              src={imageUrl}
+              title={itemTr?.title ?? ""}
+              className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-700"
+            />
+          ) : (
+            <div className="w-full h-full bg-gray-100 rounded-xl" />
+          )}
         </div>
         <div className="absolute -bottom-5 left-4 size-12 rounded-full bg-primary text-white flex items-center justify-center text-sm font-bold shadow-lg z-10">
-          <FaRoute size={20}/>
-          </div>
+          <FaRoute size={20} />
+        </div>
       </div>
 
       <div className="mt-6 pt-6 pb-5 px-5 bg-white border border-gray-200 rounded-xl group-hover:border-primary group-hover:shadow-lg transition-all duration-300">
         <Tag
-          {...(isHeading ? { title: "Lorem ipsum dolor sit." } : {})}
+          {...(isHeading ? { title: itemTr?.title ?? "" } : {})}
           className="text-base lg:text-lg  font-bold min-h-12 block text-secondary leading-snug mb-2 group-hover:text-primary transition-colors duration-300"
         >
-          Lorem ipsum dolor sit.
+          {itemTr?.title ?? ""}
         </Tag>
 
         <p className="text-xs text-accent-hover leading-relaxed line-clamp-2 mb-4">
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Perspiciatis
-          hic cum officia!
+          {itemTr?.shortDescription ?? ""}
         </p>
 
         <div className="flex items-center gap-2">
           <span className="text-xs font-semibold text-[#9CA3AF] group-hover:text-primary transition-colors duration-300 tracking-wider uppercase">
-            Read More
+            {t("buttons.read_more")}
           </span>
           <div className="h-px w-0 group-hover:w-8 bg-primary transition-all duration-500" />
           <svg

@@ -10,6 +10,8 @@ import {
 } from "@/app/(dashboard)/_type/global.type";
 import { publishGalleryFiles, publishSingleFile } from "@/helper/publishFiles";
 import { upsertAboutMainInfoSchema } from "./aboutMain.schema";
+import { revalidateAll } from "@/helper/revalidate";
+import { CACHE_TAG_GROUPS } from "@/actions/ui/cachetags";
 type GetProps = {
   locale: CustomLocales;
 };
@@ -104,7 +106,7 @@ export const upsetAbouMainInfo = authActionClient
             shortDescription,
           },
         });
-
+        await revalidateAll(CACHE_TAG_GROUPS.ABOUT_MAIN);
         return {
           ...mainRecord,
           translations: [translation],

@@ -1,6 +1,6 @@
 "use server";
 import { Prisma } from "@/generated/prisma/client";
-import {   Locales } from "@/generated/prisma/enums";
+import { Locales } from "@/generated/prisma/enums";
 import { db } from "@/lib/prisma";
 import { authActionClient } from "@/lib/safe-action/SafeAction";
 import { ZodError } from "zod";
@@ -9,6 +9,8 @@ import { formatZodErrors } from "@/utils/format-zod-errors";
 import { idSchema } from "@/app/(dashboard)/_type/global.type";
 import { createFagSchema, uptadeFagSchema } from "./fags.schema";
 import { getNextOrderNumber } from "@/lib/order/getNextOrderNumber";
+import { CACHE_TAG_GROUPS } from "@/actions/ui/cachetags";
+import { revalidateAll } from "@/helper/revalidate";
 
 type GetProps = {
   page?: number;
@@ -46,7 +48,7 @@ export async function getFagData({ page, pageSize, query, locale }: GetProps) {
       where: whereClause,
       select: {
         id: true,
-        orderNumber:true,
+        orderNumber: true,
         createdAt: true,
         updatedAt: true,
         translations: {
@@ -149,7 +151,7 @@ export const createFag = authActionClient
           },
         },
       });
-
+      await revalidateAll(CACHE_TAG_GROUPS.FAQ);
       return newData;
     } catch (error) {
       console.error("createPosition error:", error);
@@ -198,7 +200,7 @@ export const updateFag = authActionClient
 
         return result;
       });
-
+      await revalidateAll(CACHE_TAG_GROUPS.FAQ);
       return updatedData;
     } catch (error) {
       console.error("updatePosition error:", error);
@@ -224,6 +226,7 @@ export const deleteFag = authActionClient
         where: { id: id },
         data: { isDeleted: true },
       });
+      await revalidateAll(CACHE_TAG_GROUPS.FAQ);
       return {
         message: "Data deleted successfully",
       };

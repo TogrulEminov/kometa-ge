@@ -17,13 +17,17 @@ export default function ServiceCard({ item }: { item: ServicesType }) {
     >
       {/* Image Container */}
       <div className="relative aspect-4/3 overflow-hidden">
-        <CustomImage
-          src={imageUrl}
-          title={"International Road Freight Transportation"}
-          fill
-          className="object-cover transition-transform duration-700 ease-out group-hover:scale-110"
-          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-        />
+        {imageUrl ? (
+          <CustomImage
+            src={imageUrl}
+            title={"International Road Freight Transportation"}
+            fill
+            className="object-cover transition-transform duration-700 ease-out group-hover:scale-110"
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+          />
+        ) : (
+          <div className="w-full h-full bg-gray-100 rounded-xl" />
+        )}
         {/* Subtle overlay on hover */}
         <div className="absolute inset-0 bg-linear-to-t from-primary/70 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
       </div>

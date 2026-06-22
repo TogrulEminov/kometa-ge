@@ -10,6 +10,8 @@ import { createSlug } from "@/utils/createSlug";
 import { formatZodErrors } from "@/utils/format-zod-errors";
 import { idSchema, imageSchema } from "@/app/(dashboard)/_type/global.type";
 import { publishSingleFile } from "@/helper/publishFiles";
+import { revalidateAll } from "@/helper/revalidate";
+import { CACHE_TAG_GROUPS } from "@/actions/ui/cachetags";
 
 type GetProps = {
   page?: number;
@@ -148,6 +150,7 @@ export const createYoutube = authActionClient
 
       const newData = await db.$transaction(async (prisma) => {
         await publishSingleFile({ newFileId: imageId }, prisma);
+        await revalidateAll(CACHE_TAG_GROUPS.VIDEO_GALLERY);
         return (prisma as typeof db).youtube.create({
           data: {
             imageId: Number(imageId) || null,
@@ -224,7 +227,7 @@ export const updateYoutube = authActionClient
 
         return updatedData;
       });
-
+      await revalidateAll(CACHE_TAG_GROUPS.VIDEO_GALLERY);
       return updateData;
     } catch (error) {
       console.error("updateYoutube error:", error);
@@ -248,6 +251,7 @@ export const updateYoutubeImage = authActionClient
         newFileId: imageId,
         previousFileId: existingData.imageId,
       });
+      await revalidateAll(CACHE_TAG_GROUPS.VIDEO_GALLERY);
       return db.youtube.update({
         where: { id: id },
         data: {
@@ -275,6 +279,7 @@ export const deleteYoutube = authActionClient
         where: { id: id },
         data: { isDeleted: true },
       });
+      await revalidateAll(CACHE_TAG_GROUPS.VIDEO_GALLERY);
       return {
         message: "Date deleted successfully",
       };

@@ -14,6 +14,8 @@ import {
   createDirectionsSchema,
   uptadeDirectionsSchema,
 } from "./directions.schema";
+import { revalidateAll } from "@/helper/revalidate";
+import { CACHE_TAG_GROUPS } from "@/actions/ui/cachetags";
 type GetProps = {
   page: number;
   query?: string;
@@ -170,10 +172,10 @@ export const createDirections = authActionClient
       if (existingData) {
         throw new Error("Data with this title and slug already exists");
       }
-
       return db.$transaction(async (prisma) => {
         await publishSingleFile({ newFileId: imageId }, prisma);
         const nextOrder = await getNextOrderNumber("directions");
+        await revalidateAll(CACHE_TAG_GROUPS.DIRECTIONS);
         return prisma.directions.create({
           data: {
             orderNumber: nextOrder,
@@ -276,7 +278,7 @@ export const uptadeDirections = authActionClient
             },
           },
         });
-
+        await revalidateAll(CACHE_TAG_GROUPS.DIRECTIONS);
         return updatedData;
       });
     } catch (error) {
@@ -309,6 +311,7 @@ export const uptadeDirectionsImage = authActionClient
           { newFileId: imageId, previousFileId: existingData.imageId },
           prisma,
         );
+        await revalidateAll(CACHE_TAG_GROUPS.DIRECTIONS);
         return (prisma as typeof db).directions.update({
           where: { id: id },
           data: {
@@ -356,6 +359,7 @@ export const deleteDirections = authActionClient
         where: { id: id },
         data: { isDeleted: true },
       });
+      await revalidateAll(CACHE_TAG_GROUPS.DIRECTIONS);
       return {
         message: "Direction deleted successfully",
       };

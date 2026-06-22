@@ -10,7 +10,7 @@ import AdminTable from "@/app/(dashboard)/_components/AdminTable";
 import { usePaginationQuery } from "@/hooks/usePaginationQuery";
 import { useServerQuery } from "@/hooks/useServerActions";
 import type { Category, CustomLocales } from "@/services/interface/type";
-import { pageModels, pageRoutes } from "../../_type/constant";
+import {  pageRoutes } from "../../_type/constant";
 import { categories_content_list } from "../../_type/query-key";
 import SearchingArea from "../../_components/whiteBlockSearch";
 import WhiteBlockTitleArea from "../../_components/whiteBlockTitle";

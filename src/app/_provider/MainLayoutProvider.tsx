@@ -9,7 +9,9 @@ interface Props {
 export default async function MainLayoutProvider({ children, locale }: Props) {
   return (
     <>
-      <HeaderServer locale={locale} />
+      <Suspense fallback={null}>
+        <HeaderServer locale={locale} />
+      </Suspense>
       <main className="lg:pt-[48px]">
         <Suspense>{children}</Suspense>
       </main>
