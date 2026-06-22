@@ -12,7 +12,6 @@ import {
 } from "../../_components/tabs/QueryTabs";
 import UpdateImageComponent from "./_components/image";
 import LanguageComponent from "../../_components/LanguageComponent";
-import { getProcessInfo } from "@/actions/client/process/process.controller";
 import { getAboutSectionInfo } from "@/actions/client/aboutSection/aboutSection.controller";
 export default function MainPage() {
   const searchParams = useSearchParams();

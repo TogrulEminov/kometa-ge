@@ -134,8 +134,7 @@ export const createBranch = authActionClient
       }
 
       const orderNumber = await getNextOrderNumber("branch");
-      await revalidateAll(CACHE_TAG_GROUPS.ABOUT_MAIN);
-      return db.branch.create({
+      const branch = await db.branch.create({
         data: {
           isoCode: isoCode,
           status: status || "ACTIVE",
@@ -151,6 +150,8 @@ export const createBranch = authActionClient
           translations: true,
         },
       });
+      await revalidateAll(CACHE_TAG_GROUPS.ABOUT_MAIN);
+      return branch;
     } catch (error) {
       if (error instanceof ZodError) {
         const fieldErrors: Record<string, string[]> = {};

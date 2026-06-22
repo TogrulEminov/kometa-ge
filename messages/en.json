@@ -24,60 +24,87 @@
         "placeholder": "Enter your tracking id",
         "button": "Track"
       },
+      "contactInfo": {
+        "phone": "Phone",
+        "support": "Support",
+        "email": "Email",
+        "address": "Address",
+        "whatsapp": "Write to us on WhatsApp",
+        "social_networks": "Social Networks",
+        "contact_us": "Contact us",
+        "contact_us_description": "We are here to help. Reach out to our team."
+      },
       "callActionHero": {
         "title": "Book Shipment",
-        "description":"Let us know how to get back to you.",
-        "form":{
-          "pickup_location":"Pickup location",
-          "delivery_location":"Delivery location",
-          "email_address":"Email address",
-          "telephone":"Telephone",
-          "message":"Message",
-          "submit":"Submit"
+        "description": "Let us know how to get back to you.",
+        "form": {
+          "pickup_location": "Pickup location",
+          "delivery_location": "Delivery location",
+          "email_address": "Email address",
+          "telephone": "Telephone",
+          "message": "Message",
+          "submit": "Submit"
         }
       },
-      "header":{
-        "button":"Request a quote",
-        "pages":{
-          "about":"About",
-          "certificates":"Certificates",
-          "services":"Services",
-          "directions":"Directions",
-          "media":"Media",
-          "photoGallery":"Photo Gallery",
-          "videoGallery":"Video Gallery",
-          "contact":"Contact"
+      "header": {
+        "button": "Request a quote",
+        "pages": {
+          "about": "About",
+          "certificates": "Certificates",
+          "services": "Services",
+          "directions": "Directions",
+          "media": "Media",
+          "photoGallery": "Photo Gallery",
+          "videoGallery": "Video Gallery",
+          "contact": "Contact"
         }
       },
-      "footer":{
-        "main_links_title":"Main Links",
-        "services_title":"Services",
-        "directions_title":"Directions",
-        "contact_title":"Contact",
-        "site_by":"Site by",
-        "main_links":{
-          "about":"About Us",
-          "services":"Services",
-          "directions":"Directions",
-          "photo_gallery":"Photo Gallery",
-          "video_gallery":"Video Gallery",
-          "contact":"Contact",
-          "privacy_policy":"Privacy Policy",
-          "terms_of_service":"Terms of Service"
+      "footer": {
+        "main_links_title": "Main Links",
+        "services_title": "Services",
+        "directions_title": "Directions",
+        "contact_title": "Contact",
+        "site_by": "Site by",
+        "main_links": {
+          "about": "About Us",
+          "services": "Services",
+          "directions": "Directions",
+          "photo_gallery": "Photo Gallery",
+          "video_gallery": "Video Gallery",
+          "contact": "Contact",
+          "privacy_policy": "Privacy Policy",
+          "terms_of_service": "Terms of Service"
         }
       },
-      "fag":{
-        "contact_us":"Contact us",
-        "still_have_questions":"Still have questions?"
+      "fag": {
+        "contact_us": "Contact us",
+        "still_have_questions": "Still have questions?"
       },
-      "cta":{
-        "request_a_callback":"Request a callback",
-        "leave_your_phone_number":"Leave your phone number and our team will contact you within 24 hours. Fast, reliable and professional support guaranteed.",
-        "send_request":"Send request",
-        "address":"Address",
-        "email":"Email",
-        "phone":"Phone",
-        "whatsapp":"Whatsapp"
+      "cta": {
+        "request_a_callback": "Request a callback",
+        "leave_your_phone_number": "Leave your phone number and our team will contact you within 24 hours. Fast, reliable and professional support guaranteed.",
+        "send_request": "Send request",
+        "address": "Address",
+        "email": "Email",
+        "phone": "Phone",
+        "whatsapp": "Whatsapp"
+      },
+      "branchModal": {
+        "no_offices": "No offices",
+        "coming_soon": "Coming soon",
+        "warehouse": "Warehouse",
+        "office": "Office",
+        "active": "Active",
+        "planned": "Planned",
+        "one_location": "1 location",
+        "locations_count": "{count} locations",
+        "office_count": "{count} office",
+        "warehouse_count": "{count} warehouse",
+        "no_locations": "No locations",
+        "coming_soon_description": "This branch will be opened soon"
+      },
+      "stickySidebar": {
+        "table_of_contents": "Table of contents"
       }
     }
   }

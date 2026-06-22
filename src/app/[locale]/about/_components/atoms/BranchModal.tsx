@@ -2,15 +2,29 @@
 
 import { useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Branch } from "@/services/dto/branch.types";
+import { BranchItem } from "@/services/interface/type";
+import { useTranslations } from "next-intl";
 
 interface Props {
-  branch: Branch;
+  branch: BranchItem;
   onClose: () => void;
+}
+
+function getBranchSubtitle(
+  branch: BranchItem,
+  t: ReturnType<typeof useTranslations<"atoms.components.branchModal">>,
+) {
+  const total = branch.offices.length;
+  if (total === 0) return t("coming_soon");
+  if (total === 1) return t("one_location");
+  return t("locations_count", { count: total });
 }
 
 export default function BranchModal({ branch, onClose }: Props) {
   const isActive = branch.status === "ACTIVE";
+  const t = useTranslations("atoms.components.branchModal");
+  const countryName = branch.translations[0]?.countryName ?? "";
+  const subtitle = getBranchSubtitle(branch, t);
   const hasLocations = branch.offices.length > 0;
   const officeCount = branch.offices.filter((o) => o.type === "office").length;
   const warehouseCount = branch.offices.filter(
@@ -44,7 +58,7 @@ export default function BranchModal({ branch, onClose }: Props) {
                   {i + 1}
                 </span>
                 <span className="text-sm font-semibold text-secondary">
-                  {office.city}
+                  {office.translations?.[0]?.city}
                 </span>
                 <span
                   className={`text-xs font-medium px-2 py-0.5 rounded-full ml-auto ${
@@ -53,11 +67,11 @@ export default function BranchModal({ branch, onClose }: Props) {
                       : "bg-primary/8 text-primary"
                   }`}
                 >
-                  {office.type === "warehouse" ? "Anbar" : "Ofis"}
+                  {office.type === "warehouse" ? t("warehouse") : t("office")}
                 </span>
               </div>
               <p className="text-xs text-gray-400 leading-relaxed pl-[34px]">
-                {office.address}
+                {office.translations?.[0]?.address}
               </p>
             </motion.div>
           ))}
@@ -91,9 +105,9 @@ export default function BranchModal({ branch, onClose }: Props) {
             </svg>
           </div>
           <p className="text-sm font-medium text-secondary mb-1">
-            Hələ məkan yoxdur
+            {t("no_locations")}
           </p>
-          <p className="text-xs text-gray-400">Bu filial tezliklə açılacaq</p>
+          <p className="text-xs text-gray-400">{t("coming_soon_description")}</p>
         </motion.div>
       )}
     </>
@@ -144,12 +158,12 @@ export default function BranchModal({ branch, onClose }: Props) {
           <div className="px-6 py-5 border-b border-gray-100 flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl bg-primary/8 flex items-center justify-center flex-shrink-0">
               <span className="text-xs font-mono font-semibold text-primary">
-                {branch.iso}
+                {branch.isoCode}
               </span>
             </div>
             <div className="flex-1 min-w-0">
-              <p className="font-semibold text-secondary">{branch.country}</p>
-              <p className="text-xs text-gray-400 mt-0.5">{branch.subtitle}</p>
+              <p className="font-semibold text-secondary">{countryName}</p>
+              <p className="text-xs text-gray-400 mt-0.5">{subtitle}</p>
             </div>
             <button
               onClick={onClose}
@@ -169,12 +183,12 @@ export default function BranchModal({ branch, onClose }: Props) {
             <div className="flex items-center gap-2">
               {officeCount > 0 && (
                 <span className="text-xs font-medium px-2.5 py-1 rounded-full bg-primary/8 text-primary">
-                  {officeCount} ofis
+                  {t("office_count", { count: officeCount })}
                 </span>
               )}
               {warehouseCount > 0 && (
                 <span className="text-xs font-medium px-2.5 py-1 rounded-full bg-amber-50 text-amber-700">
-                  {warehouseCount} anbar
+                  {t("warehouse_count", { count: warehouseCount })}
                 </span>
               )}
             </div>
@@ -188,7 +202,7 @@ export default function BranchModal({ branch, onClose }: Props) {
               {isActive && (
                 <span className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse" />
               )}
-              {isActive ? "Aktiv" : "Gözlənilir"}
+              {isActive ? t("active") : t("planned")}
             </span>
           </div>
         </motion.div>
@@ -215,12 +229,12 @@ export default function BranchModal({ branch, onClose }: Props) {
           <div className="px-5 pb-4 border-b border-gray-100 flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl bg-primary/8 flex items-center justify-center flex-shrink-0">
               <span className="text-xs font-mono font-semibold text-primary">
-                {branch.iso}
+                {branch.isoCode}
               </span>
             </div>
             <div className="flex-1 min-w-0">
-              <p className="font-semibold text-secondary">{branch.country}</p>
-              <p className="text-xs text-gray-400 mt-0.5">{branch.subtitle}</p>
+              <p className="font-semibold text-secondary">{countryName}</p>
+              <p className="text-xs text-gray-400 mt-0.5">{subtitle}</p>
             </div>
             <button
               onClick={onClose}
@@ -235,12 +249,12 @@ export default function BranchModal({ branch, onClose }: Props) {
             <div className="px-5 pt-3 flex gap-2">
               {officeCount > 0 && (
                 <span className="text-xs font-medium px-2.5 py-1 rounded-full bg-primary/8 text-primary">
-                  {officeCount} ofis
+                  {t("office_count", { count: officeCount })}
                 </span>
               )}
               {warehouseCount > 0 && (
                 <span className="text-xs font-medium px-2.5 py-1 rounded-full bg-amber-50 text-amber-700">
-                  {warehouseCount} anbar
+                  {t("warehouse_count", { count: warehouseCount })}
                 </span>
               )}
             </div>

@@ -2,113 +2,50 @@
 
 import { useState } from "react";
 import { AnimatePresence } from "framer-motion";
-import { Branch } from "@/services/dto/branch.types";
 import BranchModal from "./atoms/BranchModal";
+import { AboutMainType, BranchItem, newInfoJson } from "@/services/interface/type";
+import { findJsonSection } from "@/utils/findJsonSection";
+import { sanitizeHtml } from "@/lib/domburify";
+import { useTranslations } from "next-intl";
 
-const branches: Branch[] = [
-  {
-    id: "az",
-    iso: "AZE",
-    country: "Azərbaycan",
-    subtitle: "Baş ofis",
-    status: "ACTIVE",
-    offices: [
-      {
-        id: "az-1",
-        type: "office",
-        city: "Bakı",
-        address: "Bakı şəhəri, Nərimanov rayonu, Heydər Əliyev prospekti 152",
-      },
-    ],
-  },
-  {
-    id: "cn",
-    iso: "CHN",
-    country: "Çin",
-    subtitle: "3 məkan",
-    status: "ACTIVE",
-    offices: [
-      {
-        id: "cn-1",
-        type: "warehouse",
-        city: "Yiwu",
-        address:
-          "Çin, Cinhua şəhəri, Yiwu şəhəri, Xizhan prospekti 800, Çjezyan əyaləti",
-      },
-      {
-        id: "cn-2",
-        type: "warehouse",
-        city: "Guangzhou",
-        address:
-          "Çin, Quançjou şəhəri, Baiyun rayonu, Shui She Nan küçəsindən 100 metr şimalda, Quançdun əyaləti",
-      },
-      {
-        id: "cn-3",
-        type: "warehouse",
-        city: "Horgos",
-        address: "Horgos Şəhəri İpək Yolu Rongteng Gömrük Nəzarət Anbarı",
-      },
-    ],
-  },
-  {
-    id: "tr",
-    iso: "TUR",
-    country: "Türkiyə",
-    subtitle: "Gözlənilir",
-    status: "PLANNED",
-    offices: [],
-  },
-  {
-    id: "kz",
-    iso: "KAZ",
-    country: "Qazaxıstan",
-    subtitle: "1 məkan",
-    status: "ACTIVE",
-    offices: [
-      {
-        id: "kz-1",
-        type: "office",
-        city: "Almatı",
-        address: "Almatı Şəhəri, Seyfullin Prospekti 410/78, Qazaxıstan",
-      },
-    ],
-  },
-  {
-    id: "ge",
-    iso: "GEO",
-    country: "Gürcüstan",
-    subtitle: "1 məkan",
-    status: "ACTIVE",
-    offices: [
-      {
-        id: "ge-1",
-        type: "office",
-        city: "Tbilisi",
-        address: "Tbilisi, Rustaveli prospekti 14, Gürcüstan",
-      },
-    ],
-  },
-];
-
-export default function BranchCards() {
-  const [selected, setSelected] = useState<Branch | null>(null);
-
+export default function BranchCards({
+  aboutInfo,
+}: {
+  aboutInfo: AboutMainType;
+}) {
+  const t = useTranslations("atoms.components.branchModal");
+  const aboutInfoTr = aboutInfo?.translations?.[0];
+  const branches = aboutInfo?.branches ?? [];
+  const branchesInfo = findJsonSection<newInfoJson>(
+    aboutInfoTr?.description ?? "",
+    "branches",
+  );
+  const [selected, setSelected] = useState<BranchItem | null>(null);
+  if (!branchesInfo || !branches.length) return null;
   return (
     <div id="section-branches" className="reveal">
-      <p className="text-sm font-medium text-primary mb-4 tracking-wide uppercase">
-        04 / Filiallar
-      </p>
-      <h2 className="font-display text-4xl font-bold mb-6">
-        Beynəlxalq filiallarımız
+      <span className="text-sm font-medium text-primary mb-4 tracking-wide uppercase">
+        {branchesInfo?.subTitle}
+      </span>
+      <h2
+        title={branchesInfo?.title}
+        className="font-display text-4xl font-bold mb-6"
+      >
+        {branchesInfo?.title}
       </h2>
-      <p className="text-gray-500 leading-relaxed text-lg mb-10">
-        Dünyanın müxtəlif ölkələrində yerləşən filiallarımız vasitəsilə qlobal
-        logistika şəbəkəmizi genişləndiririk.
-      </p>
+      {branchesInfo?.description && (
+        <article
+          dangerouslySetInnerHTML={{
+            __html: sanitizeHtml(branchesInfo?.description ?? ""),
+          }}
+          className="text-gray-500 leading-relaxed text-lg mb-10"
+        />
+      )}
 
       <div className="space-y-3">
         {branches.map((branch) => {
           const isActive = branch.status === "ACTIVE";
+          const countryName = branch.translations[0]?.countryName ?? "";
           const officeCount = branch.offices.filter(
             (o) => o.type === "office",
           ).length;
@@ -141,25 +78,33 @@ export default function BranchCards() {
                 <div>
                   <div className="flex items-center gap-2 mb-0.5">
                     <span className="font-semibold text-secondary">
-                      {branch.country}
+                      {countryName}
                     </span>
                     <span className="text-xs text-gray-400 font-mono">
-                      {branch.iso}
+                      {branch.isoCode}
                     </span>
                   </div>
-                  <p className="text-sm text-gray-400">{branch.subtitle}</p>
+                  <p className="text-sm text-gray-400">
+                    {branch.offices.length === 0
+                      ? t("coming_soon")
+                      : branch.offices.length === 1
+                        ? t("one_location")
+                        : t("locations_count", {
+                            count: branch.offices.length,
+                          })}
+                  </p>
                 </div>
               </div>
 
               <div className="flex items-center gap-2 flex-shrink-0">
                 {officeCount > 0 && (
                   <span className="hidden sm:inline-flex text-xs font-medium px-2.5 py-1 rounded-full bg-primary/8 text-primary">
-                    {officeCount} ofis
+                    {t("office_count", { count: officeCount })}
                   </span>
                 )}
                 {warehouseCount > 0 && (
                   <span className="hidden sm:inline-flex text-xs font-medium px-2.5 py-1 rounded-full bg-amber-50 text-amber-700">
-                    {warehouseCount} anbar
+                    {t("warehouse_count", { count: warehouseCount })}
                   </span>
                 )}
                 <span
@@ -169,7 +114,7 @@ export default function BranchCards() {
                       : "bg-amber-50 text-amber-700"
                   }`}
                 >
-                  {isActive ? "Aktiv" : "Gözlənilir"}
+                  {isActive ? t("active") : t("planned")}
                 </span>
                 <svg
                   className="w-4 h-4 text-gray-300 group-hover:text-gray-400 transition-colors"

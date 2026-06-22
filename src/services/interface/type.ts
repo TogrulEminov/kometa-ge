@@ -554,6 +554,7 @@ export type BranchItem = {
   updatedAt: string;
   orderNumber: number;
   translations: BranchTranslation[];
+  offices: Office[];
 };
 // office
 type OfficeTranslation = {

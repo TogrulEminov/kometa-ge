@@ -390,7 +390,91 @@ export async function fetchAboutHomeInfo({
     },
   });
 }
-export async function fetchFeaturesInfo({locale}:{locale: CustomLocales}) {
+export async function fetchAboutMainInfo({
+  locale,
+}: {
+  locale: CustomLocales;
+}) {
+  "use cache";
+  cacheLife("hours");
+  cacheTag(CACHE_TAG_GROUPS.ABOUT_MAIN);
+  return db.aboutMain.findFirst({
+    where: {
+      key: "main",
+      translations: {
+        some: {
+          locale: locale,
+        },
+      },
+    },
+    select: {
+      imageUrl: FILE_SELECT,
+      gallery: FILE_SELECT,
+      branches: {
+        where: {
+          isDeleted: false,
+          translations: {
+            some: {
+              locale,
+            },
+          },
+        },
+        select: {
+          id: true,
+          isoCode: true,
+          offices: {
+            where: {
+              isDeleted: false,
+              translations: {
+                some: {
+                  locale,
+                },
+              },
+            },
+            select: {
+              type: true,
+              translations: {
+                where: {
+                  locale,
+                },
+                select: {
+                  id: true,
+                  address: true,
+                  city: true,
+                  locale: true,
+                },
+              },
+            },
+          },
+          translations: {
+            where: {
+              locale,
+            },
+            select: {
+              countryName: true,
+              locale: true,
+            },
+          },
+        },
+      },
+      translations: {
+        where: {
+          locale: locale,
+        },
+        select: {
+          id: true,
+          title: true,
+          subTitle: true,
+          description: true,
+          locale: true,
+          hightlight: true,
+          shortDescription: true,
+        },
+      },
+    },
+  });
+}
+export async function fetchFeaturesInfo({ locale }: { locale: CustomLocales }) {
   "use cache";
   cacheLife("hours");
   cacheTag(CACHE_TAG_GROUPS.FEATURES);
@@ -450,7 +534,7 @@ export async function fetchWorkProcessInfo(locale: CustomLocales) {
     },
   });
 }
-export async function fetchFag({locale}: {locale: CustomLocales}) {
+export async function fetchFag({ locale }: { locale: CustomLocales }) {
   "use cache";
   cacheLife("hours");
   cacheTag(CACHE_TAG_GROUPS.FAQ);

@@ -4,7 +4,7 @@ import CountUp from "react-countup";
 interface StatCardProps {
   label: string;
   suffix?: string;
-  value: string | number;
+  value: number;
 }
 
 export default function StatCard({ label, value, suffix }: StatCardProps) {
