@@ -58,7 +58,7 @@ const SECTION_TYPE_CONFIG = {
     richSectionDescription: false,
     showItems: true,
     showItemDescription: false,
-    showSectionTitle: false,
+    showSectionTitle: true,
     extraItemFields: [
       {
         fieldKey: "itemSuffix",

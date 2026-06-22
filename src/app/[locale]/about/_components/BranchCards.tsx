@@ -24,7 +24,7 @@ export default function BranchCards({
   if (!branchesInfo || !branches.length) return null;
   return (
     <div id="section-branches" className="reveal">
-      <span className="text-sm font-medium text-primary mb-4 tracking-wide uppercase">
+      <span className="text-sm font-medium block text-primary mb-4 tracking-wide uppercase">
         {branchesInfo?.subTitle}
       </span>
       <h2

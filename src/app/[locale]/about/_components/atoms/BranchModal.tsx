@@ -138,14 +138,14 @@ export default function BranchModal({ branch, onClose }: Props) {
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
         transition={{ duration: 0.2 }}
-        className="fixed inset-0 bg-secondary/40 backdrop-blur-sm z-[100]"
+        className="fixed inset-0 bg-secondary/40 backdrop-blur-sm z-[1119]"
         onClick={onClose}
       />
 
       {/* Desktop modal */}
       <div
         key="desktop"
-        className="hidden md:flex fixed inset-0 z-[101] items-center justify-center p-4 pointer-events-none"
+        className="hidden md:flex fixed inset-0 z-[1120] items-center justify-center p-4 pointer-events-none"
       >
         <motion.div
           initial={{ opacity: 0, scale: 0.94, y: 10 }}
@@ -167,7 +167,7 @@ export default function BranchModal({ branch, onClose }: Props) {
             </div>
             <button
               onClick={onClose}
-              className="w-8 h-8 rounded-lg bg-gray-50 hover:bg-gray-100 flex items-center justify-center transition-colors flex-shrink-0"
+              className="w-8 h-8 rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 flex items-center justify-center transition-colors flex-shrink-0"
             >
               <CloseIcon />
             </button>

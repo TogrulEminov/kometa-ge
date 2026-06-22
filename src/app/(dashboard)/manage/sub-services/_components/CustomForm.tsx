@@ -14,6 +14,7 @@ import { CustomLocales } from "@/services/interface/type";
 import { useDropdownOptions } from "@/hooks/useDropdownOptions";
 import FormSelect from "@/globalElement/form/FormSelect";
 import { DynamicIcon } from "@/utils/DynamicIcon";
+import FormTextarea from "@/globalElement/form/FormTextarea";
 interface Props {
   isPending: boolean;
   title?: string | null;
@@ -28,6 +29,7 @@ const SECTION_TYPE_OPTIONS = [
   { value: "process", label: "Our Process" },
   { value: "related_services", label: "Related Services" },
   { value: "main_service", label: "Main Service" },
+  { value: "faq", label: "FAQ" },
 ] as const;
 
 const SECTION_TYPE_CONFIG = {
@@ -205,6 +207,7 @@ export default function CustomForm({
             </div>
           )}
           <FormInput label="Slug" placeholder="Enter slug" fieldName="slug" />
+          <FormTextarea label="Short Description" placeholder="Enter short description" fieldName="shortDescription" />
           <JsonSectionList
             fieldName="description"
             typeOptions={[...SECTION_TYPE_OPTIONS]}

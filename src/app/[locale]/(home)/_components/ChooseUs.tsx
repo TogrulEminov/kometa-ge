@@ -84,7 +84,7 @@ export default async function WhyChooseUs({ locale }: SectionLocale) {
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <div className="relative">
-            <div className="relative lg:h-full h-100 rounded-2xl overflow-hidden">
+            <div className="relative h-104 rounded-2xl overflow-hidden">
               {imageUrl ? (
                 <CustomImage
                   src={imageUrl}

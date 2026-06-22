@@ -16,7 +16,8 @@ interface Props {
 }
 
 const SECTION_TYPE_OPTIONS = [
-  { value: "main", label: "Main Info" },
+  { value: "main", label: "Main Info" },  
+  { value: "faq", label: "FAQ" },
   { value: "advantages", label: "Advantages" },
   { value: "statistics", label: "Our Statistics" },
   { value: "process", label: "Our Process" },

@@ -13,10 +13,6 @@
       "label": "Services"
     },
     {
-      "value": "blog",
-      "label": "Blogs"
-    },
-    {
       "value": "about",
       "label": "About Us"
     },
@@ -33,10 +29,6 @@
       "label": "Photo Gallery"
     },
     {
-      "value": "media",
-      "label": "Media Page"
-    },
-    {
       "value": "contact",
       "label": "Contact"
     }
@@ -50,11 +42,6 @@
       "value": "directions",
       "label": "Directions Section"
     },
-    {
-      "value": "process",
-      "label": "Process Section"
-    },
-
     {
       "value": "media",
       "label": "Media Section"

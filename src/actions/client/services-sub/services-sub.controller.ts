@@ -144,7 +144,8 @@ export async function getSubServicesById({ locale, id }: GetByIDProps) {
             title: true,
             description: true,
             slug: true,
-            locale: true,
+            locale: true, 
+            shortDescription: true,
             seo: {
               select: {
                 metaDescription: true,
@@ -176,7 +177,7 @@ export const createSubServices = authActionClient
         metaKeywords,
         slug,
         servicesId,
-        iconsUrl,
+        iconsUrl,shortDescription
       } = parsedInput;
 
       const customSlug = slug || createSlug(title);
@@ -217,6 +218,7 @@ export const createSubServices = authActionClient
                 locale: locale,
                 slug: customSlug,
                 description: JSON.stringify(description),
+                shortDescription: shortDescription,
                 seo: {
                   create: {
                     metaTitle: metaTitle,
@@ -252,6 +254,7 @@ export const uptadeSubServices = authActionClient
         metaKeywords,
         id,
         slug,
+        shortDescription,
         servicesId,
         iconsUrl,
       } = parsedInput;
@@ -279,6 +282,7 @@ export const uptadeSubServices = authActionClient
                   locale,
                   slug: finalSlug,
                   description: JSON.stringify(description),
+                  shortDescription: shortDescription,
                   seo: {
                     create: {
                       metaTitle: metaTitle,
@@ -293,6 +297,7 @@ export const uptadeSubServices = authActionClient
                   locale,
                   slug: finalSlug,
                   description: JSON.stringify(description),
+                  shortDescription: shortDescription,
                   seo: {
                     update: {
                       metaTitle: metaTitle,

@@ -14,7 +14,7 @@ export default function ServicesList({
   if (!services) return null;
   return (
     <div id={`section-${services?.type}`} className="reveal">
-      <span className="text-sm font-medium text-primary mb-4 tracking-wide uppercase">
+      <span className="text-sm font-medium block text-primary mb-4 tracking-wide uppercase">
         {services?.subTitle}
       </span>
       <h2
@@ -37,7 +37,7 @@ export default function ServicesList({
           if (!service?.itemTitle) return null;
           return (
             <div
-              key={service.itemTitle}
+              key={index}
               className={`group border-t border-gray-200 py-8 ${
                 index === services?.items?.length - 1 ? "border-b" : ""
               }`}
@@ -57,16 +57,14 @@ export default function ServicesList({
                   </h3>
                 </div>
                 <div className="col-span-12 lg:col-span-6">
-                  <p className="text-gray-500 leading-relaxed">
-                    {service.itemDescription && (
-                      <article
-                        className="text-gray-500 leading-relaxed"
-                        dangerouslySetInnerHTML={{
-                          __html: sanitizeHtml(service.itemDescription ?? ""),
-                        }}
-                      />
-                    )}
-                  </p>
+                  {service.itemDescription && (
+                    <article
+                      className="text-gray-500 leading-relaxed"
+                      dangerouslySetInnerHTML={{
+                        __html: sanitizeHtml(service.itemDescription ?? ""),
+                      }}
+                    />
+                  )}
                 </div>
               </div>
             </div>

@@ -1,16 +1,79 @@
 import InnerBanner from "@/components/InnerBanner";
-import ServicesContainer from "./_components/PhotoGalleryContainer";
-
-export default function page() {
+import PhotoGalleryContainer from "./_components/PhotoGalleryContainer";
+import {
+  fetchCategoriesByKey,
+  fetchPhotoGallery,
+} from "@/actions/ui/main.controller";
+import {
+  CategoryKey,
+  CustomLocales,
+  newInfoJson,
+  PaginationItem,
+  PhotoGalleryType,
+} from "@/services/interface/type";
+import { findJsonSection } from "@/utils/findJsonSection";
+import { Suspense } from "react";
+interface PageProps {
+  params: Promise<{ locale: string }>;
+  searchParams: Promise<{ [key: string]: string | number | boolean }>;
+}
+export default async function PhotoGalleryPage({
+  params,
+  searchParams,
+}: PageProps) {
+  const locale = (await params).locale;
+  const categoryData = await fetchCategoriesByKey({
+    locale: locale as CustomLocales,
+    key: CategoryKey.photoGallery,
+  });
+  const categoryTr = categoryData?.translations?.[0];
+  const bannerDescription = findJsonSection<newInfoJson>(
+    categoryTr?.description,
+    "banner",
+  );
+  const sectionContent = findJsonSection<newInfoJson>(
+    categoryTr?.description,
+    "sectionContent",
+  );
   return (
     <>
       <InnerBanner
-        title="Photo Gallery"
-        subtitle="Explore moments from our logistics operations, transportation projects, and fleet in action"
-        breadcrumbs={[{ label: "Photo Gallery" }]}
+        title={categoryTr?.title ?? ""}
+        subtitle={bannerDescription?.description ?? ""}
+        breadcrumbs={[{ label: categoryTr?.title ?? "" }]}
         variant="dark"
       />
-      <ServicesContainer />
+      <Suspense fallback={null}>
+        <CardArea
+          searchParams={searchParams}
+          sectionContent={sectionContent}
+          locale={locale as CustomLocales}
+        />
+      </Suspense>
     </>
+  );
+}
+async function CardArea({
+  searchParams,
+  sectionContent,
+  locale,
+}: {
+  searchParams: Promise<{ [key: string]: string | number | boolean }>;
+  sectionContent: newInfoJson | undefined;
+  locale: CustomLocales;
+}) {
+  const searchParamsData = await searchParams;
+  const { page = 1 } = searchParamsData;
+
+  const services = await fetchPhotoGallery({
+    pageNumber: Number(page),
+    locale: locale as CustomLocales,
+  });
+  return (
+    <PhotoGalleryContainer
+      data={services?.data as unknown as PhotoGalleryType[]}
+      sectionContent={sectionContent as newInfoJson}
+      paginations={services.paginations as PaginationItem}
+    />
   );
 }

@@ -2,7 +2,7 @@ import { sanitizeHtml } from "@/lib/domburify";
 import { cn } from "@/utils/cn";
 import { highlightActiveWord } from "@/utils/highlight";
 import { JSX } from "react";
-type HeadingTag = "strong" | "h2" | "h3" | "h4" | "h5" | "h6";
+type HeadingTag = "strong" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
 
 interface Props {
   title: string;

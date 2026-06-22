@@ -4,16 +4,22 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useAction } from "next-safe-action/hooks";
 import CustomForm from "../../../_components/CustomForm";
-import { CustomLocales, ServicesType, SubServicesType } from "@/services/interface/type";
+import { CustomLocales, SubServicesType } from "@/services/interface/type";
 import { useServerQueryById } from "@/hooks/useServerActions";
 import { pageRoutes } from "@/app/(dashboard)/_type/constant";
 import FormWrapper from "@/globalElement/form/FormWrapper";
 import LanguageComponent from "@/app/(dashboard)/_components/LanguageComponent";
 import { parseJSON } from "@/utils/parseJson";
 import { NewInfoJson } from "@/app/(dashboard)/_type/global.type";
-import { getSubServicesById, uptadeSubServices } from "@/actions/client/services-sub/services-sub.controller";
+import {
+  getSubServicesById,
+  uptadeSubServices,
+} from "@/actions/client/services-sub/services-sub.controller";
 import { sub_services_list } from "@/app/(dashboard)/_type/query-key";
-import { UpdateSubServiceInput, uptadeSubServiceSchema } from "@/actions/client/services-sub/services-sub.schema";
+import {
+  UpdateSubServiceInput,
+  uptadeSubServiceSchema,
+} from "@/actions/client/services-sub/services-sub.schema";
 export default function CategriesUptadeContent() {
   const params = useParams();
   const id = Array.isArray(params?.id) ? params.id[0] : params?.id;
@@ -55,6 +61,7 @@ export default function CategriesUptadeContent() {
       iconsUrl: existingData?.iconsUrl || null,
       servicesId: existingData?.servicesId || null,
       locale: locale as CustomLocales,
+      shortDescription: translation?.shortDescription || null,
     },
   });
   const { execute, isExecuting } = useAction(uptadeSubServices, {
@@ -81,7 +88,11 @@ export default function CategriesUptadeContent() {
           schema={uptadeSubServiceSchema}
           onSubmit={onSubmit}
         >
-          <CustomForm locale={locale as CustomLocales} isPending={isExecuting} title={translation?.title} />
+          <CustomForm
+            locale={locale as CustomLocales}
+            isPending={isExecuting}
+            title={translation?.title}
+          />
         </FormWrapper>
       </section>
     </>

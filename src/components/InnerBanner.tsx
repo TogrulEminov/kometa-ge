@@ -10,7 +10,6 @@ import CustomImage from "@/globalElement/CustomImage";
 import { MotionDiv, MotionNav } from "@/lib/motion";
 import { Link } from "@/i18n/navigation";
 import innerBanner from "@public/assets/inner-banner.png";
-import { FaAngleLeft } from "react-icons/fa";
 
 interface BreadcrumbItem {
   label: string;
@@ -230,9 +229,9 @@ export default function InnerBanner({
 
             {/* Title + subtitle */}
             <MotionDiv variants={itemVariants}>
-              <h1 className="font-display text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-white leading-[1.1] tracking-tight">
+              <strong className="font-display text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-white leading-[1.1] tracking-tight">
                 {title}
-              </h1>
+              </strong>
               {subtitle && (
                 <p className="text-white/60 text-sm sm:text-base md:text-lg max-w-2xl leading-relaxed font-light mt-3">
                   {subtitle}

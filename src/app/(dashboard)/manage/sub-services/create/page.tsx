@@ -32,6 +32,7 @@ export default function CreatePage() {
       servicesId: null,
       description: [],
       locale: locale as CustomLocales,
+      shortDescription: null,
     },
   });
 

@@ -325,3 +325,19 @@ details:not([open]) summary:hover .chevron-icon {
   z-index: 0;
 }
 
+[id^="section-"] {
+  scroll-margin-top: 100px;
+}
+
+.contact-form-fields .ant-input:hover,
+.contact-form-fields textarea.ant-input:hover {
+  border-color: var(--color-primary) !important;
+}
+
+.contact-form-fields .ant-input:focus,
+.contact-form-fields .ant-input-focused,
+.contact-form-fields textarea.ant-input:focus {
+  border-color: var(--color-primary) !important;
+  box-shadow: none !important;
+}
+

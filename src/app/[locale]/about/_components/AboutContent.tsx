@@ -1,3 +1,4 @@
+import CustomImage from "@/globalElement/CustomImage";
 import { sanitizeHtml } from "@/lib/domburify";
 import { AboutMainType, newInfoJson } from "@/services/interface/type";
 import { findJsonSection } from "@/utils/findJsonSection";
@@ -28,12 +29,12 @@ export default function AboutContent({
               if (!imageUrl) return null;
               return (
                 <div
-                  className="image-reveal rounded-lg overflow-hidden"
+                  className="image-reveal aspect-4/3 rounded-lg overflow-hidden"
                   key={item.id}
                 >
-                  <Image
+                  <CustomImage
                     src={imageUrl}
-                    alt={aboutInfoTr?.title ?? ""}
+                    title={aboutInfoTr?.title as string}
                     width={500}
                     height={400}
                     className="w-full h-full object-cover"
@@ -44,7 +45,7 @@ export default function AboutContent({
           </div>
         )}
         {mainDescription?.subTitle && (
-          <span className="text-sm font-medium text-primary mb-4 tracking-wide uppercase">
+          <span className="text-sm font-medium block text-primary mb-4 tracking-wide uppercase">
             {mainDescription?.subTitle}
           </span>
         )}
@@ -68,7 +69,7 @@ export default function AboutContent({
       {benefits && (
         <div id={`section-${benefits?.type}`} className="reveal">
           {benefits?.subTitle && (
-            <span className="text-sm font-medium text-primary mb-4 tracking-wide uppercase">
+            <span className="text-sm font-medium block text-primary mb-4 tracking-wide uppercase">
               {benefits?.subTitle}
             </span>
           )}

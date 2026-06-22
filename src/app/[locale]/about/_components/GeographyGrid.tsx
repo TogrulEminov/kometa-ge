@@ -19,7 +19,7 @@ export default function GeographyGrid({
   if (!geography) return null;
   return (
     <div id={`section-${geography?.type}`} className="reveal">
-      <span className="text-sm font-medium text-primary mb-4 tracking-wide uppercase">
+      <span className="text-sm font-medium block text-primary mb-4 tracking-wide uppercase">
         {geography?.subTitle}
       </span>
       <h2

@@ -33,6 +33,13 @@ const SECTION_TYPE_CONFIG = {
     showItems: false,
     showItemDescription: false,
     showSectionTitle: true,
+    extraMainFields: [
+      {
+        fieldKey: "highlightWord",
+        label: "Highlight Word",
+        type: "input" as const,
+      },
+    ],
   },
 };
 export default function CustomForm({

@@ -25,7 +25,7 @@ export default function HeroSection({
   return (
     <section className="relative bg-white overflow-hidden py-10 lg:py-20 border-b border-b-tertiary">
       <div className="container ">
-        <div className="grid grid-cols-12 gap-8">
+        <div className="grid grid-cols-12 gap-8 items-start">
           <div className="col-span-12 lg:col-span-9 space-y-5">
             {aboutInfoTr?.subTitle && (
               <span className="text-sm block w-fit font-medium bg-primary text-white px-4 rounded-full py-2 tracking-wide">
@@ -48,8 +48,10 @@ export default function HeroSection({
               />
             )}
           </div>
-
-          <div className="col-span-12 lg:col-span-3 flex flex-row flex-wrap lg:flex-col gap-4 lg:gap-6 lg:pt-20">
+          <div
+            className="col-span-12 lg:col-span-3 flex flex-row flex-wrap lg:flex-col gap-4 lg:gap-6"
+            id={`section-${statistics?.type}`}
+          >
             {statistics?.items.map((stat: jsonItem, i) => {
               if (!stat.itemValue || !stat.itemTitle || !stat.itemSuffix)
                 return null;

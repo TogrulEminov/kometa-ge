@@ -19,7 +19,12 @@ export const CustomLocales = {
   en: "en",
   ka: "ka",
 } as const;
-
+export interface PaginationItem {
+  page: number;
+  pageSize: number;
+  dataCount: number;
+  totalPages: number;
+}
 export type CustomLocales = (typeof CustomLocales)[keyof typeof CustomLocales];
 export const StaticKey = {
   main: "main",
@@ -30,13 +35,8 @@ export type StaticKey = (typeof StaticKey)[keyof typeof StaticKey];
 export const SectionKey = {
   services: "services",
   directions: "directions",
-  process: "process",
-  blog: "blog",
   media: "media",
-  branches: "branches",
-  testimonials: "testimonials",
   faq: "faq",
-  employee: "employee",
   contact: "contact",
 } as const;
 export type SectionKey = (typeof SectionKey)[keyof typeof SectionKey];
@@ -475,6 +475,7 @@ export type SubServicesTranslationType = {
   id: string;
   title: string;
   slug: string | null;
+  shortDescription: string | null;
   description: NewInfoJson | null;
   locale: CustomLocales;
   documentId: string | null;

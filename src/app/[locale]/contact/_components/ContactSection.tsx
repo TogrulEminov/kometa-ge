@@ -5,28 +5,41 @@ import { Suspense } from "react";
 import MapContainerBox from "./MapContainer";
 import MapInfo from "./atoms/MapInfo";
 import SocialBox from "./atoms/SocialBox";
+import {
+  IContactInformation,
+  newInfoJson,
+  Social,
+} from "@/services/interface/type";
+import { useTranslations } from "next-intl";
 
-export default function ContactPage() {
+export default function ContactSection({
+  data,
+  sectionContent,
+  socials,
+}: {
+  data: IContactInformation;
+  sectionContent: newInfoJson;
+  socials: Social[];
+}) {
+  const t = useTranslations("atoms.components.contactInfo");
   return (
     <div className="min-h-screen bg-[#f5f5f7] py-20">
       <div className="container">
         <SectionContentComponent
-          title="Get in touch"
+          title={sectionContent?.title ?? ""}
           type="vertical"
-          heading="h2"
-          description={
-            "Have a question? We are here to help. Reach out to our team."
-          }
+          heading="h1"
+          description={sectionContent?.description ?? ""}
         />
 
-        <InfoxBox />
+        <InfoxBox contactInfo={data} />
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <div className="bg-white rounded-3xl p-8 lg:p-10 border border-gray-100">
-            <h2 className="text-secondary text-2xl font-bold mb-2">
-              Send a message
-            </h2>
+            <strong className="text-secondary text-2xl block font-bold mb-2">
+              {t("send_a_message")}
+            </strong>
             <p className="text-gray-400 text-sm mb-8">
-              Fill out the form and we will get back to you shortly.
+              {t("send_description")}
             </p>
             <ContactForm />
           </div>
@@ -39,15 +52,24 @@ export default function ContactPage() {
                     <div className="absolute inset-0 bg-gray-100 w-full h-full" />
                   }
                 >
-                  <MapContainerBox />
+                  <MapContainerBox contactInfo={data} />
                 </Suspense>
               </div>
 
               <div className="p-5">
-                <MapInfo />
+                <Suspense
+                  fallback={
+                    <div className="absolute inset-0 bg-gray-100 w-full h-full" />
+                  }
+                >
+                  <MapInfo contactInfo={data} />
+                </Suspense>
               </div>
             </div>
-            <SocialBox />
+
+            <Suspense fallback={null}>
+              <SocialBox socials={socials} />
+            </Suspense>
           </div>
         </div>
       </div>

@@ -6,6 +6,7 @@ import { useForm } from "react-hook-form";
 import z from "zod";
 import FormPhone from "@/globalElement/form/FormPhone";
 import FormTextarea from "@/globalElement/form/FormTextarea";
+import { useTranslations } from "next-intl";
 const formSchema = z.object({
   name: z.string().nullish(),
   surname: z.string().nullish(),
@@ -16,7 +17,15 @@ const formSchema = z.object({
 });
 
 type SchemaInput = z.infer<typeof formSchema>;
+
+const contactInputClassName =
+  "w-full bg-gray-50 h-12 border border-transparent outline-none shadow-none ring-0 rounded-xl px-5 py-4 text-secondary text-sm placeholder-gray-400 transition-colors hover:!border-primary focus:!border-primary focus:ring-0! focus:ring-offset-0!";
+
+const contactTextareaClassName =
+  "w-full bg-gray-50 border border-transparent outline-none shadow-none ring-0 rounded-xl px-5 py-4 text-secondary text-sm placeholder-gray-400 resize-none transition-colors hover:!border-primary focus:!border-primary focus:ring-0! focus:ring-offset-0!";
+
 export default function ContactForm() {
+  const t=useTranslations("atoms.components.contactInfo");
   const generalForm = useForm<SchemaInput>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -33,57 +42,42 @@ export default function ContactForm() {
   };
   return (
     <FormWrapper methods={generalForm} schema={formSchema} onSubmit={onSubmit}>
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-6">
+      <div className="contact-form-fields grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-6">
         <FormInput
-          placeholder="First name"
+          placeholder={t("form.first_name")}
           fieldName="name"
-          classNames={{
-            input:
-              "w-full bg-gray-50 h-12 border-0 outline-none shadow-none ring-0 rounded-xl px-5 py-4 text-secondary text-sm placeholder-gray-400",
-          }}
+          className={contactInputClassName}
         />
 
         <FormInput
-          placeholder="Last name"
+          placeholder={t("form.last_name")}
           fieldName="surname"
-          classNames={{
-            input:
-              "w-full bg-gray-50 h-12 border-0 outline-none shadow-none ring-0 rounded-xl px-5 py-4 text-secondary text-sm placeholder-gray-400",
-          }}
+          className={contactInputClassName}
         />
         <FormInput
-          placeholder="Email Address"
+          placeholder={t("form.email")}
           fieldName="email"
           wrapperClassName="sm:col-span-2!"
-          classNames={{
-            input:
-              "w-full bg-gray-50 h-12 border-0 outline-none shadow-none ring-0 rounded-xl px-5 py-4 text-secondary text-sm placeholder-gray-400",
-          }}
+          className={contactInputClassName}
         />
         <FormPhone
           fieldName="phone"
           wrapperClassName="sm:col-span-2!"
-          classNames={{
-            input:
-              "w-full bg-gray-50 h-12 border-0 outline-none shadow-none ring-0 rounded-xl px-5 py-4 text-secondary text-sm placeholder-gray-400",
-          }}
+          className={contactInputClassName}
         />
         <FormTextarea
           fieldName="message"
           rows={4}
-          placeholder="Your Message..."
+          placeholder={t("form.message")}
           wrapperClassName="sm:col-span-2!"
-          classNames={{
-            textarea:
-              "w-full bg-gray-50 border-0 outline-none shadow-none ring-0 rounded-xl px-5 py-4 text-secondary text-sm placeholder-gray-400 resize-none",
-          }}
+          className={contactTextareaClassName}
         />
 
         <button
           type="submit"
           className="w-full sm:col-span-2 bg-secondary hover:bg-primary text-white font-semibold py-4 rounded-xl transition-all duration-300 hover:shadow-lg hover:shadow-primary/20"
         >
-          Send Message
+          {t("form.submit")}
         </button>
       </div>
     </FormWrapper>

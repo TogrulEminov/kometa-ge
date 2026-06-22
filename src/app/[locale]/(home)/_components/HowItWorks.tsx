@@ -41,9 +41,9 @@ console.log("worksTr",worksTr)
         </div>
 
         {/* BOTTOM ROW */}
-        <div className="flex lg:items-stretch lg:flex-row flex-col gap-10 relative z-10">
+        <div className="grid lg:grid-cols-2 grid-cols-1 lg:items-stretch   gap-10 relative z-10">
           {/* LEFT: Red Card */}
-          <div className="bg-primary lg:ml-5  order-2 lg:order-1  rounded-2xl mx-auto  p-6 md:p-8 lg:-mt-20 flex flex-col justify-between">
+          <div className="bg-primary lg:ml-5  order-2 lg:order-1  w-full rounded-2xl  lg:max-w-lg p-6 md:p-8 lg:-mt-20 flex flex-col justify-between">
             {/* Steps — scrollable */}
             <div className="flex flex-col overflow-y-auto  scrollbar-none max-h-[360px] pr-1">
               {description &&

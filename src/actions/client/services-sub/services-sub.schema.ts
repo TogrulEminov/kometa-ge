@@ -14,6 +14,7 @@ export const createSubServiceSchema = z
     slug: z.string().nullable().optional(),
     servicesId: z.string().nullable().optional(),
     description: z.array(newInfoJsonSchema).optional(),
+    shortDescription: z.string().nullable().optional(),
   })
   .merge(localeSchema)
   .merge(imageSchema)

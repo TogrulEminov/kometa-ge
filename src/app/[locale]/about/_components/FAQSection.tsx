@@ -15,7 +15,7 @@ export default function FAQSection({
   if (!faq) return null;
   return (
     <div id="section-faq" className="reveal">
-      <span className="text-sm font-medium text-primary mb-4 tracking-wide uppercase">
+      <span className="text-sm font-medium block text-primary mb-4 tracking-wide uppercase">
         {faq?.subTitle}
       </span>
       <h2 title={faq?.title} className="font-display text-4xl font-bold mb-6">

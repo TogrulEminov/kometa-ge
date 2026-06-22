@@ -1,3 +1,6 @@
+import { clearPhoneRegex } from "@/lib/domburify";
+import { IContactInformation } from "@/services/interface/type";
+import { useTranslations } from "next-intl";
 import React from "react";
 import {
   FaClock,
@@ -6,37 +9,39 @@ import {
   FaPhoneAlt,
 } from "react-icons/fa";
 
-const contactInfo = [
-  {
-    icon: FaPhoneAlt,
-    label: "Phone",
-    value: "+994 55 262 40 37",
-    href: "tel:+994552624037",
-  },
-  {
-    icon: FaEnvelope,
-    label: "Email",
-    value: "info@kometa.ge",
-    href: "mailto:info@kometa.ge",
-  },
-  {
-    icon: FaMapMarkerAlt,
-    label: "Address",
-    value: "Baku, Azerbaijan",
-    href: "#",
-  },
-  {
-    icon: FaClock,
-    label: "Working Hours",
-    value: "Mon - Fri: 09:00 - 18:00",
-    href: "#",
-  },
-];
 
-export default function InfoxBox() {
+export default function InfoxBox({ contactInfo }: { contactInfo: IContactInformation }) {
+  const t=useTranslations("atoms.components.contactInfo");
+  const contactInfoData = [
+    {
+      icon: FaPhoneAlt,
+      label: t("phone"), 
+      value: contactInfo.phone,
+      href: `tel:${clearPhoneRegex(contactInfo.phone)}`,  
+    },
+    {
+      icon: FaEnvelope,
+      label: t("email"),
+      value: contactInfo.email,
+      href: `mailto:${contactInfo.email}`,
+    },
+    {
+      icon: FaMapMarkerAlt,
+      label: t("address"), 
+      value: contactInfo.translations?.[0]?.adress,
+      href: contactInfo.adressLink ?? "",
+    },
+    {
+      icon: FaClock,
+      label: t("whatsapp"),
+      value: contactInfo.whatsapp,
+      href: `https://wa.me/${clearPhoneRegex(contactInfo.whatsapp)}`,
+    },
+  ];
+  
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-12">
-      {contactInfo.map((item, i) => (
+      {contactInfoData.map((item, i) => (
         <a
           key={i}
           href={item.href}

@@ -109,7 +109,27 @@ export async function fetchServices({
             locale: true,
           },
         },
-        imageUrl: FILE_SELECT,
+        subServices: {
+          where: {
+            isDeleted: false,
+            translations: {
+              some: {
+                locale,
+              },
+            },
+          },
+          select: {
+            id: true,
+            translations: {
+              where: { locale },
+              select: {
+                title: true,
+                slug: true,
+                locale: true,
+              },
+            },
+          },
+        },
       },
       orderBy: { orderNumber: "asc" },
       skip: skip,
@@ -128,6 +148,69 @@ export async function fetchServices({
     },
   };
 }
+export async function fetchServicesRelated({
+  category,
+  locale,
+}: {
+  category: string;
+  locale: CustomLocales;
+}) {
+  "use cache";
+  cacheLife("hours");
+  cacheTag(CACHE_TAG_GROUPS.SERVICES);
+  const whereAction: ServicesWhereInput = {
+    isDeleted: false,
+    translations: {
+      some: {
+        locale,
+        NOT: {
+          slug: category,
+        },
+      },
+    },
+  };
+
+  return db.services.findMany({
+    where: whereAction,
+    select: {
+      id: true,
+      iconUrl: true,
+      translations: {
+        where: { locale },
+        select: {
+          id: true,
+          title: true,
+          shortDescription: true,
+          slug: true,
+          locale: true,
+        },
+      },
+      subServices: {
+        where: {
+          isDeleted: false,
+          translations: {
+            some: {
+              locale,
+            },
+          },
+        },
+        select: {
+          id: true,
+          translations: {
+            where: { locale },
+            select: {
+              title: true,
+              slug: true,
+              locale: true,
+            },
+          },
+        },
+      },
+    },
+    orderBy: { orderNumber: "asc" },
+  });
+}
+
 export async function fetchDirections({
   pageNumber,
   locale,
@@ -647,6 +730,76 @@ export async function fetchSubServices({
           slug: true,
           description: true,
           locale: true,
+          shortDescription: true,
+        },
+      },
+    },
+  });
+}
+export async function fetchRelatedSubServices({
+  category,
+  locale,
+  slug,
+}: {
+  category: string;
+  locale: CustomLocales;
+  slug: string;
+}) {
+  "use cache";
+  cacheLife("hours");
+  cacheTag(CACHE_TAG_GROUPS.SUB_SERVICES);
+  return db.subServices.findFirst({
+    where: {
+      services: {
+        isDeleted: false,
+        translations: {
+          some: {
+            locale: locale,
+            slug: category,
+          },
+        },
+      },
+      translations: {
+        some: {
+          locale: locale,
+          NOT: {
+            slug: slug,
+          },
+        },
+      },
+    },
+    select: {
+      id: true,
+      imageUrl: FILE_SELECT,
+      gallery: FILE_SELECT,
+      iconsUrl: true,
+      services: {
+        where: {
+          isDeleted: false,
+          translations: {
+            some: {
+              locale,
+            },
+          },
+        },
+        select: {
+          id: true,
+          imageUrl: FILE_SELECT,
+          translations: {
+            where: { locale, slug: category },
+            select: { title: true, id: true, slug: true, locale: true },
+          },
+        },
+      },
+      translations: {
+        where: { locale },
+        select: {
+          id: true,
+          title: true,
+          slug: true,
+          description: true,
+          locale: true,
+          shortDescription: true,
         },
       },
     },
@@ -695,6 +848,7 @@ export async function fetchServicesDetailMain({
               slug: true,
               locale: true,
               description: true,
+              shortDescription: true,
             },
           },
         },
@@ -707,6 +861,7 @@ export async function fetchServicesDetailMain({
           slug: true,
           locale: true,
           shortDescription: true,
+          description: true,
         },
       },
     },
