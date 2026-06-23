@@ -18,7 +18,8 @@
       "contact_us": "Contact us",
       "read_more": "Read more",
       "get_started": "Get started",
-      "watch_on_youtube": "Watch on YouTube"
+      "watch_on_youtube": "Watch on YouTube",
+      "get_a_quote": "Get a quote"
     },
     "components": {
       "tracking": {
@@ -122,6 +123,7 @@
         "table_of_contents": "Table of contents",
         "services_titles": "All Services",
         "social_networks": "Follow us on social media",
+        "directions_titles": "All Directions",
         "contact": {
           "title": "Have a question?",
           "name": "Contact us",

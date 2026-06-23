@@ -99,6 +99,7 @@ async function Content({
       services={services?.data as unknown as ServicesType[]}
       contactInfo={contactInfo as unknown as IContactInformation}
       socials={socials as unknown as Social[]}
+      category={category}
     />
   );
 }

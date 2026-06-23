@@ -9,6 +9,7 @@ const MAIN_DOMAIN = "kometa.ge";
 
 const nextConfig: NextConfig = {
   output: "standalone",
+  serverExternalPackages: ["sharp"],
   reactStrictMode: false,
   poweredByHeader: true,
   trailingSlash: false,
@@ -197,28 +198,6 @@ const nextConfig: NextConfig = {
       // Fontlar üçün cache
       {
         source: "/:path*\\.(woff|woff2|ttf)",
-        headers: [
-          {
-            key: "Cache-Control",
-            value: "public, max-age=31536000, immutable",
-          },
-        ],
-      },
-
-      // Static assets üçün cache
-      {
-        source: "/static/:path*",
-        headers: [
-          {
-            key: "Cache-Control",
-            value: "public, max-age=31536000, immutable",
-          },
-        ],
-      },
-
-      // ✅ YENİ: Next.js _next/static üçün cache
-      {
-        source: "/_next/static/:path*",
         headers: [
           {
             key: "Cache-Control",

@@ -21,12 +21,14 @@ export default function ServicesSlugDetail({
   contactInfo,
   socials,
   relatedSubServices,
+  category,
 }: {
   servicesDetail: SubServicesType;
   services: ServicesType[];
   contactInfo: IContactInformation;
   socials: Social[];
   relatedSubServices: SubServicesType[];
+  category: string;
 }) {
   const servicesTr = servicesDetail?.translations?.[0];
   const servicesOverview = findJsonSection<newInfoJson>(
@@ -66,7 +68,7 @@ export default function ServicesSlugDetail({
           <aside className="lg:w-[30%]   hrink-0 lg:order-1 order-2">
             <StickyBarDetail
               services={services}
-              category={servicesTr?.slug ?? ""}
+              category={category}
               contactInfo={contactInfo as unknown as IContactInformation}
               socials={socials as unknown as Social[]}
             />

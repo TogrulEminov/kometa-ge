@@ -2,18 +2,24 @@ import fs from "fs";
 import path from "path";
 import sharp from "sharp";
 
-const DEFAULT_LOGO = "public/assets/logo-white.svg";
+const DEFAULT_LOGO_PARTS = ["public", "assets", "logo-white.svg"] as const;
 const DEFAULT_OPACITY = 0.18;
 const DEFAULT_SCALE = 0.24;
 const MIN_IMAGE_SIZE = 240;
 
+function resolveLogoPath(): string {
+  const envPath = process.env.WATERMARK_LOGO_PATH?.replace(/^[/\\]+/, "");
+  const parts = envPath
+    ? envPath.split(/[/\\]/).filter(Boolean)
+    : [...DEFAULT_LOGO_PARTS];
+
+  return path.join(/* turbopackIgnore: true */ process.cwd(), ...parts);
+}
+
 function getWatermarkConfig() {
   return {
     enabled: process.env.WATERMARK_ENABLED !== "false",
-    logoPath: path.join(
-      process.cwd(),
-      process.env.WATERMARK_LOGO_PATH ?? DEFAULT_LOGO,
-    ),
+    logoPath: resolveLogoPath(),
     opacity: Number(process.env.WATERMARK_OPACITY ?? DEFAULT_OPACITY),
     scale: Number(process.env.WATERMARK_SCALE ?? DEFAULT_SCALE),
   };

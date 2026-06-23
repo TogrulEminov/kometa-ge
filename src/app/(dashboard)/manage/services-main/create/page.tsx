@@ -31,6 +31,7 @@ export default function CreatePage() {
       description: [],
       iconUrl: null,
       locale: locale as CustomLocales,
+      shortDescription: null,
     },
   });
 

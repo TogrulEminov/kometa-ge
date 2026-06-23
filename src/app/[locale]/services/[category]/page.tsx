@@ -78,8 +78,6 @@ async function Content({
     pageNumber: 1,
   });
 
-
-  console.log(servicesCategoryData);
   return (
     <ServicesCategoryDetail
       socials={socials as unknown as Social[]}
