@@ -16,9 +16,27 @@ import {
 } from "@/services/interface/type";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
+import { Metadata } from "next";
+import { generatePageMetadata } from "@/utils/metadata-generator";
+
 interface PageProps {
   params: Promise<{ locale: string; slug: string }>;
 }
+
+export async function generateMetadata({
+  params,
+}: PageProps): Promise<Metadata> {
+  const { locale, slug } = await params;
+
+  return generatePageMetadata({
+    locale,
+    customPath: "directions",
+    dataType: "directions",
+    slug,
+    detail: true,
+  });
+}
+
 export default async function DirectionsDetailPage({ params }: PageProps) {
   const { locale, slug } = await params;
   const directionData = await fetchDirectionsDetailMain({

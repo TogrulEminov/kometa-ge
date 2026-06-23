@@ -1,6 +1,7 @@
 import { Link } from "@/i18n/navigation";
 import { jsonItem, newInfoJson, ServicesType } from "@/services/interface/type";
 import { DynamicIcon } from "@/utils/DynamicIcon";
+import { serviceMainHref } from "@/i18n/href";
 
 export default async function RelatedServices({
   servicesRelated,
@@ -35,7 +36,7 @@ export default async function RelatedServices({
           return (
             <Link
               key={service.id}
-              href={`/servies/${serviceTr?.slug}`}
+              href={serviceMainHref(serviceTr?.slug ?? "")}
               className="group bg-white rounded-2xl p-5  border border-gray-100 hover:border-primary/20  transition-all duration-300 flex items-start gap-4"
             >
               <div className="size-12 p-3 rounded-xl bg-primary/10 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-all duration-300 shrink-0">

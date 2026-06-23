@@ -1,6 +1,7 @@
 import { Link } from "@/i18n/navigation";
 import { newInfoJson, SubServicesType } from "@/services/interface/type";
 import { FaArrowRight } from "react-icons/fa";
+import { serviceSubHref } from "@/i18n/href";
 export default async function RelatedServices({
   sectionData,
   relatedServices,
@@ -35,7 +36,10 @@ export default async function RelatedServices({
         return (
           <Link
             key={service.id}
-            href={`/services/${servicesCategorySlug?.slug}/${serviceTr.slug}`}
+            href={serviceSubHref(
+              servicesCategorySlug?.slug ?? "",
+              serviceTr.slug ?? "",
+            )}
             className="group block relative rounded-2xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-500"
           >
             <div className="absolute inset-0 bg-secondary/80" />

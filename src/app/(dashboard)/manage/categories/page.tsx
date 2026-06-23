@@ -15,7 +15,7 @@ import { categories_content_list } from "../../_type/query-key";
 import SearchingArea from "../../_components/whiteBlockSearch";
 import WhiteBlockTitleArea from "../../_components/whiteBlockTitle";
 import { categoryColumns } from "./_components/categoryColumns";
-import { useAction } from "next-safe-action/hooks";
+import { useAction } from "@/hooks/useServerActions";
 import { useMessageStore } from "@/hooks/useMessageStore";
 
 export default function AdminCategoriesPage() {
@@ -41,6 +41,7 @@ export default function AdminCategoriesPage() {
   const totalPages = data?.paginations.totalPages ?? 1;
 
   const { execute: deleteData } = useAction(deleteCategory, {
+    queryKey: categories_content_list,
     onSuccess: () => {
       success("Category deleted successfully");
     },

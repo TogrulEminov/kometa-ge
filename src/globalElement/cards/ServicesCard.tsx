@@ -5,6 +5,7 @@ import { Link } from "@/i18n/navigation";
 import { ServicesType } from "@/services/interface/type";
 import { getForCards } from "@/utils/getFullimageUrl";
 import { useTranslations } from "next-intl";
+import { serviceMainHref } from "@/i18n/href";
 
 export default function ServiceCard({ item }: { item: ServicesType }) {
   const imageUrl = getForCards(item?.imageUrl);
@@ -12,7 +13,7 @@ export default function ServiceCard({ item }: { item: ServicesType }) {
   const t = useTranslations("atoms");
   return (
     <Link
-      href={`/services/${transations?.slug}`}
+      href={serviceMainHref(transations?.slug ?? "")}
       className="group relative bg-white border border-gray-100 rounded-none overflow-hidden"
     >
       {/* Image Container */}

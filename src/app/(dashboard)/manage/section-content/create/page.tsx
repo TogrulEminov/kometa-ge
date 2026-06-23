@@ -9,7 +9,8 @@ import {
   createSectionContentSchema,
 } from "@/actions/client/section/section.schema";
 import { CustomLocales } from "@/services/interface/type";
-import { useAction } from "next-safe-action/hooks";
+import { section_content_list } from "@/app/(dashboard)/_type/query-key";
+import { useAction } from "@/hooks/useServerActions";
 import { createSectionContent } from "@/actions/client/section/section.controller";
 import { pageRoutes } from "@/app/(dashboard)/_type/constant";
 import LanguageComponent from "@/app/(dashboard)/_components/LanguageComponent";
@@ -32,6 +33,7 @@ export default function CreateSectionContent() {
     },
   });
   const { execute, isExecuting } = useAction(createSectionContent, {
+    queryKey: section_content_list,
     onSuccess: () => {
       generalForm.reset();
       router.push(pageRoutes.sectionContent.root);

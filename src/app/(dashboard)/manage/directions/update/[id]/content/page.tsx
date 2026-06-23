@@ -2,7 +2,7 @@
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { useAction } from "next-safe-action/hooks";
+import { useAction } from "@/hooks/useServerActions";
 import CustomForm from "../../../_components/CustomForm";
 import { CustomLocales, DirectionsType } from "@/services/interface/type";
 import { useServerQueryById } from "@/hooks/useServerActions";
@@ -51,7 +51,7 @@ export default function CategriesUptadeContent() {
     mode: "onChange",
     resolver: zodResolver(uptadeDirectionsSchema),
     values: {
-      id: existingData?.id,
+      id: existingData?.id ?? (id as string),
       title: translation?.title || "",
       navTitle: translation?.navTitle || "",
       slug: translation?.slug || "",
@@ -66,6 +66,7 @@ export default function CategriesUptadeContent() {
   });
 
   const { execute, isExecuting } = useAction(uptadeDirections, {
+    queryKey: directions_list,
     onSuccess: (data) => {
       router.push(pageRoutes.directions.root);
       router.refresh();

@@ -2,7 +2,7 @@
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { useAction } from "next-safe-action/hooks";
+import { useAction } from "@/hooks/useServerActions";
 import CustomForm from "../../../_components/CustomForm";
 import { CustomLocales, ServicesType } from "@/services/interface/type";
 import { useServerQueryById } from "@/hooks/useServerActions";
@@ -64,6 +64,7 @@ export default function CategriesUptadeContent() {
     },
   });
   const { execute, isExecuting } = useAction(uptadeServices, {
+    queryKey: services_main_list,
     onSuccess: (data) => {
       router.push(pageRoutes.servicesMain.root);
       router.refresh();

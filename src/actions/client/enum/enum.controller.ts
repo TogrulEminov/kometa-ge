@@ -92,9 +92,6 @@ export async function getEnumById({ locale, id }: GetByIDProps) {
     const whereClause: Prisma.EnumWhereInput = {
       isDeleted: false,
       id,
-      translations: {
-        some: { locale },
-      },
     };
 
     return db.enum.findFirst({

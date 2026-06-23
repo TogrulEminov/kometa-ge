@@ -3,7 +3,7 @@ import { useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { AboutMainType, CustomLocales } from "@/services/interface/type";
-import { useAction } from "next-safe-action/hooks";
+import { useAction } from "@/hooks/useServerActions";
 import FormWrapper from "@/globalElement/form/FormWrapper";
 import FieldBlock from "@/app/(dashboard)/_components/contentBlock";
 import FormInput from "@/globalElement/form/FormInput";
@@ -19,7 +19,7 @@ import {
 import FormRichEditor from "@/globalElement/form/FormRichEditor";
 import { upsetAbouMainInfo } from "@/actions/client/aboutMain/aboutMain.controller";
 import { getBranches } from "@/actions/client/branches/branches.controller";
-import { branches_list } from "@/app/(dashboard)/_type/query-key";
+import { branches_list, about_page_list } from "@/app/(dashboard)/_type/query-key";
 import { useServerQuery } from "@/hooks/useServerActions";
 import { useDropdownOptions } from "@/hooks/useDropdownOptions";
 import FormSelect from "@/globalElement/form/FormSelect";
@@ -172,6 +172,7 @@ export default function Content({ existingData, refetch }: Props) {
   const { formState } = generalFormInput;
   const { isDirty } = formState;
   const { execute, isExecuting } = useAction(upsetAbouMainInfo, {
+    queryKey: about_page_list,
     onSuccess: (data) => {
       refetch();
     },

@@ -9,7 +9,7 @@ import { pageModels, pageRoutes } from "../../_type/constant";
 import { offices_list } from "../../_type/query-key";
 import SearchingArea from "../../_components/whiteBlockSearch";
 import WhiteBlockTitleArea from "../../_components/whiteBlockTitle";
-import { useAction } from "next-safe-action/hooks";
+import { useAction } from "@/hooks/useServerActions";
 import { useMessageStore } from "@/hooks/useMessageStore";
 import { Columns } from "./Columns";
 import {
@@ -38,6 +38,7 @@ export default function AdminPage() {
   const totalPages = data?.paginations.totalPages ?? 1;
 
   const { execute: deleteData } = useAction(deleteOffice, {
+    queryKey: offices_list,
     onSuccess: () => {
       success("Office deleted successfully");
     },

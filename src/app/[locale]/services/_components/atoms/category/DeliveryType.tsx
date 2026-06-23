@@ -2,6 +2,7 @@ import { Link } from "@/i18n/navigation";
 import { newInfoJson, SubServicesType } from "@/services/interface/type";
 import { cn } from "@/utils/cn";
 import { DynamicIcon } from "@/utils/DynamicIcon";
+import { serviceSubHref } from "@/i18n/href";
 
 export default async function DeliveryType({
   delivery,
@@ -35,7 +36,7 @@ export default async function DeliveryType({
           return (
             <Link
               key={item.id}
-              href={`/services/${category}/${itemTr.slug}`}
+              href={serviceSubHref(category, itemTr.slug ?? "")}
               className="bg-white block rounded-2xl p-6  border border-gray-100 hover:border-primary/20 transition-all duration-300"
             >
               <div

@@ -7,10 +7,11 @@ import { cn } from "@/utils/cn";
 import { Dispatch, SetStateAction, useMemo } from "react";
 import { DirectionsType, ServicesType } from "@/services/interface/type";
 import { useTranslations } from "next-intl";
+import { AppHref, directionDetailHref, serviceMainHref } from "@/i18n/href";
 
 type NavChild = {
   id: string;
-  href: string;
+  href: AppHref;
   key?: string;
   name?: string;
 };
@@ -18,7 +19,7 @@ type NavChild = {
 type NavItem = {
   id: string;
   key: string;
-  href?: string;
+  href?: AppHref;
   name?: string;
   children?: NavChild[];
 };
@@ -35,7 +36,7 @@ function getNavbar(
       {
         id: service.id,
         name: translation.title,
-        href: `/services/${translation.slug}`,
+        href: serviceMainHref(translation.slug),
       },
     ];
   });
@@ -48,7 +49,7 @@ function getNavbar(
       {
         id: direction.id,
         name: translation.navTitle,
-        href: `/directions/${translation.slug}`,
+        href: directionDetailHref(translation.slug),
       },
     ];
   });

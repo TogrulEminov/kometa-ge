@@ -13,10 +13,26 @@ import {
 } from "@/services/interface/type";
 import { findJsonSection } from "@/utils/findJsonSection";
 import { Suspense } from "react";
+import { Metadata } from "next";
+import { generatePageMetadata } from "@/utils/metadata-generator";
+
 interface PageProps {
   params: Promise<{ locale: string }>;
   searchParams: Promise<{ [key: string]: string | number | boolean }>;
 }
+
+export async function generateMetadata({
+  params,
+}: PageProps): Promise<Metadata> {
+  const { locale } = await params;
+
+  return generatePageMetadata({
+    locale,
+    customPath: "services",
+    categoryKey: CategoryKey.services,
+  });
+}
+
 export default async function ServicesPage({
   params,
   searchParams,

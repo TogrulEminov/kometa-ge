@@ -11,7 +11,7 @@ import { CustomLocales, FaqItem } from "@/services/interface/type";
 import { pageModels, pageRoutes } from "../../_type/constant";
 import AdminTable from "../../_components/AdminTable";
 import { Columns } from "./Columns";
-import { useAction } from "next-safe-action/hooks";
+import { useAction } from "@/hooks/useServerActions";
 import { deleteFag, getFagData } from "@/actions/client/fags/fags.controller";
 
 export default function ContentAdminPage() {
@@ -33,7 +33,9 @@ export default function ContentAdminPage() {
   const page = Number(data?.paginations?.page) || 1;
   const pageSize = Number(data?.paginations?.pageSize) || 12;
   const totalPages = Number(data?.paginations?.totalPages) || 1;
-  const { execute: deleteData } = useAction(deleteFag, {});
+  const { execute: deleteData } = useAction(deleteFag, {
+    queryKey: faq_list,
+  });
   const handleDelete = async (id: string) => {
     await deleteData({ id: id as string });
   };

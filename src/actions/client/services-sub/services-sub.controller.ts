@@ -112,9 +112,6 @@ export async function getSubServicesById({ locale, id }: GetByIDProps) {
     const whereClause: Prisma.SubServicesWhereInput = {
       isDeleted: false,
       id,
-      translations: {
-        some: { locale },
-      },
     };
 
     return db.subServices.findFirst({

@@ -2,7 +2,7 @@
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { useAction } from "next-safe-action/hooks";
+import { useAction } from "@/hooks/useServerActions";
 import { CustomLocales, Office } from "@/services/interface/type";
 import { useServerQueryById } from "@/hooks/useServerActions";
 import { pageRoutes } from "@/app/(dashboard)/_type/constant";
@@ -55,6 +55,7 @@ export default function UptadeContent() {
     },
   });
   const { execute, isExecuting } = useAction(updateOffice, {
+    queryKey: offices_list,
     onSuccess: (data) => {
       router.push(pageRoutes.offices.root);
       router.refresh();

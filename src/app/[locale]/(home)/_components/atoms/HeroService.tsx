@@ -3,6 +3,7 @@ import { Link } from "@/i18n/navigation";
 import { ServicesType } from "@/services/interface/type";
 import { getForCards } from "@/utils/getFullimageUrl";
 import { getTranslations } from "next-intl/server";
+import { serviceMainHref } from "@/i18n/href";
 
 export default async function HeroService({
   services,
@@ -39,7 +40,7 @@ export default async function HeroService({
         )}
         {translations?.slug ? (
           <Link
-            href={`/services/${translations.slug}`}
+            href={serviceMainHref(translations.slug)}
             className="inline-flex items-center gap-2 border border-[#1C1E29] text-[#1C1E29] hover:bg-[#1C1E29] hover:text-white text-xs font-semibold uppercase tracking-wider px-5 py-2.5 rounded transition-colors duration-200 w-fit"
           >
             {t("buttons.read_more")} <span>→</span>

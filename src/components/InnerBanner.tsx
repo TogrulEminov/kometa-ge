@@ -9,11 +9,12 @@ import {
 import CustomImage from "@/globalElement/CustomImage";
 import { MotionDiv, MotionNav } from "@/lib/motion";
 import { Link } from "@/i18n/navigation";
+import { AppHref } from "@/i18n/href";
 import innerBanner from "@public/assets/inner-banner.png";
 
 interface BreadcrumbItem {
   label: string;
-  href?: string;
+  href?: AppHref;
 }
 
 interface InnerBannerProps {

@@ -7,7 +7,7 @@ import {
   UpsertHeroInfoInput,
   upsertHeroInfoSchema,
 } from "@/actions/client/hero/hero.schema";
-import { useAction } from "next-safe-action/hooks";
+import { useAction } from "@/hooks/useServerActions";
 import { upsertHeroInfo } from "@/actions/client/hero/hero.controller";
 import FormWrapper from "@/globalElement/form/FormWrapper";
 import FieldBlock from "@/app/(dashboard)/_components/contentBlock";
@@ -16,7 +16,7 @@ import FormTextarea from "@/globalElement/form/FormTextarea";
 import NavigateBtn from "@/app/(dashboard)/_components/navigateBtn";
 import SubmitAdminButton from "@/app/(dashboard)/_components/submitBtn";
 import { useServerQuery } from "@/hooks/useServerActions";
-import { services_main_list } from "@/app/(dashboard)/_type/query-key";
+import { services_main_list, hero_info_list } from "@/app/(dashboard)/_type/query-key";
 import { getServices } from "@/actions/client/services/services.controller";
 import { useDropdownOptions } from "@/hooks/useDropdownOptions";
 import FormSelect from "@/globalElement/form/FormSelect";
@@ -45,6 +45,7 @@ export default function Content({ existingData, refetch }: Props) {
   const { isDirty } = formState;
 
   const { execute, isExecuting } = useAction(upsertHeroInfo, {
+    invalidateKeys: [hero_info_list, services_main_list],
     onSuccess: (data) => {
       console.log(data);
       refetch();

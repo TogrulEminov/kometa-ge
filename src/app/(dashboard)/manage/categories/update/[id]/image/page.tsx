@@ -3,7 +3,7 @@ import { useParams } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { useAction } from "next-safe-action/hooks";
+import { useAction } from "@/hooks/useServerActions";
 import {
   getCategoriesById,
   uptadeCategoryImage,
@@ -54,6 +54,7 @@ export default function CategoriesUpdateImagePage() {
   });
 
   const { execute, isExecuting } = useAction(uptadeCategoryImage, {
+    queryKey: categories_content_list,
     onSuccess: (data) => {
       generalForm.reset();
       generalForm.setValue("imageId", null);

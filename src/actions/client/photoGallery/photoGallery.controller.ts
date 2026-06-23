@@ -102,9 +102,6 @@ export async function getPhotoGalleryById({ locale, id }: GetByIDProps) {
     const whereClause: Prisma.PhotoGalleryWhereInput = {
       isDeleted: false,
       id,
-      translations: {
-        some: { locale },
-      },
     };
 
     return db.photoGallery.findFirst({

@@ -9,6 +9,14 @@ import {
   type UseQueryOptions,
   type UseMutationOptions,
 } from "@tanstack/react-query";
+import {
+  useAction as useSafeAction,
+  type HookBaseOptions,
+  type InferUseActionHookReturn,
+  type SingleInputActionFn,
+} from "next-safe-action/hooks";
+import { useRouter } from "next/navigation";
+import { useCallback } from "react";
 
 type QueryParams = Record<string, string | number | boolean | undefined | null>;
 
@@ -18,23 +26,120 @@ type ActionResponse<T> = {
   code?: string;
 };
 
+type AdminActionExtraOptions = {
+  /** Bir və ya bir neçə React Query cache key */
+  invalidateKeys?: string[];
+  /** `invalidateKeys: [queryKey]` üçün qısa yazılış */
+  queryKey?: string;
+  /** Next.js server cache refresh (default: true) */
+  refresh?: boolean;
+};
+
+export type AdminActionOptions = HookBaseOptions<
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  any,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  any,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  any,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  any
+> &
+  AdminActionExtraOptions;
+
 export function createServerQueryKey(
   name: string,
   params?: QueryParams,
   id?: string | number,
 ): QueryKey {
-  if (id != null) return [name, "detail", id];
+  if (id != null) {
+    if (params && Object.keys(params).length > 0) {
+      return [name, "detail", id, params];
+    }
+    return [name, "detail", id];
+  }
   if (params && Object.keys(params).length > 0) return [name, "list", params];
   return [name, "list"];
 }
 
-async function invalidateQueries(client: QueryClient, keys: string[]) {
-  await Promise.all(
-    keys.map((key) =>
-      client.invalidateQueries({ queryKey: [key], exact: false }),
-    ),
-  );
+export async function invalidateQueryKeys(
+  client: QueryClient,
+  keys?: string[],
+) {
+  if (keys?.length) {
+    await Promise.all(
+      keys.map((key) =>
+        client.invalidateQueries({ queryKey: [key], exact: false }),
+      ),
+    );
+    return;
+  }
+
+  await client.invalidateQueries();
 }
+
+/**
+ * next-safe-action `useAction` wrapper.
+ * - `execute` awaits `executeAsync` (AdminTable və digər await axınları üçün)
+ * - uğurlu mutation-dan sonra React Query cache invalidate olunur
+ * - Next.js server cache üçün `router.refresh()` çağırılır
+ */
+type AnySafeAction = SingleInputActionFn<
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  any,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  any,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  any,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  any
+>;
+
+export function useAdminAction<TAction extends AnySafeAction>(
+  safeActionFn: TAction,
+  opts?: AdminActionOptions,
+): Omit<InferUseActionHookReturn<TAction>, "execute"> & {
+  execute: InferUseActionHookReturn<TAction>["executeAsync"];
+} {
+  const queryClient = useQueryClient();
+  const router = useRouter();
+  const {
+    invalidateKeys,
+    queryKey,
+    refresh = true,
+    onSuccess,
+    ...rest
+  } = opts ?? {};
+
+  const keysToInvalidate =
+    invalidateKeys ?? (queryKey ? [queryKey] : undefined);
+
+  const hookResult = useSafeAction(safeActionFn, {
+    ...rest,
+    onSuccess: async (args) => {
+      await invalidateQueryKeys(queryClient, keysToInvalidate);
+      if (refresh) {
+        router.refresh();
+      }
+      await onSuccess?.(args);
+    },
+  });
+
+  const execute = useCallback(
+    (input: Parameters<typeof hookResult.executeAsync>[0]) =>
+      hookResult.executeAsync(input),
+    [hookResult],
+  );
+
+  return {
+    ...hookResult,
+    execute,
+  } as Omit<InferUseActionHookReturn<TAction>, "execute"> & {
+    execute: InferUseActionHookReturn<TAction>["executeAsync"];
+  };
+}
+
+export { useAdminAction as useAction };
 
 type MutationConfig<TData, TInput> = Omit<
   UseMutationOptions<TData, Error, TInput>,
@@ -56,7 +161,7 @@ export function useServerAction<TData = unknown, TInput = unknown>(
     ...options,
     onSuccess: async (data, variables, context, mutation) => {
       if (invalidateKeys.length) {
-        await invalidateQueries(queryClient, invalidateKeys);
+        await invalidateQueryKeys(queryClient, invalidateKeys);
       }
       await onSuccess?.(data, variables, context, mutation);
     },

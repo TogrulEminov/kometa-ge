@@ -15,6 +15,7 @@ import {
 } from "@/actions/ui/main.controller";
 import {
   AboutMainType,
+  CategoryKey,
   CustomLocales,
   IContactInformation,
   newInfoJson,
@@ -23,9 +24,25 @@ import {
 import { findJsonSection } from "@/utils/findJsonSection";
 import { parseJSON } from "@/utils/parseJson";
 import { Suspense } from "react";
+import { Metadata } from "next";
+import { generatePageMetadata } from "@/utils/metadata-generator";
+
 interface PageProps {
   params: Promise<{ locale: string }>;
 }
+
+export async function generateMetadata({
+  params,
+}: PageProps): Promise<Metadata> {
+  const { locale } = await params;
+
+  return generatePageMetadata({
+    locale,
+    customPath: "about",
+    categoryKey: CategoryKey.about,
+  });
+}
+
 export default async function AboutPage({ params }: PageProps) {
   const { locale } = await params;
   const aboutInfo = await fetchAboutMainInfo({

@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import { Input, Modal } from "antd";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useAction } from "next-safe-action/hooks";
+import { useAction } from "@/hooks/useServerActions";
 import { LuCopy, LuRefreshCw } from "react-icons/lu";
 import FormWrapper from "@/globalElement/form/FormWrapper";
 import FieldBlock from "@/app/(dashboard)/_components/contentBlock";

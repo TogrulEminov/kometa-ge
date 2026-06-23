@@ -90,9 +90,6 @@ export async function getFagById({ locale, id }: GetByIDProps) {
     const whereClause: Prisma.FaqWhereInput = {
       isDeleted: false,
       id,
-      translations: {
-        some: { locale },
-      },
     };
 
     return db.faq.findFirst({

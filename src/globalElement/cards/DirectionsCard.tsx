@@ -62,6 +62,7 @@ import { FaRoute } from "react-icons/fa";
 import { DirectionsType } from "@/services/interface/type";
 import { getForCards } from "@/utils/getFullimageUrl";
 import { useTranslations } from "next-intl";
+import { directionDetailHref } from "@/i18n/href";
 
 type HeadingTag = "strong" | "h3";
 
@@ -83,7 +84,7 @@ export default function DirectionsCard({
   const t = useTranslations("atoms");
   return (
     <Link
-      href={`/directions/${itemTr?.slug}`}
+      href={directionDetailHref(itemTr?.slug ?? "")}
       className={`group relative block ${className}`}
     >
       <div className="relative mx-4">

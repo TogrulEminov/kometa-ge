@@ -18,11 +18,12 @@ import {
 import { clearPhoneRegex } from "@/lib/domburify";
 import { getTranslations } from "next-intl/server";
 import { Suspense, type ReactNode } from "react";
+import { AppHref, directionDetailHref, serviceMainHref } from "@/i18n/href";
 
 type FooterLink = {
   id: string;
   name: string;
-  href: string;
+  href: AppHref;
 };
 
 function buildServiceLinks(services: ServicesType[]): FooterLink[] {
@@ -34,7 +35,7 @@ function buildServiceLinks(services: ServicesType[]): FooterLink[] {
       {
         id: service.id,
         name: translation.title,
-        href: `/services/${translation.slug}`,
+        href: serviceMainHref(translation.slug),
       },
     ];
   });
@@ -49,7 +50,7 @@ function buildDirectionLinks(directions: DirectionsType[]): FooterLink[] {
       {
         id: direction.id,
         name: translation.navTitle,
-        href: `/directions/${translation.slug}`,
+        href: directionDetailHref(translation.slug),
       },
     ];
   });

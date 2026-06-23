@@ -15,7 +15,7 @@ import { Pagination, Spin } from "antd";
 import AdminTable from "../../_components/AdminTable";
 import { Columns } from "./TableColumns";
 import { useMessageStore } from "@/hooks/useMessageStore";
-import { useAction } from "next-safe-action/hooks";
+import { useAction } from "@/hooks/useServerActions";
 
 export default function AdminYoutubePage() {
   const { success, error } = useMessageStore();
@@ -39,6 +39,7 @@ export default function AdminYoutubePage() {
   const totalPages = Number(data?.paginations?.totalPages) || 1;
 
   const { execute: deleteData } = useAction(deleteYoutube, {
+    queryKey: youtube_media_list,
     onSuccess: () => {
       success("Date deleted successfully");
     },

@@ -2,7 +2,7 @@
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { useAction } from "next-safe-action/hooks";
+import { useAction } from "@/hooks/useServerActions";
 import { BranchItem, CustomLocales, Office } from "@/services/interface/type";
 import { useServerQueryById } from "@/hooks/useServerActions";
 
@@ -58,6 +58,7 @@ export default function CategriesUptadeContent() {
     },
   });
   const { execute, isExecuting } = useAction(updateBranch, {
+    queryKey: branches_list,
     onSuccess: (data) => {
       router.push(pageRoutes.branches.root);
       router.refresh();

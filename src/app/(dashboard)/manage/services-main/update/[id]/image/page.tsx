@@ -2,7 +2,7 @@
 import { useParams } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useAction } from "next-safe-action/hooks";
+import { useAction } from "@/hooks/useServerActions";
 import { FileType, ServicesType } from "@/services/interface/type";
 import { useServerQueryById } from "@/hooks/useServerActions";
 import {
@@ -51,6 +51,7 @@ export default function CategoriesUpdateImagePage() {
   });
 
   const { execute, isExecuting } = useAction(uptadeServicesImage, {
+    queryKey: services_main_list,
     onSuccess: (data) => {
       generalForm.reset();
       generalForm.setValue("imageId", null);

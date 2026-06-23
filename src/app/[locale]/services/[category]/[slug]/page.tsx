@@ -19,9 +19,29 @@ import {
 import { notFound } from "next/navigation";
 import ServicesSlugDetail from "../../_components/detail/ServicesSlugDetail";
 import { Suspense } from "react";
+import { serviceMainHref } from "@/i18n/href";
+import { Metadata } from "next";
+import { generatePageMetadata } from "@/utils/metadata-generator";
+
 interface PageProps {
   params: Promise<{ locale: string; category: string; slug: string }>;
 }
+
+export async function generateMetadata({
+  params,
+}: PageProps): Promise<Metadata> {
+  const { locale, category, slug } = await params;
+
+  return generatePageMetadata({
+    locale,
+    customPath: "services",
+    dataType: "servicesSubCategory",
+    category,
+    slug,
+    detail: true,
+  });
+}
+
 export default async function ServicesPage({ params }: PageProps) {
   const { locale, category, slug } = await params;
   const servicesCategoryData = await fetchServicesDetailMain({
@@ -48,11 +68,11 @@ export default async function ServicesPage({ params }: PageProps) {
         breadcrumbs={[
           {
             label: categoryTr?.title ?? "",
-            href: `/services`,
+            href: "/services",
           },
           {
             label: servicesCategoryData?.translations?.[0]?.title ?? "",
-            href: `/services/${category}`,
+            href: serviceMainHref(category),
           },
           { label: servicesSubTr?.title ?? "" },
         ]}

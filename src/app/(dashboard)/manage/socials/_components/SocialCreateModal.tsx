@@ -3,7 +3,8 @@ import { Modal } from "antd";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { useAction } from "next-safe-action/hooks";
+import { social_list } from "@/app/(dashboard)/_type/query-key";
+import { useAction } from "@/hooks/useServerActions";
 import {
   CreateSocialInput,
   createSocialSchema,
@@ -38,6 +39,7 @@ export default function SocialCreateModal({
   const { handleSubmit, reset } = generalForm;
 
   const { execute, isExecuting } = useAction(createSocial, {
+    queryKey: social_list,
     onSuccess: () => {
       reset();
       onClose();

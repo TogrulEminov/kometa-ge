@@ -3,7 +3,8 @@ import { useEffect } from "react";
 import { Modal, Spin, Space } from "antd";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useAction } from "next-safe-action/hooks";
+import { social_list } from "@/app/(dashboard)/_type/query-key";
+import { useAction } from "@/hooks/useServerActions";
 import { useServerQuery } from "@/hooks/useServerActions";
 import {
   getSocialById,
@@ -63,6 +64,7 @@ export default function SocialUpdateModal({
   }, [isOpen, reset]);
 
   const { execute, isExecuting } = useAction(updateSocial, {
+    queryKey: social_list,
     onSuccess: () => {
       reset();
       onClose();

@@ -1,6 +1,7 @@
 "use client";
 
 import { Link } from "@/i18n/navigation";
+import { directionDetailHref } from "@/i18n/href";
 import { clearPhoneRegex } from "@/lib/domburify";
 import {
   DirectionsType,
@@ -38,7 +39,7 @@ export default function LeftSidebar({
             const directionTr = direction.translations?.[0];
             return (
               <Link
-                href={`/directions/${directionTr?.slug}`}
+                href={directionDetailHref(directionTr?.slug ?? "")}
                 key={direction.id}
                 className="px-4 py-3.5 w-full block rounded-xl bg-primary text-white shadow-lg text-sm font-medium"
               >

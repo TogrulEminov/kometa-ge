@@ -15,8 +15,23 @@ import {
 } from "@/actions/ui/main.controller";
 import { findJsonSection } from "@/utils/findJsonSection";
 import { Suspense } from "react";
+import { Metadata } from "next";
+import { generatePageMetadata } from "@/utils/metadata-generator";
+
 interface PageProps {
   params: Promise<{ locale: string }>;
+}
+
+export async function generateMetadata({
+  params,
+}: PageProps): Promise<Metadata> {
+  const { locale } = await params;
+
+  return generatePageMetadata({
+    locale,
+    customPath: "contact",
+    categoryKey: CategoryKey.contact,
+  });
 }
 
 export default async function ContactPage({ params }: PageProps) {

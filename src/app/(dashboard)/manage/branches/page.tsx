@@ -9,7 +9,7 @@ import { pageModels, pageRoutes } from "../../_type/constant";
 import { branches_list } from "../../_type/query-key";
 import SearchingArea from "../../_components/whiteBlockSearch";
 import WhiteBlockTitleArea from "../../_components/whiteBlockTitle";
-import { useAction } from "next-safe-action/hooks";
+import { useAction } from "@/hooks/useServerActions";
 import { useMessageStore } from "@/hooks/useMessageStore";
 import {
   deleteBranch,
@@ -38,6 +38,7 @@ export default function AdminBranchesPage() {
   const totalPages = data?.paginations.totalPages ?? 1;
 
   const { execute: deleteData } = useAction(deleteBranch, {
+    queryKey: branches_list,
     onSuccess: () => {
       success("Branch deleted successfully");
     },

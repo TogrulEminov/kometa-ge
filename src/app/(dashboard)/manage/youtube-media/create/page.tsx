@@ -1,7 +1,8 @@
 "use client";
 import { useRouter, useSearchParams } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useAction } from "next-safe-action/hooks";
+import { youtube_media_list } from "@/app/(dashboard)/_type/query-key";
+import { useAction } from "@/hooks/useServerActions";
 import CustomForm from "../CustomForm";
 import {
   CreateYoutubeInput,
@@ -30,6 +31,7 @@ export default function CreateYoutube() {
   });
   const { reset } = generalForm;
   const { execute, isExecuting } = useAction(createYoutube, {
+    queryKey: youtube_media_list,
     onSuccess: () => {
       reset();
       router.push(pageRoutes.youtubeMedia.root);

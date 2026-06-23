@@ -6,7 +6,8 @@ import {
   imageSchema,
   ImageSchemaInput,
 } from "@/app/(dashboard)/_type/global.type";
-import { useAction } from "next-safe-action/hooks";
+import { hero_info_list } from "@/app/(dashboard)/_type/query-key";
+import { useAction } from "@/hooks/useServerActions";
 import { uptadeHeroImage } from "@/actions/client/hero/hero.controller";
 import OneImageView from "@/app/(dashboard)/_components/imageView/single";
 import FieldBlock from "@/app/(dashboard)/_components/contentBlock";
@@ -27,6 +28,7 @@ export default function UpdateImageComponent({ existingData, refetch }: Props) {
     },
   });
   const { execute, isExecuting } = useAction(uptadeHeroImage, {
+    queryKey: hero_info_list,
     onSuccess: async () => {
       await refetch();
       generalForm.reset({ imageId: undefined });

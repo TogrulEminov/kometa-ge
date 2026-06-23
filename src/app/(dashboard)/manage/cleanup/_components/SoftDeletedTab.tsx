@@ -4,7 +4,8 @@ import { useMemo, useState } from "react";
 import { Spin } from "antd";
 import { FiRefreshCw, FiTrash2 } from "react-icons/fi";
 import { LuHardDrive } from "react-icons/lu";
-import { useAction } from "next-safe-action/hooks";
+import { cleanup_list } from "@/app/(dashboard)/_type/query-key";
+import { useAction } from "@/hooks/useServerActions";
 import { useMessageStore } from "@/hooks/useMessageStore";
 import { purgeAllDeletedAction, purgeModuleDeletedAction } from "@/actions/cleanup/cleanup.action";
 import type { CleanupModuleKey } from "@/lib/cleanup/cleanup.types";
@@ -24,6 +25,7 @@ export default function SoftDeletedTab({ stats, isLoading, onRefresh }: Props) {
   const [isPurgingAll, setIsPurgingAll] = useState(false);
 
   const { execute: purgeModule } = useAction(purgeModuleDeletedAction, {
+    queryKey: cleanup_list,
     onSuccess: ({ data: result }) => {
       if (!result) return;
       success(
@@ -37,6 +39,7 @@ export default function SoftDeletedTab({ stats, isLoading, onRefresh }: Props) {
   });
 
   const { execute: purgeAll } = useAction(purgeAllDeletedAction, {
+    queryKey: cleanup_list,
     onSuccess: ({ data: result }) => {
       if (!result) return;
       success(`${result.totalDeletedRecords} soft-deleted records cleaned up`);

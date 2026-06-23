@@ -10,10 +10,26 @@ import {
 import { fetchCategoriesByKey, fetchVideoGallery } from "@/actions/ui/main.controller";
 import { findJsonSection } from "@/utils/findJsonSection";
 import { Suspense } from "react";
+import { Metadata } from "next";
+import { generatePageMetadata } from "@/utils/metadata-generator";
+
 interface PageProps {
   params: Promise<{ locale: string }>;
   searchParams: Promise<{ [key: string]: string | number | boolean }>;
 }
+
+export async function generateMetadata({
+  params,
+}: PageProps): Promise<Metadata> {
+  const { locale } = await params;
+
+  return generatePageMetadata({
+    locale,
+    customPath: "video-gallery",
+    categoryKey: CategoryKey.videoGallery,
+  });
+}
+
 export default async function VideoGalleryPage({ params, searchParams }: PageProps) {
   const locale = (await params).locale;
   const categoryData = await fetchCategoriesByKey({

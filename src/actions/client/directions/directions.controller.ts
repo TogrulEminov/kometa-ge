@@ -101,9 +101,6 @@ export async function getDirectionsById({ locale, id }: GetByIDProps) {
     const whereClause: Prisma.DirectionsWhereInput = {
       isDeleted: false,
       id,
-      translations: {
-        some: { locale },
-      },
     };
 
     return db.directions.findFirst({
@@ -229,6 +226,10 @@ export const uptadeDirections = authActionClient
         shortDescription,
       } = parsedInput;
 
+      if (!id) {
+        throw new Error("Direction ID is required");
+      }
+
       const customSlug = slug || createSlug(title);
 
       const finalSlug = customSlug;
@@ -240,7 +241,7 @@ export const uptadeDirections = authActionClient
             translations: {
               upsert: {
                 where: {
-                  documentId_locale: { documentId: id!, locale },
+                  documentId_locale: { documentId: id, locale },
                 },
                 create: {
                   title: title,

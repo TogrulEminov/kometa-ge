@@ -4,7 +4,8 @@ import { useEffect } from "react";
 import { Input, Modal } from "antd";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useAction } from "next-safe-action/hooks";
+import { users_list } from "@/app/(dashboard)/_type/query-key";
+import { useAction } from "@/hooks/useServerActions";
 import { LuCopy, LuRefreshCw } from "react-icons/lu";
 import FormWrapper from "@/globalElement/form/FormWrapper";
 import FieldBlock from "@/app/(dashboard)/_components/contentBlock";
@@ -55,6 +56,7 @@ export default function ResetPasswordModal({ isOpen, user, onClose }: Props) {
   }, [isOpen, reset]);
 
   const { execute, isExecuting } = useAction(resetUserPassword, {
+    queryKey: users_list,
     onSuccess: () => {
       success("Password updated successfully");
       onClose();

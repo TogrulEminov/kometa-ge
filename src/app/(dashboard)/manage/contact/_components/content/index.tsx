@@ -1,6 +1,7 @@
 "use client";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useAction } from "next-safe-action/hooks";
+import { contact_information_list } from "@/app/(dashboard)/_type/query-key";
+import { useAction } from "@/hooks/useServerActions";
 import { CustomLocales, IContactInformation } from "@/services/interface/type";
 import {
   UpsertContactFormValues,
@@ -48,6 +49,7 @@ export default function Content({ existingData, refetch }: Props) {
   } = generalForm;
 
   const { execute, isExecuting } = useAction(upsertContact, {
+    queryKey: contact_information_list,
     onSuccess() {
       reset();
       router.refresh();

@@ -104,9 +104,6 @@ export async function getServicesById({ locale, id }: GetByIDProps) {
     const whereClause: Prisma.ServicesWhereInput = {
       isDeleted: false,
       id,
-      translations: {
-        some: { locale },
-      },
     };
 
     return db.services.findFirst({

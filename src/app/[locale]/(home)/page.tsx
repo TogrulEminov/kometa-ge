@@ -7,11 +7,27 @@ import FAQSection from "./_components/FagSection";
 import MediaSection from "./_components/MediaCard";
 import HowItWorksHome from "./_components/HowItWorks";
 import CTASectionV1 from "./_components/CtaSection";
-import { CustomLocales } from "@/services/interface/type";
+import { CategoryKey, CustomLocales } from "@/services/interface/type";
 import { Suspense } from "react";
+import { Metadata } from "next";
+import { generatePageMetadata } from "@/utils/metadata-generator";
+
 interface PageProps {
   params: Promise<{ locale: string }>;
 }
+
+export async function generateMetadata({
+  params,
+}: PageProps): Promise<Metadata> {
+  const { locale } = await params;
+
+  return generatePageMetadata({
+    locale,
+    customPath: "home",
+    categoryKey: CategoryKey.home,
+  });
+}
+
 export default async function HomePage({ params }: PageProps) {
   const { locale } = await params;
 

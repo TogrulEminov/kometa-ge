@@ -7,7 +7,8 @@ import {
   gallerySchema,
   GallerySchemaInput,
 } from "@/app/(dashboard)/_type/global.type";
-import { useAction } from "next-safe-action/hooks";
+import { about_page_list } from "@/app/(dashboard)/_type/query-key";
+import { useAction } from "@/hooks/useServerActions";
 import { upsertAboutMainGallery } from "@/actions/client/aboutMain/aboutMain.controller";
 import FieldBlock from "@/app/(dashboard)/_components/contentBlock";
 import MultiImageView from "@/app/(dashboard)/_components/imageView/multi";
@@ -30,6 +31,7 @@ export default function GalleryUpdateImage({ existingData, refetch }: Props) {
   });
 
   const { execute, isExecuting } = useAction(upsertAboutMainGallery, {
+    queryKey: about_page_list,
     onSuccess: async () => {
       await refetch();
       router.refresh();

@@ -3,7 +3,8 @@ import { useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CustomLocales, FeaturesType } from "@/services/interface/type";
-import { useAction } from "next-safe-action/hooks";
+import { features_list } from "@/app/(dashboard)/_type/query-key";
+import { useAction } from "@/hooks/useServerActions";
 import FormWrapper from "@/globalElement/form/FormWrapper";
 import FieldBlock from "@/app/(dashboard)/_components/contentBlock";
 import FormInput from "@/globalElement/form/FormInput";
@@ -78,6 +79,7 @@ export default function Content({ existingData, refetch }: Props) {
   const { isDirty } = formState;
 
   const { execute, isExecuting } = useAction(upsertFeaturesInfo, {
+    queryKey: features_list,
     onSuccess: (data) => {
       refetch();
     },

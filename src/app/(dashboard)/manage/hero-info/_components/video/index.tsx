@@ -2,7 +2,8 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { HeroInfo } from "@/services/interface/type";
-import { useAction } from "next-safe-action/hooks";
+import { hero_info_list } from "@/app/(dashboard)/_type/query-key";
+import { useAction } from "@/hooks/useServerActions";
 import { uptadeHeroVideo } from "@/actions/client/hero/hero.controller";
 import OneImageView from "@/app/(dashboard)/_components/imageView/single";
 import FieldBlock from "@/app/(dashboard)/_components/contentBlock";
@@ -27,6 +28,7 @@ export default function UpdateVideoComponent({ existingData, refetch }: Props) {
     },
   });
   const { execute, isExecuting } = useAction(uptadeHeroVideo, {
+    queryKey: hero_info_list,
     onSuccess: async () => {
       await refetch();
       generalForm.reset({ videoId: undefined });

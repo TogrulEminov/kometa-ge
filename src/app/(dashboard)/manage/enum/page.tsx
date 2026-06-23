@@ -13,7 +13,7 @@ import { CustomLocales, Enum } from "@/services/interface/type";
 import { pageRoutes } from "../../_type/constant";
 import AdminTable from "../../_components/AdminTable";
 import { Columns } from "./Columns";
-import { useAction } from "next-safe-action/hooks";
+import { useAction } from "@/hooks/useServerActions";
 import { deleteEnum, getEnumData } from "@/actions/client/enum/enum.controller";
 
 export default function ContentAdminPage() {
@@ -38,7 +38,9 @@ export default function ContentAdminPage() {
 
   console.log(data);
 
-  const { execute: deleteData } = useAction(deleteEnum, {});
+  const { execute: deleteData } = useAction(deleteEnum, {
+    queryKey: enum_list,
+  });
   const handleDelete = async (id: string) => {
     await deleteData({ id: id as string });
   };

@@ -2,7 +2,7 @@
 import { useParams, useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useAction } from "next-safe-action/hooks";
+import { useAction } from "@/hooks/useServerActions";
 import {
   getYoutubeById,
   updateYoutubeImage,
@@ -55,6 +55,7 @@ export default function YoutubesUpdateImagePage() {
     formState: { isDirty },
   } = generalForm;
   const { execute, isExecuting } = useAction(updateYoutubeImage, {
+    queryKey: youtube_media_list,
     onSuccess: async () => {
       await refetch();
     },

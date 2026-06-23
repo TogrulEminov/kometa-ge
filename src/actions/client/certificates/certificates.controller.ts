@@ -102,9 +102,6 @@ export async function getCertificatesById({ locale, id }: GetByIDProps) {
     const whereClause: Prisma.CertificatesWhereInput = {
       isDeleted: false,
       id,
-      translations: {
-        some: { locale },
-      },
     };
 
     return db.certificates.findFirst({

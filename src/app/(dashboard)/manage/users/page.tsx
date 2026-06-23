@@ -4,7 +4,8 @@ import { Suspense, useMemo, useState } from "react";
 import { Spin, Table } from "antd";
 import { BiPlus } from "react-icons/bi";
 import { FiRefreshCw } from "react-icons/fi";
-import { useAction } from "next-safe-action/hooks";
+import { users_list } from "../../_type/query-key";
+import { useAction } from "@/hooks/useServerActions";
 import WhiteBlockTitleArea from "../../_components/whiteBlockTitle";
 import { User } from "@/services/interface/type";
 import { deleteUser, getUsers } from "@/actions/auth/auth.action";
@@ -14,8 +15,6 @@ import { useServerQuery } from "@/hooks/useServerActions";
 import UserFormModal from "./_components/UserFormModal";
 import ResetPasswordModal from "./_components/ResetPasswordModal";
 import { getUserColumns } from "./_components/Columns";
-
-const USERS_QUERY_KEY = "users-list";
 
 export default function UsersPage() {
   const { success, error } = useMessageStore();
@@ -30,7 +29,7 @@ export default function UsersPage() {
   const currentUserRole = session?.user?.role ?? undefined;
 
   const { data, isLoading, isError, refetch } = useServerQuery(
-    USERS_QUERY_KEY,
+    users_list,
     getUsers,
     { params: {} },
   );
@@ -38,6 +37,7 @@ export default function UsersPage() {
   const users = (data ?? []) as User[];
 
   const { execute: deleteUserAction } = useAction(deleteUser, {
+    queryKey: users_list,
     onSuccess: () => {
       success("User deleted successfully");
       refetch();

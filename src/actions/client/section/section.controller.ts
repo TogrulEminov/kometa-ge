@@ -92,9 +92,6 @@ export async function getSectionContentById({ locale, id }: GetByIDProps) {
     const whereClause: Prisma.SectionContentWhereInput = {
       isDeleted: false,
       id: id,
-      translations: {
-        some: { locale },
-      },
     };
 
     return db.sectionContent.findFirst({

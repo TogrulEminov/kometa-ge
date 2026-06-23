@@ -2,7 +2,7 @@
 import { useParams } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useAction } from "next-safe-action/hooks";
+import { useAction } from "@/hooks/useServerActions";
 import { FileType, SubServicesType,  } from "@/services/interface/type";
 import { useServerQueryById } from "@/hooks/useServerActions";
 import {
@@ -47,6 +47,7 @@ export default function UpdateGalleryPage() {
     },
   });
   const { execute, isExecuting } = useAction(updateSubServicesGallery, {
+    queryKey: sub_services_list,
     onSuccess: async (data) => {
       await refetch();
       generalForm.reset();

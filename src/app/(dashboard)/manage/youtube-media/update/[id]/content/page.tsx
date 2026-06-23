@@ -2,7 +2,7 @@
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { useAction } from "next-safe-action/hooks";
+import { useAction } from "@/hooks/useServerActions";
 import CustomForm from "../../../CustomForm";
 import {
   getYoutubeById,
@@ -53,6 +53,7 @@ export default function UpdateContent() {
   });
   const { reset } = generalForm;
   const { execute, isExecuting } = useAction(updateYoutube, {
+    queryKey: youtube_media_list,
     onSuccess: () => {
       reset();
       router.push(pageRoutes.youtubeMedia.root);

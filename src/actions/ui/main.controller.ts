@@ -990,3 +990,162 @@ export async function fetchCategoriesByKey({
     },
   });
 }
+// meta
+export async function fetchServicesMainSeo({
+  locale,
+  slug,
+}: {
+  locale: CustomLocales;
+  slug: string;
+}) {
+  "use cache";
+  cacheLife("hours");
+  cacheTag(CACHE_TAG_GROUPS.SERVICES);
+  return db.services.findFirst({
+    where: {
+      isDeleted: false,
+      translations: {
+        some: { locale, slug },
+      },
+    },
+    select: {
+      id: true,
+      imageUrl: FILE_SELECT,
+      translations: {
+        select: {
+          id: true,
+          title: true,
+          locale: true,
+          shortDescription: true,
+          slug: true,
+          seo: {
+            select: {
+              id: true,
+              metaDescription: true,
+              metaKeywords: true,
+              metaTitle: true,
+            },
+          },
+        },
+      },
+    },
+  });
+}
+export async function fetchDirectionsSeo({
+  locale,
+  slug,
+}: {
+  locale: CustomLocales;
+  slug: string;
+}) {
+  "use cache";
+  cacheLife("hours");
+  cacheTag(CACHE_TAG_GROUPS.DIRECTIONS);
+  return db.directions.findFirst({
+    where: {
+      isDeleted: false,
+      translations: {
+        some: { locale, slug },
+      },
+    },
+    select: {
+      id: true,
+      imageUrl: FILE_SELECT,
+      translations: {
+        select: {
+          id: true,
+          title: true,
+          slug: true,
+          locale: true,
+          shortDescription: true,
+          seo: {
+            select: {
+              id: true,
+              metaDescription: true,
+              metaKeywords: true,
+              metaTitle: true,
+            },
+          },
+        },
+      },
+    },
+  });
+}
+export async function fetchSubServicesSeo({
+  slug,
+  category,
+  locale,
+}: {
+  slug: string;
+  category: string;
+  locale: CustomLocales;
+}) {
+  "use cache";
+  cacheLife("hours");
+  cacheTag(CACHE_TAG_GROUPS.SUB_SERVICES);
+  return db.subServices.findFirst({
+    where: {
+      services: {
+        isDeleted: false,
+        translations: {
+          some: {
+            locale: locale,
+            slug: category,
+          },
+        },
+      },
+      translations: {
+        some: {
+          locale: locale,
+          slug,
+        },
+      },
+    },
+    select: {
+      id: true,
+      imageUrl: FILE_SELECT,
+      gallery: FILE_SELECT,
+      iconsUrl: true,
+      services: {
+        where: {
+          isDeleted: false,
+          translations: {
+            some: {
+              locale,
+            },
+          },
+        },
+        select: {
+          id: true,
+          imageUrl: FILE_SELECT,
+          translations: {
+            select: {
+              title: true,
+              id: true,
+              shortDescription: true,
+              slug: true,
+              locale: true,
+            },
+          },
+        },
+      },
+      translations: {
+        select: {
+          id: true,
+          title: true,
+          slug: true,
+          locale: true,
+          shortDescription: true,
+          seo: {
+            select: {
+              id: true,
+              metaDescription: true,
+              metaKeywords: true,
+              metaTitle: true,
+            },
+          },
+        },
+      },
+    },
+  });
+}

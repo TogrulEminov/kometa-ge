@@ -2,7 +2,8 @@
 import { useRouter, useSearchParams } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { useAction } from "next-safe-action/hooks";
+import { branches_list } from "@/app/(dashboard)/_type/query-key";
+import { useAction } from "@/hooks/useServerActions";
 import { CustomLocales } from "@/services/interface/type";
 import { pageRoutes } from "../../../_type/constant";
 import FormWrapper from "@/globalElement/form/FormWrapper";
@@ -26,6 +27,7 @@ export default function CreateCategories() {
   });
 
   const { execute, isExecuting } = useAction(createBranch, {
+    queryKey: branches_list,
     onSuccess: (data) => {
       console.log("succes", data);
       router.push(pageRoutes.branches.root);

@@ -4,7 +4,8 @@ import { useMemo, useState } from "react";
 import { Checkbox, Empty, Popconfirm, Spin } from "antd";
 import { FiExternalLink, FiRefreshCw, FiTrash2 } from "react-icons/fi";
 import { LuFile, LuFileImage } from "react-icons/lu";
-import { useAction } from "next-safe-action/hooks";
+import { cleanup_list } from "@/app/(dashboard)/_type/query-key";
+import { useAction } from "@/hooks/useServerActions";
 import { useMessageStore } from "@/hooks/useMessageStore";
 import { useServerQuery } from "@/hooks/useServerActions";
 import {
@@ -48,6 +49,7 @@ export default function UnpublishedFilesTab({ onRefreshStats }: Props) {
   const fileList = (files ?? []) as UnpublishedFileItem[];
 
   const { execute: deleteFiles } = useAction(deleteUnpublishedFilesAction, {
+    queryKey: cleanup_list,
     onSuccess: ({ data: result }) => {
       if (!result) return;
       success(`${result.deletedFiles} files deleted`);
@@ -61,6 +63,7 @@ export default function UnpublishedFilesTab({ onRefreshStats }: Props) {
   });
 
   const { execute: deleteAllFiles } = useAction(cleanupUnpublishedFilesAction, {
+    queryKey: cleanup_list,
     onSuccess: ({ data: result }) => {
       if (!result) return;
       success(`${result.deletedFiles} unpublished files deleted`);

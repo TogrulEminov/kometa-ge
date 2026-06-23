@@ -4,7 +4,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import CustomForm from "../CustomForm";
 import { CustomLocales, EnumKey } from "@/services/interface/type";
-import { useAction } from "next-safe-action/hooks";
+import { enum_list } from "@/app/(dashboard)/_type/query-key";
+import { useAction } from "@/hooks/useServerActions";
 import { pageRoutes } from "@/app/(dashboard)/_type/constant";
 import LanguageComponent from "@/app/(dashboard)/_components/LanguageComponent";
 import FormWrapper from "@/globalElement/form/FormWrapper";
@@ -28,6 +29,7 @@ export default function CreateContent() {
     },
   });
   const { execute, isExecuting } = useAction(createEnum, {
+    queryKey: enum_list,
     onSuccess: () => {
       generalForm.reset();
       router.push(pageRoutes.enum.root);

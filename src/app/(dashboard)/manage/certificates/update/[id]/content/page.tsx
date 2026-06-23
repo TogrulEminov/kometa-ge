@@ -2,7 +2,7 @@
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { useAction } from "next-safe-action/hooks";
+import { useAction } from "@/hooks/useServerActions";
 import CustomForm from "../../../_components/CustomForm";
 import {
   CertificatesType,
@@ -53,6 +53,7 @@ export default function CategriesUptadeContent() {
     },
   });
   const { execute, isExecuting } = useAction(uptadeCertificates, {
+    queryKey: certificates_list,
     onSuccess: (data) => {
       router.push(pageRoutes.certificates.root);
       router.refresh();

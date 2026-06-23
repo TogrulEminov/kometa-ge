@@ -4,7 +4,8 @@ import { useEffect } from "react";
 import { Input, Modal } from "antd";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useAction } from "next-safe-action/hooks";
+import { users_list } from "@/app/(dashboard)/_type/query-key";
+import { useAction } from "@/hooks/useServerActions";
 import { LuCopy, LuRefreshCw } from "react-icons/lu";
 import FormWrapper from "@/globalElement/form/FormWrapper";
 import FieldBlock from "@/app/(dashboard)/_components/contentBlock";
@@ -90,21 +91,20 @@ export default function UserFormModal({
     }
   }, [isOpen, reset]);
 
-  const { execute: createUser, isExecuting: isCreating } = useAction(
-    createUserAction,
-    {
-      onSuccess: () => {
-        success("User created successfully");
-        onClose();
-        onSuccess();
-      },
-      onError: (err) => {
-        error(err.error?.serverError ?? "Failed to create user");
-      },
+  const { execute: createUser, isExecuting: isCreating } = useAction(createUserAction, {
+    queryKey: users_list,
+    onSuccess: () => {
+      success("User created successfully");
+      onClose();
+      onSuccess();
     },
-  );
+    onError: (err) => {
+      error(err.error?.serverError ?? "Failed to create user");
+    },
+  });
 
   const { execute: updateUser, isExecuting: isUpdating } = useAction(uptadeUser, {
+    queryKey: users_list,
     onSuccess: () => {
       success("User updated successfully");
       onClose();

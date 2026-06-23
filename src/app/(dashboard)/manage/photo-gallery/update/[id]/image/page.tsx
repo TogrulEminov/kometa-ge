@@ -2,7 +2,7 @@
 import { useParams } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useAction } from "next-safe-action/hooks";
+import { useAction } from "@/hooks/useServerActions";
 import { FileType, PhotoGalleryType } from "@/services/interface/type";
 import { useServerQueryById } from "@/hooks/useServerActions";
 import {
@@ -51,6 +51,7 @@ export default function CategoriesUpdateImagePage() {
   });
 
   const { execute, isExecuting } = useAction(uptadePhotoGalleryImage, {
+    queryKey: photo_gallery_list,
     onSuccess: async (data) => {
       await refetch();
       generalForm.reset();

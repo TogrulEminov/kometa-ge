@@ -11,7 +11,7 @@ import { directions_list } from "../../_type/query-key";
 import SearchingArea from "../../_components/whiteBlockSearch";
 import WhiteBlockTitleArea from "../../_components/whiteBlockTitle";
 import { Columns } from "./_components/Columns";
-import { useAction } from "next-safe-action/hooks";
+import { useAction } from "@/hooks/useServerActions";
 import { useMessageStore } from "@/hooks/useMessageStore";
 import {
   deleteDirections,
@@ -40,6 +40,7 @@ export default function AdminPage() {
   const totalPages = data?.paginations.totalPages ?? 1;
 
   const { execute: deleteData } = useAction(deleteDirections, {
+    queryKey: directions_list,
     onSuccess: () => {
       success("Data deleted successfully");
     },

@@ -17,3 +17,5 @@ export const branches_list = "branches_list";
 export const offices_list = "offices_list";
 export const photo_gallery_list = "photo_gallery_list";
 export const certificates_list = "certificates_list";
+export const users_list = "users_list";
+export const cleanup_list = "cleanup_list";

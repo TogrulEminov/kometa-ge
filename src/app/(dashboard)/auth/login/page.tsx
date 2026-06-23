@@ -1,7 +1,7 @@
 "use client";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useAction } from "next-safe-action/hooks";
+import { useAction } from "@/hooks/useServerActions";
 import { LoginInput, loginValidation } from "@/actions/auth/validation";
 import { loginAdminPanel } from "@/actions/auth/auth.action";
 import { authClient } from "@/lib/auth/auth-client";

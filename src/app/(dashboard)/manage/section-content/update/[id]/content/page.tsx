@@ -2,7 +2,7 @@
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { useAction } from "next-safe-action/hooks";
+import { useAction } from "@/hooks/useServerActions";
 import CustomForm from "../../../CustomForm";
 import {
   getSectionContentById,
@@ -58,6 +58,7 @@ export default function SectionUptadeContent() {
     },
   });
   const { execute, isExecuting } = useAction(uptadeSectionContent, {
+    queryKey: section_content_list,
     onSuccess: () => {
       sectionContentForm.reset();
       router.push(pageRoutes.sectionContent.root);

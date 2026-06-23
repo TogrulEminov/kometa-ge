@@ -17,8 +17,11 @@ import {
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
+import {
+  invalidateQueryKeys,
+  useAction,
+} from "@/hooks/useServerActions";
 import { useQueryClient } from "@tanstack/react-query";
-import { useAction } from "next-safe-action/hooks";
 import { LuGripVertical, LuTrash2 } from "react-icons/lu";
 import NoDataComponent from "@/app/(dashboard)/_components/noData";
 import UptadeButton from "@/app/(dashboard)/_components/uptadeButton";
@@ -165,10 +168,11 @@ function AdminTable<T extends BaseTableItem>({
   );
 
   const { execute, isExecuting } = useAction(updateOrderAction, {
+    invalidateKeys: [invalidateQueryKey],
+    refresh: false,
     onSuccess: ({ data }) => {
       if (data?.success) {
         success(data.message ?? "Sıra yeniləndi");
-        queryClient.invalidateQueries({ queryKey: [invalidateQueryKey] });
         refetch?.();
         return;
       }
@@ -193,7 +197,7 @@ function AdminTable<T extends BaseTableItem>({
       setDeletingId(id);
       try {
         await onDelete(id);
-        await queryClient.invalidateQueries({ queryKey: [invalidateQueryKey] });
+        await invalidateQueryKeys(queryClient, [invalidateQueryKey]);
         refetch?.();
       } catch {
         error("Silinərkən xəta baş verdi");

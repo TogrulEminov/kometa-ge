@@ -2,7 +2,8 @@
 import { Card, Button, Popconfirm, Tag, Tooltip } from "antd";
 import { EditOutlined, DeleteOutlined, LinkOutlined } from "@ant-design/icons";
 import Link from "next/link";
-import { useAction } from "next-safe-action/hooks";
+import { social_list } from "@/app/(dashboard)/_type/query-key";
+import { useAction } from "@/hooks/useServerActions";
 import { useMessageStore } from "@/hooks/useMessageStore";
 import { deleteSocial } from "@/actions/client/socials/socials.controller";
 import { Social } from "@/services/interface/type";
@@ -17,15 +18,13 @@ interface Props {
 export default function SocialCard({ social, onEdit, onRefetch }: Props) {
   const { success } = useMessageStore();
 
-  const { execute: deleteData, isExecuting: isDeleting } = useAction(
-    deleteSocial,
-    {
-      onSuccess: () => {
-        success("Sosial şəbəkə uğurla silindi!");
-        onRefetch();
-      },
+  const { execute: deleteData, isExecuting: isDeleting } = useAction(deleteSocial, {
+    queryKey: social_list,
+    onSuccess: () => {
+      success("Sosial şəbəkə uğurla silindi!");
+      onRefetch();
     },
-  );
+  });
 
   const handleDelete = async () => {
     deleteData({ id: social?.id });

@@ -2,6 +2,7 @@ import { Link } from "@/i18n/navigation";
 import { newInfoJson, SubServicesType } from "@/services/interface/type";
 import { DynamicIcon } from "@/utils/DynamicIcon";
 import { FaArrowRight } from "react-icons/fa6";
+import { serviceSubHref } from "@/i18n/href";
 
 export default async function ParentService({
   sectionData,
@@ -31,7 +32,10 @@ export default async function ParentService({
       </div>
 
       <Link
-        href={`/services/${parentService.services?.translations?.[0]?.slug}/${parentServiceTr.slug}`}
+        href={serviceSubHref(
+          parentService.services?.translations?.[0]?.slug ?? "",
+          parentServiceTr.slug ?? "",
+        )}
         className="group block bg-secondary rounded-2xl p-8 shadow-xl hover:shadow-2xl transition-all duration-500"
       >
         <div className="flex items-center justify-between">

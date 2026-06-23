@@ -17,9 +17,27 @@ import {
 } from "@/services/interface/type";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
+import { Metadata } from "next";
+import { generatePageMetadata } from "@/utils/metadata-generator";
+
 interface PageProps {
   params: Promise<{ locale: string; category: string }>;
 }
+
+export async function generateMetadata({
+  params,
+}: PageProps): Promise<Metadata> {
+  const { locale, category } = await params;
+
+  return generatePageMetadata({
+    locale,
+    customPath: "services",
+    dataType: "serviceMain",
+    category,
+    detail: true,
+  });
+}
+
 export default async function ServicesCategory({ params }: PageProps) {
   const { category, locale } = await params;
   const categoryData = await fetchCategoriesByKey({

@@ -8,7 +8,8 @@ import {
   WorkJson,
   WorkProcessItem,
 } from "@/services/interface/type";
-import { useAction } from "next-safe-action/hooks";
+import { work_process_list } from "@/app/(dashboard)/_type/query-key";
+import { useAction } from "@/hooks/useServerActions";
 import FormWrapper from "@/globalElement/form/FormWrapper";
 import FieldBlock from "@/app/(dashboard)/_components/contentBlock";
 import FormInput from "@/globalElement/form/FormInput";
@@ -47,6 +48,7 @@ export default function Content({ existingData, refetch }: Props) {
   const { isDirty } = formState;
 
   const { execute, isExecuting } = useAction(upsertProcessInfo, {
+    queryKey: work_process_list,
     onSuccess: (data) => {
       console.log(data);
       refetch();

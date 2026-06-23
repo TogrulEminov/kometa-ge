@@ -23,7 +23,11 @@ export const createDirectionsSchema = z
   .merge(imageSchema)
   .merge(metaInformationSchema);
 
-export const uptadeDirectionsSchema = createDirectionsSchema.merge(idSchema);
+export const uptadeDirectionsSchema = createDirectionsSchema.merge(
+  z.object({
+    id: z.string().cuid("ID formatı düzgün deyil"),
+  }),
+);
 
 export type CreateDirectionsInput = z.infer<typeof createDirectionsSchema>;
 export type UpdateDirectionsInput = z.infer<typeof uptadeDirectionsSchema>;

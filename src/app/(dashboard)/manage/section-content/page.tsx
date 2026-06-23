@@ -16,7 +16,7 @@ import { CustomLocales, SectionContent } from "@/services/interface/type";
 import { pageRoutes } from "../../_type/constant";
 import AdminTable from "../../_components/AdminTable";
 import { Columns } from "./Columns";
-import { useAction } from "next-safe-action/hooks";
+import { useAction } from "@/hooks/useServerActions";
 
 export default function SectionContentAdminPage() {
   const { queryParams, handleChange, locale } = usePaginationQuery();
@@ -37,7 +37,9 @@ export default function SectionContentAdminPage() {
   const page = Number(data?.paginations?.page) || 1;
   const pageSize = Number(data?.paginations?.pageSize) || 12;
   const totalPages = Number(data?.paginations?.totalPages) || 1;
-  const { execute: deleteData } = useAction(deleteSection, {});
+  const { execute: deleteData } = useAction(deleteSection, {
+    queryKey: section_content_list,
+  });
   const handleDelete = async (id: string) => {
     await deleteData({ id: id as string });
   };

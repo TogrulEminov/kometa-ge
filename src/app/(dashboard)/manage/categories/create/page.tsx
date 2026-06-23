@@ -4,7 +4,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 import { useForm } from "react-hook-form";
 import CustomForm from "../_components/CustomForm";
-import { useAction } from "next-safe-action/hooks";
+import { categories_content_list } from "@/app/(dashboard)/_type/query-key";
+import { useAction } from "@/hooks/useServerActions";
 import {
   CreateCategoryInput,
   createCategorySchema,
@@ -34,6 +35,7 @@ export default function CreateCategories() {
   });
 
   const { execute, isExecuting } = useAction(createCategory, {
+    queryKey: categories_content_list,
     onSuccess: (data) => {
       console.log("succes", data);
       router.push(pageRoutes.categories.root);

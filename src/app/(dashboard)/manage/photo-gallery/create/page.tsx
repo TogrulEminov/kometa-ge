@@ -3,7 +3,8 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import CustomForm from "../_components/CustomForm";
-import { useAction } from "next-safe-action/hooks";
+import { photo_gallery_list } from "@/app/(dashboard)/_type/query-key";
+import { useAction } from "@/hooks/useServerActions";
 import { CustomLocales } from "@/services/interface/type";
 import { pageRoutes } from "../../../_type/constant";
 import FormWrapper from "@/globalElement/form/FormWrapper";
@@ -28,6 +29,7 @@ export default function CreatePage() {
     },
   });
   const { execute, isExecuting } = useAction(createPhotoGallery, {
+    queryKey: photo_gallery_list,
     onSuccess: (data) => {
       console.log("succes", data);
       router.push(pageRoutes.photoGallery.root);
