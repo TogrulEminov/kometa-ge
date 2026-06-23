@@ -86,53 +86,53 @@ export function ContactInformationBox({
         {t("contact.name")}
       </h3>
       <div className="space-y-3">
-        {contactInfo.phone && (
+        {contactInfo?.phone && (
           <div className="flex items-center gap-3 text-secondary/70 text-sm">
             <div className="w-9 h-9 rounded-lg bg-tertiary flex items-center justify-center text-primary text-xs font-bold">
               <FaPhoneAlt className="w-4 h-4" />
             </div>
             <a
-              href={`tel:${clearPhoneRegex(contactInfo.phone)}`}
+              href={`tel:${clearPhoneRegex(contactInfo?.phone)}`}
               className="hover:underline"
             >
-              {contactInfo.phone}
+              {contactInfo?.phone}
             </a>
           </div>
         )}
-        {contactInfo.email && (
+        {contactInfo?.email && (
           <div className="flex items-center gap-3 text-secondary/70 text-sm">
             <div className="w-9 h-9 rounded-lg bg-tertiary flex items-center justify-center text-primary text-xs font-bold">
               <FaEnvelope className="w-4 h-4" />
             </div>
-            <a href={`mailto:${contactInfo.email}`} className="hover:underline">
-              {contactInfo.email}
+            <a href={`mailto:${contactInfo?.email}`} className="hover:underline">
+              {contactInfo?.email}
             </a>
           </div>
         )}
-        {contactInfo.translations?.[0]?.adress && (
+        {contactInfo?.translations?.[0]?.adress && (
           <div className="flex items-center gap-3 text-secondary/70 text-sm">
             <div className="w-9 h-9 rounded-lg bg-tertiary flex items-center justify-center text-primary text-xs font-bold">
               <FaMapMarkerAlt className="w-4 h-4" />
             </div>
             {contactInfo?.adressLink ? (
               <a href={contactInfo?.adressLink} className="hover:underline">
-                {contactInfo.translations?.[0]?.adress}
+                {contactInfo?.translations?.[0]?.adress}
               </a>
             ) : (
-              <span>{contactInfo.translations?.[0]?.adress}</span>
+              <span>{contactInfo?.translations?.[0]?.adress}</span>
             )}
           </div>
         )}
-        {contactInfo.whatsapp && (
+        {contactInfo?.whatsapp && (
           <div className="flex items-center gap-3 text-secondary/70 text-sm">
             <div className="w-9 h-9 rounded-lg bg-tertiary flex items-center justify-center text-primary text-xs font-bold">
               <FaWhatsapp className="w-4 h-4" />
             </div>
             <a
-              href={`https://wa.me/${clearPhoneRegex(contactInfo.whatsapp)}`}
+              href={`https://wa.me/${clearPhoneRegex(contactInfo?.whatsapp)}`}
               className="hover:underline"
             >
-              {contactInfo.whatsapp}
+              {contactInfo?.whatsapp}
             </a>
           </div>
         )}

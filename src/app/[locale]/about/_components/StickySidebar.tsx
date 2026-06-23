@@ -66,23 +66,23 @@ export function ContactInfo({
     {
       icon: <FaPhoneAlt />,
       label: t("phone"),
-      value: contactInfo.phone,
+      value: contactInfo?.phone,
       sub: t("support"),
-      href: `tel:${clearPhoneRegex(contactInfo.phone)}`,
+      href: `tel:${clearPhoneRegex(contactInfo?.phone)}`,
     },
     {
       icon: <FaEnvelope />,
       label: t("email"),
-      value: contactInfo.email,
-      sub: contactInfo.email,
-      href: `mailto:${contactInfo.email}`,
+      value: contactInfo?.email,
+      sub: contactInfo?.email,
+      href: `mailto:${contactInfo?.email}`,
     },
     {
       icon: <FaMapMarkerAlt />,
       label: t("address"),
-      value: contactInfo.translations?.[0]?.adress,
-      sub: contactInfo.translations?.[0]?.adress,
-      href: contactInfo.adressLink ?? "",
+      value: contactInfo?.translations?.[0]?.adress,
+      sub: contactInfo?.translations?.[0]?.adress,
+      href: contactInfo?.adressLink ?? "",
     },
   ];
 
@@ -112,9 +112,9 @@ export function ContactInfo({
           </a>
         ))}
       </div>
-      {contactInfo.whatsapp && (
+      {contactInfo?.whatsapp && (
         <a
-          href={`https://wa.me/${clearPhoneRegex(contactInfo.whatsapp ?? "")}`}
+          href={`https://wa.me/${clearPhoneRegex(contactInfo?.whatsapp ?? "")}`}
           target="_blank"
           rel="noopener noreferrer"
           className="flex items-center justify-center gap-2.5 w-full bg-[#25D366] hover:bg-[#128C7E] text-white py-3.5 rounded-xl font-semibold text-sm transition-all duration-300 hover:shadow-lg hover:shadow-[#25D366]/25 mb-6"

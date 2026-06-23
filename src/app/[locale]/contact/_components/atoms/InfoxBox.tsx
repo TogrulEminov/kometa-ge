@@ -16,26 +16,26 @@ export default function InfoxBox({ contactInfo }: { contactInfo: IContactInforma
     {
       icon: FaPhoneAlt,
       label: t("phone"), 
-      value: contactInfo.phone,
-      href: `tel:${clearPhoneRegex(contactInfo.phone)}`,  
+      value: contactInfo?.phone,
+      href: `tel:${clearPhoneRegex(contactInfo?.phone)}`,  
     },
     {
       icon: FaEnvelope,
       label: t("email"),
-      value: contactInfo.email,
-      href: `mailto:${contactInfo.email}`,
+      value: contactInfo?.email,
+      href: `mailto:${contactInfo?.email}`,
     },
     {
       icon: FaMapMarkerAlt,
       label: t("address"), 
-      value: contactInfo.translations?.[0]?.adress,
-      href: contactInfo.adressLink ?? "",
+      value: contactInfo?.translations?.[0]?.adress,
+      href: contactInfo?.adressLink ?? "",
     },
     {
       icon: FaClock,
       label: t("whatsapp"),
-      value: contactInfo.whatsapp,
-      href: `https://wa.me/${clearPhoneRegex(contactInfo.whatsapp)}`,
+      value: contactInfo?.whatsapp,
+      href: `https://wa.me/${clearPhoneRegex(contactInfo?.whatsapp)}`,
     },
   ];
   

@@ -64,28 +64,28 @@ function buildContactItems(contactInfo: IContactInformation | null) {
     href?: string;
   }[] = [];
 
-  if (contactInfo.phone) {
+  if (contactInfo?.phone) {
     items.push({
       icon: <FaPhoneAlt className="text-sm" />,
-      text: contactInfo.phone,
-      href: clearPhoneRegex(contactInfo.phone),
+      text: contactInfo?.phone,
+      href: clearPhoneRegex(contactInfo?.phone),
     });
   }
 
-  if (contactInfo.email) {
+  if (contactInfo?.email) {
     items.push({
       icon: <FaEnvelope className="text-sm" />,
-      text: contactInfo.email,
-      href: `mailto:${contactInfo.email}`,
+      text: contactInfo?.email,
+      href: `mailto:${contactInfo?.email}`,
     });
   }
 
-  const address = contactInfo.translations?.[0]?.adress;
+  const address = contactInfo?.translations?.[0]?.adress;
   if (address) {
     items.push({
       icon: <FaMap className="text-sm" />,
       text: address,
-      href: contactInfo.adressLink ?? undefined,
+      href: contactInfo?.adressLink ?? undefined,
     });
   }
 

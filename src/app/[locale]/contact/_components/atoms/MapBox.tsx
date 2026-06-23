@@ -14,8 +14,8 @@ const customIcon = new Icon({
 
 
 export default function MapBox({ contactInfo }: { contactInfo: IContactInformation }) {
-  const latitude = contactInfo.latitude ? parseFloat(contactInfo.latitude) : 0;
-  const longitude = contactInfo.longitude ? parseFloat(contactInfo.longitude) : 0;
+  const latitude = contactInfo?.latitude ? parseFloat(contactInfo?.latitude) : 0;
+  const longitude = contactInfo?.longitude ? parseFloat(contactInfo?.longitude) : 0;
   const t=useTranslations("atoms.components.contactInfo");
   return (
     <MapContainer

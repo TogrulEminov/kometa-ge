@@ -4,8 +4,8 @@ import { IContactInformation } from "@/services/interface/type";
 
 export default function MapInfo({ contactInfo }: { contactInfo: IContactInformation }) {
   const t = useTranslations("atoms.components.contactInfo");
-  const latitude = contactInfo.latitude ? parseFloat(contactInfo.latitude) : 0;
-  const longitude = contactInfo.longitude ? parseFloat(contactInfo.longitude) : 0;
+  const latitude = contactInfo?.latitude ? parseFloat(contactInfo?.latitude) : 0;
+  const longitude = contactInfo?.longitude ? parseFloat(contactInfo?.longitude) : 0;
   return (
     <div className="flex items-start gap-3">
       <div className="w-10 h-10 bg-gray-50 rounded-xl flex items-center justify-center text-primary shrink-0">
@@ -14,7 +14,7 @@ export default function MapInfo({ contactInfo }: { contactInfo: IContactInformat
       <div>
         <div className="font-semibold text-secondary text-sm">{t("head_office")}</div>
         <div className="text-gray-400 text-sm mt-0.5">
-          {contactInfo.translations?.[0]?.adress}
+          {contactInfo?.translations?.[0]?.adress}
         </div>
         <a
           href={`https://www.google.com/maps/dir/?api=1&destination=${latitude},${longitude}`}

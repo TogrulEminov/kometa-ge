@@ -104,27 +104,27 @@ export default function StickyBarDetail({
   const contactInfoData = [
     {
       icon: FaPhoneAlt,
-      label: t("contactInfo.phone"),
-      value: contactInfo.phone,
-      href: `tel:${clearPhoneRegex(contactInfo.phone)}`,
+      label: t("contactInfo?.phone"),
+      value: contactInfo?.phone,
+      href: `tel:${clearPhoneRegex(contactInfo?.phone)}`,
     },
     {
       icon: FaEnvelope,
-      label: t("contactInfo.email"),
-      value: contactInfo.email,
-      href: `mailto:${contactInfo.email}`,
+      label: t("contactInfo?.email"),
+      value: contactInfo?.email,
+      href: `mailto:${contactInfo?.email}`,
     },
     {
       icon: FaMapMarkerAlt,
       label: t("contactInfo.address"),
-      value: contactInfo.translations?.[0]?.adress,
-      href: contactInfo.adressLink ?? "",
+      value: contactInfo?.translations?.[0]?.adress,
+      href: contactInfo?.adressLink ?? "",
     },
     {
       icon: FaWhatsapp,
-      label: t("contactInfo.whatsapp"),
-      value: contactInfo.whatsapp,
-      href: `https://wa.me/${clearPhoneRegex(contactInfo.whatsapp)}`,
+      label: t("contactInfo?.whatsapp"),
+      value: contactInfo?.whatsapp,
+      href: `https://wa.me/${clearPhoneRegex(contactInfo?.whatsapp)}`,
     },
   ];
 
