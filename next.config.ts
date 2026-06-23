@@ -5,7 +5,7 @@ import redirectData from "@/json/redirect.json";
 
 const isDev = process.env.NODE_ENV === "development";
 // ✅ Əsas domain — yalnız bir yerdə dəyiş
-const MAIN_DOMAIN = "kometa.ge";
+const MAIN_DOMAIN = "kometa-ge.vercel.app";
 
 const nextConfig: NextConfig = {
   output: "standalone",
@@ -95,9 +95,6 @@ const nextConfig: NextConfig = {
         "https://www.googletagmanager.com",
         "https://static.cloudflareinsights.com",
         "https://connect.facebook.net",
-        "https://api-maps.yandex.ru",
-        "https://*.maps.yandex.net",
-        "https://yastatic.net",
         "https://www.clarity.ms",
         "https://*.clarity.ms",
         "https://challenges.cloudflare.com",
@@ -142,9 +139,15 @@ const nextConfig: NextConfig = {
       // Worker
       "worker-src 'self' blob:",
 
-      // Connect — ✅ köhnə domain silindi
+      // Connect — same-origin API + analytics/third-party
       [
         "connect-src 'self'",
+        "http://localhost:*",
+        "http://127.0.0.1:*",
+        "ws://localhost:*",
+        "ws://127.0.0.1:*",
+        "wss://localhost:*",
+        "wss://127.0.0.1:*",
         "https://www.google-analytics.com",
         "https://*.google-analytics.com",
         "https://*.analytics.google.com",

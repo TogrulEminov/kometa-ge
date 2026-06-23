@@ -1,6 +1,6 @@
 "use client";
 
-import { Link } from "@/i18n/navigation";
+import { Link, usePathname } from "@/i18n/navigation";
 import { clearPhoneRegex } from "@/lib/domburify";
 import {
   IContactInformation,
@@ -10,7 +10,6 @@ import {
 import { DynamicIcon } from "@/utils/DynamicIcon";
 import { renderSocialIcon } from "@/utils/renderSocialIcon";
 import { useTranslations } from "next-intl";
-import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { FaMapMarkerAlt, FaPhoneAlt } from "react-icons/fa";
 import {
@@ -62,12 +61,12 @@ export default function StickyBarDetail({
   socials: Social[];
 }) {
   const pathname = usePathname();
-  const [expandedService, setExpandedService] = useState<string | null>(() =>
-    findExpandedServiceId(services, pathname, category),
-  );
+  const [isMounted, setIsMounted] = useState(false);
+  const [expandedService, setExpandedService] = useState<string | null>(null);
   const t = useTranslations("atoms.components");
 
   useEffect(() => {
+    setIsMounted(true);
     const activeServiceId = findExpandedServiceId(services, pathname, category);
     if (activeServiceId) {
       setExpandedService(activeServiceId);
@@ -79,7 +78,7 @@ export default function StickyBarDetail({
   };
 
   const isSlugActive = (slug?: string | null) =>
-    Boolean(slug && pathname.includes(slug));
+    isMounted && Boolean(slug && pathname.includes(slug));
 
   const getServiceButtonClassName = (
     isActive: boolean,
@@ -103,30 +102,30 @@ export default function StickyBarDetail({
 
   const contactInfoData = [
     {
+      id: "phone",
       icon: FaPhoneAlt,
-      label: t("contactInfo?.phone"),
       value: contactInfo?.phone,
       href: `tel:${clearPhoneRegex(contactInfo?.phone)}`,
     },
     {
+      id: "email",
       icon: FaEnvelope,
-      label: t("contactInfo?.email"),
       value: contactInfo?.email,
       href: `mailto:${contactInfo?.email}`,
     },
     {
+      id: "address",
       icon: FaMapMarkerAlt,
-      label: t("contactInfo.address"),
       value: contactInfo?.translations?.[0]?.adress,
       href: contactInfo?.adressLink ?? "",
     },
     {
+      id: "whatsapp",
       icon: FaWhatsapp,
-      label: t("contactInfo?.whatsapp"),
       value: contactInfo?.whatsapp,
       href: `https://wa.me/${clearPhoneRegex(contactInfo?.whatsapp)}`,
     },
-  ];
+  ].filter((item) => Boolean(item.value));
 
   return (
     <div className="lg:sticky lg:top-25 space-y-6">
@@ -139,11 +138,15 @@ export default function StickyBarDetail({
           {services.map((service) => {
             const serviceSlug = service.translations[0]?.slug ?? "";
             const hasActiveChild =
-              service.subServices?.some((child) =>
+              isMounted &&
+              (service.subServices?.some((child) =>
                 isSlugActive(child.translations[0]?.slug),
-              ) ?? false;
+              ) ??
+                false);
             const isActive = isSlugActive(serviceSlug) || hasActiveChild;
-            const isExpanded = expandedService === service.id || hasActiveChild;
+            const isExpanded =
+              isMounted &&
+              (expandedService === service.id || hasActiveChild);
 
             return (
               <div key={service.id}>
@@ -229,7 +232,7 @@ export default function StickyBarDetail({
         <div className="space-y-3">
           {contactInfoData.map((item) => (
             <a
-              key={item.label}
+              key={item.id}
               href={item.href}
               className="flex items-center gap-3 text-secondary/70 text-sm hover:text-primary transition-colors"
             >

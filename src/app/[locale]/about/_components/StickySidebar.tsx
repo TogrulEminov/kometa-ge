@@ -1,3 +1,5 @@
+"use client";
+
 import { clearPhoneRegex } from "@/lib/domburify";
 import {
   IContactInformation,

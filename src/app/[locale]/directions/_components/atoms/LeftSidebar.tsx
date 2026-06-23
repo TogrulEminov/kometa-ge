@@ -1,3 +1,5 @@
+"use client";
+
 import { Link } from "@/i18n/navigation";
 import { clearPhoneRegex } from "@/lib/domburify";
 import {
