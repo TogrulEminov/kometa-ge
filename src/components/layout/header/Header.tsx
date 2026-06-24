@@ -14,11 +14,6 @@ import {
   Social,
 } from "@/services/interface/type";
 
-const ShipmentModal = dynamic(
-  () => import("@/app/[locale]/(home)/_components/atoms/FormModal"),
-  { ssr: false },
-);
-
 export default function Header({
   contactInfo,
   socials,
