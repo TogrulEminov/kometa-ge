@@ -30,11 +30,6 @@ export default function robots(): MetadataRoute.Robots {
         disallow: "/",
       },
     ],
-    sitemap: [
-      `${websiteUrl}/sitemap.xml`,
-      `${websiteUrl}/sitemap-az.xml`,
-      `${websiteUrl}/sitemap-en.xml`,
-      `${websiteUrl}/sitemap-ru.xml`,
-    ],
+    sitemap: `${websiteUrl}/sitemap.xml`,
   };
 }
