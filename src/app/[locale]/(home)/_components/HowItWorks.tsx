@@ -17,7 +17,6 @@ export default async function HowItWorksScroll({ locale }: SectionLocale) {
     | undefined;
   const description = parseJSON<WorkJson>(worksTr?.description)?.data;
   const imageUrl = getForCards(works?.imageUrl);
-console.log("worksTr",worksTr)
   if (!works) return null;
   return (
     <section className="relative pb-10 lg:pb-20">

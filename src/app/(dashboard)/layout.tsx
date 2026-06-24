@@ -1,6 +1,7 @@
 import { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { Suspense } from "react";
+import QueryProvider from "./QueryProvider";
 export const metadata: Metadata = {
   metadataBase: new URL(
     process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000",
@@ -65,22 +66,24 @@ export default function DashboardGroupLayout({
         className={`${inter.variable} antialiased`}
         suppressHydrationWarning
       >
-        <Suspense
-          fallback={
-            <div className="flex flex-col items-center justify-center min-h-screen bg-white  transition-colors duration-300">
-              <div className="h-12 w-12 border-[4px] border-indigo-500 border-t-transparent border-solid rounded-full animate-spin"></div>
-              <p className="mt-4 text-lg font-medium text-gray-700 dark:text-gray-300">
-                Məlumat yüklənir...
-              </p>
+        <QueryProvider>
+          <Suspense
+            fallback={
+              <div className="flex flex-col items-center justify-center min-h-screen bg-white  transition-colors duration-300">
+                <div className="h-12 w-12 border-[4px] border-indigo-500 border-t-transparent border-solid rounded-full animate-spin"></div>
+                <p className="mt-4 text-lg font-medium text-gray-700 dark:text-gray-300">
+                  Məlumat yüklənir...
+                </p>
 
-              <p className="mt-1 text-sm text-gray-500 dark:text-gray-500">
-                Zəhmət olmasa gözləyin.
-              </p>
-            </div>
-          }
-        >
-          {children}
-        </Suspense>
+                <p className="mt-1 text-sm text-gray-500 dark:text-gray-500">
+                  Zəhmət olmasa gözləyin.
+                </p>
+              </div>
+            }
+          >
+            {children}
+          </Suspense>
+        </QueryProvider>
       </body>
     </html>
   );

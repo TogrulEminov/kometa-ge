@@ -4,8 +4,8 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { LuArrowRight } from "react-icons/lu";
 import { useAdminSession } from "@/app/(dashboard)/manage/AdminSessionProvider";
-import { useToggleState } from "@/lib/rich-editor/zustand/functions";
 import { getMenuSectionsForRole } from "@/app/(dashboard)/_type/constant";
+import { useToggleState } from "@/hooks/useToggleStore";
 
 const Sidebar = () => {
   const pathname = usePathname();

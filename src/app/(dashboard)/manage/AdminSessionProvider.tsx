@@ -7,7 +7,7 @@ import {
   useRef,
   type ReactNode,
 } from "react";
-import type { QueryClient } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 import { authClient } from "@/lib/auth/auth-client";
 
 export type AdminSessionData = {
@@ -41,12 +41,11 @@ export function useAdminSession() {
 export default function AdminSessionProvider({
   children,
   initialSession,
-  queryClient,
 }: {
   children: ReactNode;
   initialSession: AdminSessionData | null;
-  queryClient: QueryClient;
 }) {
+  const queryClient = useQueryClient();
   const previousUserIdRef = useRef<string | null>(
     initialSession?.user?.id ?? null,
   );

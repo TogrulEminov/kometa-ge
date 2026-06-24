@@ -1,5 +1,5 @@
 "use client";
-import { useToggleState } from "@/lib/rich-editor/zustand/functions";
+import { useToggleState } from "@/hooks/useToggleStore";
 import React from "react";
 
 const WhiteBlock = ({

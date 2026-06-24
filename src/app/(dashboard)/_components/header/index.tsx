@@ -11,11 +11,11 @@ import {
   LuShield,
 } from "react-icons/lu";
 import useOutSideClick from "@/hooks/useOutsideClick";
-import { useToggleStore } from "@/lib/rich-editor/zustand/functions";
 import { useLogout } from "@/hooks/useLogout";
 import { useAdminSession } from "@/app/(dashboard)/manage/AdminSessionProvider";
 import ChangePasswordModal from "./ChangePasswordModal";
 import { pageRoutes } from "../../_type/constant";
+import { useToggleStore } from "@/hooks/useToggleStore";
 
 const Header = () => {
   const ref = useRef(null);

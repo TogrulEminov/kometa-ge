@@ -6,6 +6,7 @@ import { useMotionValueEvent, useScroll } from "motion/react";
 import { cn } from "@/utils/cn";
 import HeaderTop from "./HeaderTop";
 import HeaderBottom from "./HeaderBottom";
+import Sidebar from "@/components/layout/sidebar";
 import {
   DirectionsType,
   IContactInformation,
@@ -39,7 +40,6 @@ export default function Header({
       setIsSticky(false);
     }
   });
-  const [isOpen, setIsOpen] = useState(false);
 
   return (
     <>
@@ -53,12 +53,12 @@ export default function Header({
         />
         <HeaderBottom
           isSticky={isSticky}
-          setIsOpen={setIsOpen}
           directions={directions}
           services={services}
         />
       </header>
-      <ShipmentModal open={isOpen} onClose={() => setIsOpen(false)} />
+      <Sidebar directions={directions} services={services} />
+      <ShipmentModal />
     </>
   );
 }

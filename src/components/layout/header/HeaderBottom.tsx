@@ -4,104 +4,15 @@ import { IoMdMenu } from "react-icons/io";
 import { IoChevronDown } from "react-icons/io5";
 import Language from "./Language";
 import { cn } from "@/utils/cn";
-import { Dispatch, SetStateAction, useMemo } from "react";
+import { useMemo } from "react";
 import { DirectionsType, ServicesType } from "@/services/interface/type";
 import { useTranslations } from "next-intl";
-import { AppHref, directionDetailHref, serviceMainHref } from "@/i18n/href";
-
-type NavChild = {
-  id: string;
-  href: AppHref;
-  key?: string;
-  name?: string;
-};
-
-type NavItem = {
-  id: string;
-  key: string;
-  href?: AppHref;
-  name?: string;
-  children?: NavChild[];
-};
-
-function getNavbar(
-  services: ServicesType[],
-  directions: DirectionsType[],
-): NavItem[] {
-  const serviceChildren: NavChild[] = services?.flatMap((service) => {
-    const translation = service.translations?.[0];
-    if (!translation?.slug || !translation.title) return [];
-
-    return [
-      {
-        id: service.id,
-        name: translation.title,
-        href: serviceMainHref(translation.slug),
-      },
-    ];
-  });
-
-  const directionChildren: NavChild[] = directions?.flatMap((direction) => {
-    const translation = direction.translations?.[0];
-    if (!translation?.slug || !translation.navTitle) return [];
-
-    return [
-      {
-        id: direction.id,
-        name: translation.navTitle,
-        href: directionDetailHref(translation.slug),
-      },
-    ];
-  });
-
-  return [
-    {
-      id: "nav-1",
-      key: "about",
-      href: "/about",
-      children: [
-        {
-          id: "certificates",
-          key: "certificates",
-          href: "/certificates",
-        },
-      ],
-    },
-    {
-      id: "nav-2",
-      key: "services",
-      href: "/services",
-      children: serviceChildren,
-    },
-    {
-      id: "nav-3",
-      key: "directions",
-      href: "/directions",
-      children: directionChildren,
-    },
-    {
-      id: "nav-4",
-      key: "media",
-      children: [
-        {
-          id: "photo-gallery",
-          key: "photoGallery",
-          href: "/photo-gallery",
-        },
-        {
-          id: "video-gallery",
-          key: "videoGallery",
-          href: "/video-gallery",
-        },
-      ],
-    },
-    {
-      id: "nav-5",
-      key: "contact",
-      href: "/contact",
-    },
-  ];
-}
+import { useToggleStore } from "@/hooks/useToggleStore";
+import {
+  shipmentModalKey,
+  sideMenuKey,
+} from "@/services/interface/constant-keys";
+import { getNavbar, type NavItem } from "./navConfig";
 
 function DropdownItem({
   item,
@@ -166,15 +77,14 @@ function DropdownItem({
 
 export default function HeaderBottom({
   isSticky,
-  setIsOpen,
   directions,
   services,
 }: {
   isSticky: boolean;
-  setIsOpen: Dispatch<SetStateAction<boolean>>;
   directions: DirectionsType[];
   services: ServicesType[];
 }) {
+  const { open } = useToggleStore();
   const t = useTranslations("atoms.components.header");
   const navbar = useMemo(
     () => getNavbar(services, directions),
@@ -210,14 +120,19 @@ export default function HeaderBottom({
 
           <button
             type="button"
-            onClick={() => setIsOpen(true)}
-            className="hidden sm:inline-flex items-center px-4 py-2 bg-[#B11226] hover:bg-[#8f0e1e] text-white text-sm font-medium rounded-lg transition-colors duration-200"
+            onClick={() => open(shipmentModalKey)}
+            className="hidden sm:inline-flex cursor-pointer items-center px-4 py-2 bg-[#B11226] hover:bg-[#8f0e1e] text-white text-sm font-medium rounded-lg transition-colors duration-200"
           >
             {t("button")}
           </button>
 
-          <button className="lg:hidden text-white p-1" aria-label="Toggle menu">
-            {<IoMdMenu size={36} />}
+          <button
+            type="button"
+            onClick={() => open(sideMenuKey)}
+            className="lg:hidden cursor-pointer text-white p-1"
+            aria-label="Toggle menu"
+          >
+            <IoMdMenu size={36} />
           </button>
         </div>
       </div>

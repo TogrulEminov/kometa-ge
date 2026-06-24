@@ -1,5 +1,5 @@
+import { useToggleState, useToggleStore } from "@/hooks/useToggleStore";
 import React, {type JSX, useRef, useEffect} from "react";
-import {useToggleState, useToggleStore} from "../zustand/functions";
 
 interface Props {
     children: React.ReactNode;
