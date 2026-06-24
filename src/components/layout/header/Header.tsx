@@ -58,7 +58,6 @@ export default function Header({
         />
       </header>
       <Sidebar directions={directions} services={services} />
-      <ShipmentModal />
     </>
   );
 }
