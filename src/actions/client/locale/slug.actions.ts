@@ -50,7 +50,7 @@ export async function getTranslatedSlug(
     const contentType = parsedType.data;
 
     let translatedSlug: string | undefined;
-    let translatedCategory: string | undefined | null;
+    let translatedCategory: string | undefined;
 
     switch (contentType) {
       case "services": {
@@ -132,8 +132,10 @@ export async function getTranslatedSlug(
             : null,
         ]);
 
-        translatedSlug = subServiceItem?.document?.translations[0]?.slug;
-        translatedCategory = categoryItem?.document?.translations[0]?.slug;
+        translatedSlug =
+          subServiceItem?.document?.translations[0]?.slug ?? undefined;
+        translatedCategory =
+          categoryItem?.document?.translations[0]?.slug ?? undefined;
 
         if (!translatedSlug || !translatedCategory) {
           return {
