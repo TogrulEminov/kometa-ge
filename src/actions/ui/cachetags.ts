@@ -16,6 +16,7 @@ export const CACHE_TAG_GROUPS = {
     SECTION_CONTENT: "section_content_cache",
     CATEGORIES: "categories_cache",
     ENUM: "enum_cache",
+    LOCALE_REDIRECT: "locale_redirect_cache",
   } as const;
   
   export type CacheTag = (typeof CACHE_TAG_GROUPS)[keyof typeof CACHE_TAG_GROUPS];

@@ -90,7 +90,8 @@
           "contact": "Contact",
           "privacy_policy": "Privacy Policy",
           "terms_of_service": "Terms of Service"
-        }
+        },
+        "copy_right": "© {year} Kometa GE. Copyright all reserved"
       },
       "fag": {
         "contact_us": "Contact us",
