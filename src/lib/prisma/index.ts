@@ -11,7 +11,7 @@ const createPrismaClient = () => {
     process.env.DATABASE_URL_POOL || process.env.DATABASE_URL;
   const pool = new Pool({
     connectionString,
-    max: 20,
+    max: process.env.NODE_ENV === "production" ? 3 : 20,
     idleTimeoutMillis: 30000,
     connectionTimeoutMillis: 2000,
   });

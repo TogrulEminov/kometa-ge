@@ -73,6 +73,8 @@ const nextConfig: NextConfig = {
       dynamic: 60,
       static: 180,
     },
+    workerThreads: false,
+    cpus: 1,
   },
 
   webpack: (config, { isServer }) => {
