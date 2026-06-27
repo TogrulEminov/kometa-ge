@@ -15,15 +15,12 @@ const translations = {
     description:
       "The page you are looking for does not exist or has been moved. Please return to the home page.",
     homeButton: "Home Page",
-    popularLinks: "Popular pages:",
   },
-
   ka: {
     title: "გვერდი ვერ მოიძებნა",
     description:
       "გვერდი, რომელსაც ეძებთ, არ არსებობს ან გადატანილია. გთხოვთ, დაბრუნდეთ მთავარ გვერდზე.",
     homeButton: "მთავარი გვერდი",
-    popularLinks: "პოპულარული გვერდები:",
   },
 };
 
@@ -31,16 +28,15 @@ export default function NotFoundContainer({ locale }: NotFoundContainerProps) {
   const t = translations[locale];
 
   return (
-    <div className="min-h-screen bg-20 flex items-center justify-center px-4 py-8 sm:py-12">
-      <div className="max-w-2xl w-full text-center relative">
-        {/* 404 Text */}
+    <div className="flex min-h-screen items-center justify-center bg-background px-4 py-8 sm:py-12">
+      <div className="relative w-full max-w-2xl text-center">
         <motion.div
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.6, ease: "easeOut" }}
           className="relative mb-6 sm:mb-8"
         >
-          <h1 className="text-[120px] sm:text-[180px] md:text-[280px] font-bold text-26 leading-none select-none">
+          <h1 className="select-none text-[120px] font-bold leading-none text-primary/15 sm:text-[180px] md:text-[280px]">
             404
           </h1>
           <motion.div
@@ -48,57 +44,49 @@ export default function NotFoundContainer({ locale }: NotFoundContainerProps) {
             transition={{ duration: 2, repeat: Infinity }}
             className="absolute inset-0 flex items-center justify-center"
           >
-            <div className="w-24 h-24 sm:w-32 sm:h-32 md:w-40 md:h-40 rounded-full bg-6/10" />
+            <div className="h-24 w-24 rounded-full bg-primary/10 sm:h-32 sm:w-32 md:h-40 md:w-40" />
           </motion.div>
         </motion.div>
 
-        {/* Title & Description */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.2 }}
-          className="space-y-3 sm:space-y-4 mb-8 sm:mb-12 px-4"
+          className="mb-8 space-y-3 px-4 sm:mb-12 sm:space-y-4"
         >
-          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-1 leading-tight">
+          <h2 className="text-2xl font-bold leading-tight text-foreground sm:text-3xl md:text-4xl lg:text-5xl">
             {t.title}
           </h2>
-          <p className="text-base sm:text-lg md:text-xl text-12 max-w-md mx-auto leading-relaxed">
+          <p className="mx-auto max-w-md text-base leading-relaxed text-muted sm:text-lg md:text-xl">
             {t.description}
           </p>
         </motion.div>
 
-        {/* Action Buttons */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.4 }}
-          className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center px-4 mb-12 sm:mb-16"
+          className="mb-12 flex flex-col items-center justify-center gap-3 px-4 sm:mb-16 sm:flex-row sm:gap-4"
         >
           <GoBack locale={locale} />
           <Link
             href={`/${locale}`}
-            className="group flex items-center justify-center gap-2 w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 bg-6 text-white bg-primary rounded-lg font-semibold hover:bg-7 transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105"
+            className="group flex w-full items-center justify-center gap-2 rounded-xl bg-primary px-6 py-3 text-sm font-semibold text-white shadow-lg transition-all duration-300 hover:scale-[1.02] hover:bg-primary/90 hover:shadow-xl sm:w-auto sm:px-8 sm:py-4 sm:text-base"
           >
-            <BiHome className="w-4 h-4 sm:w-5 sm:h-5" />
-            <span className="text-sm sm:text-base">{t.homeButton}</span>
+            <BiHome className="h-4 w-4 sm:h-5 sm:w-5" />
+            <span>{t.homeButton}</span>
           </Link>
         </motion.div>
-        {/* Decorative Elements */}
+
         <motion.div
-          animate={{
-            scale: [1, 1.2, 1],
-            opacity: [0.3, 0.5, 0.3],
-          }}
+          animate={{ scale: [1, 1.2, 1], opacity: [0.25, 0.45, 0.25] }}
           transition={{ duration: 3, repeat: Infinity }}
-          className="absolute top-10 sm:top-20 left-4 sm:left-10 w-16 h-16 sm:w-20 sm:h-20 bg-6/20 rounded-full blur-2xl sm:blur-3xl"
+          className="absolute left-4 top-10 h-16 w-16 rounded-full bg-primary/20 blur-2xl sm:left-10 sm:top-20 sm:h-20 sm:w-20 sm:blur-3xl"
         />
         <motion.div
-          animate={{
-            scale: [1, 1.3, 1],
-            opacity: [0.3, 0.6, 0.3],
-          }}
+          animate={{ scale: [1, 1.3, 1], opacity: [0.2, 0.4, 0.2] }}
           transition={{ duration: 4, repeat: Infinity, delay: 1 }}
-          className="absolute bottom-10 sm:bottom-20 right-4 sm:right-10 w-20 h-20 sm:w-32 sm:h-32 bg-7/20 rounded-full blur-2xl sm:blur-3xl"
+          className="absolute bottom-10 right-4 h-20 w-20 rounded-full bg-primary/15 blur-2xl sm:bottom-20 sm:right-10 sm:h-32 sm:w-32 sm:blur-3xl"
         />
       </div>
     </div>

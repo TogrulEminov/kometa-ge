@@ -18,11 +18,12 @@ export default function GoBack({ locale }: GoBackProps) {
 
   return (
     <button
+      type="button"
       onClick={() => router.back()}
-      className="group flex items-center cursor-pointer justify-center gap-2 w-full bg-secondary sm:w-auto px-6 sm:px-8 py-3 sm:py-4 text-white text-ui-1 border-2 border-ui-2 rounded-lg font-semibold hover:bg-ui-5 hover:border-ui-4 transition-all duration-300"
+      className="group flex w-full cursor-pointer items-center justify-center gap-2 rounded-xl border border-white/10 bg-surface-elevated px-6 py-3 text-sm font-semibold text-foreground transition-all duration-300 hover:border-primary/40 hover:bg-white/5 sm:w-auto sm:px-8 sm:py-4 sm:text-base"
     >
-      <BsArrowLeft className="w-4 h-4 sm:w-5 sm:h-5 group-hover:-translate-x-1 transition-transform" />
-      <span className="text-sm sm:text-base">{buttonTexts[locale]}</span>
+      <BsArrowLeft className="h-4 w-4 transition-transform group-hover:-translate-x-1 sm:h-5 sm:w-5" />
+      <span>{buttonTexts[locale]}</span>
     </button>
   );
 }
