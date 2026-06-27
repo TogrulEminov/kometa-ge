@@ -33,7 +33,7 @@ export default async function WhyChooseUs({ locale }: SectionLocale) {
   );
   if (!features) return null;
   return (
-    <section className="w-full pt-5 pb-20 bg-white">
+    <section className="w-full pt-5 pb-20 bg-background">
       <div className="container space-y-10">
         <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
           <div>
@@ -45,7 +45,7 @@ export default async function WhyChooseUs({ locale }: SectionLocale) {
             {featuresTr?.title && (
               <h2
                 title={featuresTr?.title}
-                className="text-4xl md:text-5xl lg:text-[56px] font-bold text-secondary leading-[1.1] tracking-tight"
+                className="text-4xl md:text-5xl lg:text-[56px] font-bold text-foreground leading-[1.1] tracking-tight"
               >
                 {featuresTr?.title}
               </h2>
@@ -70,12 +70,12 @@ export default async function WhyChooseUs({ locale }: SectionLocale) {
               </div>
 
               {/* Title */}
-              <strong className="text-lg font-bold text-secondary tracking-wide mb-4">
+              <strong className="text-lg font-bold text-foreground tracking-wide mb-4">
                 {feature?.itemTitle}
               </strong>
 
               {/* Description */}
-              <p className="text-[#64748B] text-[15px] leading-relaxed mb-6">
+              <p className="text-muted text-[15px] leading-relaxed mb-6">
                 {feature?.itemDescription}
               </p>
             </div>
@@ -94,17 +94,17 @@ export default async function WhyChooseUs({ locale }: SectionLocale) {
                   sizes="(max-width: 1024px) 100vw, 50vw"
                 />
               ) : (
-                <div className="w-full h-full bg-gray-100 rounded-2xl" />
+                <div className="w-full h-full bg-surface-elevated rounded-2xl" />
               )}
             </div>
 
             {/* Floating Card */}
             {main && (
-              <div className="absolute bottom-6 left-6 right-6 md:bottom-10 md:left-10 md:right-auto bg-white rounded-xl p-6 md:p-8 shadow-2xl max-w-sm">
+              <div className="absolute bottom-6 left-6 right-6 md:bottom-10 md:left-10 md:right-auto surface-card p-6 md:p-8 shadow-2xl max-w-sm">
                 <span className="inline-flex items-center px-4 py-1.5 bg-primary text-white text-[11px] font-bold tracking-[2px] uppercase rounded-full mb-4">
                   {main?.subTitle}
                 </span>
-                <h4 className="text-xl font-bold text-secondary">
+                <h4 className="text-xl font-bold text-foreground">
                   {main?.title}
                 </h4>
               </div>

@@ -8,7 +8,7 @@ export default async function HomeDirectionsSection({ locale }: SectionLocale) {
   const sectionInfo = await fetchSectionByKeys({ key: "directions", locale });
   const sectionTr = sectionInfo?.translations?.[0];
   if (!directions?.data?.length || !sectionInfo?.translations?.length) return null;
- console.log(directions);
+
   return (
     <section className="pt-0 pb-20">
       <div className="container">

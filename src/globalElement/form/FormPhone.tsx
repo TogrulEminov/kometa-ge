@@ -15,6 +15,7 @@ export interface FormPhoneProps extends Omit<
 > {
   fieldName: string;
   label?: string;
+  labelClassName?: string;
   wrapperClassName?: string;
   className?: string;
 }
@@ -130,6 +131,7 @@ function PhoneInput({
 
 export default function FormPhone({
   label,
+  labelClassName,
   fieldName,
   wrapperClassName,
   className,
@@ -139,6 +141,7 @@ export default function FormPhone({
     <FieldWrapper
       fieldName={fieldName as any}
       label={label}
+      labelClassName={labelClassName}
       className={wrapperClassName}
     >
       {(field, fieldState) => (

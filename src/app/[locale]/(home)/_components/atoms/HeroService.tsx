@@ -16,7 +16,7 @@ export default async function HeroService({
   const t = await getTranslations("atoms");
   if (!services) return <div></div>;
   return (
-    <div className="bg-white rounded-2xl p-6 border border-gray-100 lg:mt-10  flex  lg:items-stretch flex-col lg:flex-row gap-5">
+    <div className="surface-card rounded-2xl p-6 lg:mt-10 flex lg:items-stretch flex-col lg:flex-row gap-5">
       <div className="w-full relative lg:w-40 h-50 shrink-0 rounded-xl overflow-hidden">
         {imageUrl ? (
           <CustomImage
@@ -26,22 +26,22 @@ export default async function HeroService({
             className="w-full h-full object-cover"
           />
         ) : (
-          <div className="w-full h-full bg-gray-100 rounded-xl" />
+          <div className="w-full h-full bg-surface-elevated rounded-xl" />
         )}
       </div>
       <div className="flex flex-col justify-center space-y-3">
-        <h3 className="text-[#1C1E29] text-lg font-bold uppercase leading-snug">
+        <h3 className="text-foreground text-lg font-bold uppercase leading-snug">
           {translations?.title}
         </h3>
         {translations?.shortDescription && (
-          <p className="text-gray-500 text-sm line-clamp-2">
+          <p className="text-muted text-sm line-clamp-2">
             {translations?.shortDescription}
           </p>
         )}
         {translations?.slug ? (
           <Link
             href={serviceMainHref(translations.slug)}
-            className="inline-flex items-center gap-2 border border-[#1C1E29] text-[#1C1E29] hover:bg-[#1C1E29] hover:text-white text-xs font-semibold uppercase tracking-wider px-5 py-2.5 rounded transition-colors duration-200 w-fit"
+            className="inline-flex items-center gap-2 border border-white/20 text-foreground hover:bg-primary hover:text-white hover:border-primary text-xs font-semibold uppercase tracking-wider px-5 py-2.5 rounded transition-colors duration-200 w-fit"
           >
             {t("buttons.read_more")} <span>→</span>
           </Link>

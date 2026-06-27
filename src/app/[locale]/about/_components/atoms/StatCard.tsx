@@ -11,7 +11,7 @@ export default function StatCard({ label, value, suffix }: StatCardProps) {
   const isNumber = !isNaN(Number(value));
 
   return (
-    <div className="flex-1 lg:flex-none w-full shrink-0 bg-gray-50 rounded-2xl p-6 text-center lg:text-left border border-gray-100">
+    <div className="flex-1 lg:flex-none w-full shrink-0 surface-card p-6 text-center lg:text-left">
       <div className="text-3xl lg:text-4xl font-bold text-primary mb-1">
         {isNumber ? (
           <CountUp
@@ -25,7 +25,7 @@ export default function StatCard({ label, value, suffix }: StatCardProps) {
           `${value}${suffix}`
         )}
       </div>
-      <div className="text-sm text-secondary/60 font-medium">{label}</div>
+      <div className="text-sm text-muted font-medium">{label}</div>
     </div>
   );
 }

@@ -22,7 +22,7 @@ export default async function RelatedServices({
         {(servicesSection?.title as string) && (
           <h2
             title={servicesSection?.title as string}
-            className="text-secondary text-3xl font-bold mt-2 mb-4"
+            className="text-foreground text-3xl font-bold mt-2 mb-4"
           >
             {servicesSection?.title}
           </h2>
@@ -37,17 +37,17 @@ export default async function RelatedServices({
             <Link
               key={service.id}
               href={serviceMainHref(serviceTr?.slug ?? "")}
-              className="group bg-white rounded-2xl p-5  border border-gray-100 hover:border-primary/20  transition-all duration-300 flex items-start gap-4"
+              className="group surface-card rounded-2xl p-5 hover:border-primary/30 transition-all duration-300 flex items-start gap-4"
             >
               <div className="size-12 p-3 rounded-xl bg-primary/10 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-all duration-300 shrink-0">
                 <DynamicIcon iconName={service.iconUrl} />
               </div>
               <div>
-                <h3 className="text-secondary font-bold text-base mb-1 group-hover:text-primary transition-colors duration-300">
+                <h3 className="text-foreground font-bold text-base mb-1 group-hover:text-primary transition-colors duration-300">
                   {serviceTr?.title}
                 </h3>
                 {serviceTr?.shortDescription && (
-                  <p className="text-secondary/50 text-sm leading-relaxed">
+                  <p className="text-muted text-sm leading-relaxed">
                     {serviceTr?.shortDescription}
                   </p>
                 )}

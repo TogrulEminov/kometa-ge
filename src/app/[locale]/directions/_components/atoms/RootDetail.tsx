@@ -22,7 +22,9 @@ export default async function RootDetail({ data }: { data: DirectionsType }) {
   return (
     <div className="space-y-8">
       <MainInfo data={data} mainData={mainData as newInfoJson} />
-      <InteractiveRouteMap fromIso={routeData.from} toIso={routeData.to} />
+      {routeData?.from && routeData?.to && (
+        <InteractiveRouteMap fromIso={routeData.from} toIso={routeData.to} />
+      )}
       <KeyFeatures data={featuresData as newInfoJson} />
       <WhyThisRoute data={advantagesData as newInfoJson} />
       <CommonQuestions data={faqData as newInfoJson} />
@@ -30,6 +32,7 @@ export default async function RootDetail({ data }: { data: DirectionsType }) {
     </div>
   );
 }
+
 export function MainInfo({
   data,
   mainData,
@@ -39,9 +42,10 @@ export function MainInfo({
 }) {
   const dataTr = data?.translations?.[0];
   const imageUrl = getForCards(data?.imageUrl);
+
   return (
     <div className="space-y-8">
-      <div className="rounded-3xl overflow-hidden shadow-xl border border-gray-100">
+      <div className="surface-card overflow-hidden">
         {imageUrl ? (
           <CustomImage
             width={1200}
@@ -51,7 +55,7 @@ export function MainInfo({
             title={dataTr?.title}
           />
         ) : (
-          <div className="w-full h-80 bg-gray-100 rounded-lg" />
+          <div className="w-full h-80 bg-surface-elevated" />
         )}
       </div>
 
@@ -64,7 +68,7 @@ export function MainInfo({
         {dataTr?.title && (
           <h1
             title={dataTr?.title}
-            className="text-secondary text-3xl md:text-4xl font-bold mt-2"
+            className="text-foreground text-3xl md:text-4xl font-bold mt-2"
           >
             {dataTr?.title}
           </h1>
@@ -72,12 +76,12 @@ export function MainInfo({
         <div className="w-16 h-1 bg-primary rounded-full mt-4" />
       </div>
 
-      <div className="bg-white rounded-2xl p-8 border border-gray-100 shadow-sm">
-        <h2 className="text-secondary font-bold text-xl mb-4">
+      <div className="surface-card p-8">
+        <h2 className="text-foreground font-bold text-xl mb-4">
           {mainData?.title}
         </h2>
         <article
-          className="text-secondary/70 leading-relaxed"
+          className="text-muted leading-relaxed [&_a]:text-primary [&_a]:underline"
           dangerouslySetInnerHTML={{
             __html: sanitizeHtml(mainData?.description ?? ""),
           }}
@@ -86,19 +90,21 @@ export function MainInfo({
     </div>
   );
 }
+
 export function KeyFeatures({ data }: { data: newInfoJson }) {
   if (!data) return null;
+
   return (
-    <div className="bg-white rounded-2xl p-8 border border-gray-100 shadow-sm">
-      <h2 className="text-secondary font-bold text-xl mb-6">{data.title}</h2>
+    <div className="surface-card p-8">
+      <h2 className="text-foreground font-bold text-xl mb-6">{data.title}</h2>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {data.items.map((item, i) => (
           <div
             key={i}
-            className="flex items-start gap-4 py-2 px-3 bg-tertiary rounded-sm"
+            className="flex items-start gap-4 py-2 px-3 bg-surface-elevated/60 rounded-sm"
           >
             <div className="w-2 h-2 rounded-full bg-primary mt-2 shrink-0" />
-            <span className="text-secondary/80 text-sm font-medium leading-relaxed">
+            <span className="text-foreground/80 text-sm font-medium leading-relaxed">
               {item.itemTitle as string}
             </span>
           </div>
@@ -107,18 +113,20 @@ export function KeyFeatures({ data }: { data: newInfoJson }) {
     </div>
   );
 }
+
 export function WhyThisRoute({ data }: { data: newInfoJson }) {
   if (!data) return null;
+
   return (
-    <div className="bg-white rounded-2xl p-8 border border-gray-100 shadow-sm">
-      <h2 className="text-secondary font-bold text-xl mb-6">{data.title}</h2>
+    <div className="surface-card p-8">
+      <h2 className="text-foreground font-bold text-xl mb-6">{data.title}</h2>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {data.items.map((item, i) => (
-          <div key={i} className="p-6 bg-tertiary rounded-2xl">
-            <h3 className="text-secondary font-bold text-base mb-2">
+          <div key={i} className="p-6 bg-surface-elevated/60 rounded-2xl">
+            <h3 className="text-foreground font-bold text-base mb-2">
               {item.itemTitle as string}
             </h3>
-            <p className="text-secondary/60 text-sm leading-relaxed">
+            <p className="text-muted text-sm leading-relaxed">
               {item.itemDescription as string}
             </p>
           </div>
@@ -127,31 +135,34 @@ export function WhyThisRoute({ data }: { data: newInfoJson }) {
     </div>
   );
 }
+
 export function CommonQuestions({ data }: { data: newInfoJson }) {
   if (!data) return null;
+
   return (
-    <div className="bg-white rounded-2xl p-8 border border-gray-100 shadow-sm">
-      <h2 title={data.title} className="text-secondary font-bold text-xl mb-6">
+    <div className="surface-card p-8">
+      <h2 title={data.title} className="text-foreground font-bold text-xl mb-6">
         {data.title}
       </h2>
       <div className="space-y-4">
         {data.items.map((item, i) => {
           if (!item.itemDescription || !item.itemTitle) return null;
+
           return (
             <details
               key={i}
-              className="border border-gray-100 rounded-xl overflow-hidden"
+              className="border border-white/10 rounded-xl overflow-hidden bg-surface-elevated/40"
             >
               <summary className="flex items-center justify-between p-5 cursor-pointer list-none select-none">
-                <span className="text-secondary font-bold text-sm">
+                <span className="text-foreground font-bold text-sm">
                   {item.itemTitle as string}
                 </span>
                 <span className="text-primary text-lg font-bold">+</span>
               </summary>
               <div className="px-5 pb-5">
-                <div className="border-t border-gray-100 pt-4">
+                <div className="border-t border-white/10 pt-4">
                   <article
-                    className="text-secondary/60 text-sm leading-relaxed"
+                    className="text-muted text-sm leading-relaxed [&_a]:text-primary"
                     dangerouslySetInnerHTML={{
                       __html: sanitizeHtml(item.itemDescription as string),
                     }}
@@ -165,11 +176,13 @@ export function CommonQuestions({ data }: { data: newInfoJson }) {
     </div>
   );
 }
+
 export async function CtaComponent({ data }: { data: newInfoJson }) {
   const t = await getTranslations("atoms.buttons");
   if (!data) return null;
+
   return (
-    <div className="bg-secondary rounded-2xl p-8 text-center">
+    <div className="rounded-2xl border border-white/10 bg-linear-to-br from-primary to-[#8a0d1e] p-8 text-center shadow-xl">
       <strong
         title={data.title}
         className="text-white text-2xl block font-bold mb-3"
@@ -182,8 +195,8 @@ export async function CtaComponent({ data }: { data: newInfoJson }) {
       <div className="flex flex-col sm:flex-row gap-4 justify-center">
         <CtaButton />
         <Link
-          href={"/contact"}
-          className="bg-white hover:bg-white/90 text-secondary font-bold py-4 px-8 rounded-xl hover:bg-tertiary transition-colors duration-300"
+          href="/contact"
+          className="border border-white/20 bg-surface-elevated hover:bg-surface text-foreground font-bold py-4 px-8 rounded-xl transition-colors duration-300"
         >
           {t("contact_us")}
         </Link>

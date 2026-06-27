@@ -24,7 +24,7 @@ export default function GeographyGrid({
       </span>
       <h2
         title={geography?.title}
-        className="font-display text-4xl font-bold mb-6"
+        className="font-display text-4xl font-bold mb-6 text-foreground"
       >
         {geography?.title}
       </h2>
@@ -32,28 +32,28 @@ export default function GeographyGrid({
         dangerouslySetInnerHTML={{
           __html: sanitizeHtml(geography?.description ?? ""),
         }}
-        className="text-gray-500 leading-relaxed text-lg mb-8"
+        className="text-muted leading-relaxed text-lg mb-8 prose"
       />
       {geography?.items && (
-        <div className="grid md:grid-cols-2 gap-px bg-gray-300">
+        <div className="grid md:grid-cols-2 gap-4">
           {geography.items.map((item: jsonItem) => (
             <div
               key={item.itemTitle}
-              className="bg-tertiary p-8 lg:p-10 reveal"
+              className="surface-card p-8 lg:p-10 reveal"
             >
               <div className="flex items-start justify-between mb-6">
-                <h3 className="font-display text-2xl font-bold">
+                <h3 className="font-display text-2xl font-bold text-foreground">
                   {item.itemTitle}
                 </h3>
                 {typeof item.badge === "string" && (
-                  <span className="text-xs font-medium text-gray-400 border border-gray-300 px-3 py-1">
+                  <span className="text-xs font-medium text-muted border border-white/10 px-3 py-1 rounded-full">
                     {item.badge}
                   </span>
                 )}
               </div>
               {item.itemDescription && (
                 <article
-                  className="text-gray-500 leading-relaxed"
+                  className="text-muted leading-relaxed prose"
                   dangerouslySetInnerHTML={{
                     __html: sanitizeHtml(item.itemDescription ?? ""),
                   }}

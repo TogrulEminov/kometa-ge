@@ -29,7 +29,7 @@ export default function BranchCards({
       </span>
       <h2
         title={branchesInfo?.title}
-        className="font-display text-4xl font-bold mb-6"
+        className="font-display text-4xl font-bold mb-6 text-foreground"
       >
         {branchesInfo?.title}
       </h2>
@@ -38,7 +38,7 @@ export default function BranchCards({
           dangerouslySetInnerHTML={{
             __html: sanitizeHtml(branchesInfo?.description ?? ""),
           }}
-          className="text-gray-500 leading-relaxed text-lg mb-10"
+          className="text-muted leading-relaxed text-lg mb-10 prose"
         />
       )}
 
@@ -57,10 +57,10 @@ export default function BranchCards({
             <div
               key={branch.id}
               onClick={() => setSelected(branch)}
-              className="border border-gray-200 hover:border-gray-300 hover:shadow-sm rounded-2xl p-5 flex items-center justify-between cursor-pointer transition-all duration-200 group"
+              className="surface-card hover:border-primary/30 p-5 flex items-center justify-between cursor-pointer transition-all duration-200 group"
             >
               <div className="flex items-center gap-4">
-                <div className="w-11 h-11 rounded-xl bg-primary/8 flex items-center justify-center flex-shrink-0">
+                <div className="w-11 h-11 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">
                   <svg
                     className="w-5 h-5 text-primary"
                     fill="none"
@@ -77,14 +77,14 @@ export default function BranchCards({
                 </div>
                 <div>
                   <div className="flex items-center gap-2 mb-0.5">
-                    <span className="font-semibold text-secondary">
+                    <span className="font-semibold text-foreground">
                       {countryName}
                     </span>
-                    <span className="text-xs text-gray-400 font-mono">
+                    <span className="text-xs text-muted font-mono">
                       {branch.isoCode}
                     </span>
                   </div>
-                  <p className="text-sm text-gray-400">
+                  <p className="text-sm text-muted">
                     {branch.offices.length === 0
                       ? t("coming_soon")
                       : branch.offices.length === 1
@@ -98,26 +98,26 @@ export default function BranchCards({
 
               <div className="flex items-center gap-2 flex-shrink-0">
                 {officeCount > 0 && (
-                  <span className="hidden sm:inline-flex text-xs font-medium px-2.5 py-1 rounded-full bg-primary/8 text-primary">
+                  <span className="hidden sm:inline-flex text-xs font-medium px-2.5 py-1 rounded-full bg-primary/10 text-primary">
                     {t("office_count", { count: officeCount })}
                   </span>
                 )}
                 {warehouseCount > 0 && (
-                  <span className="hidden sm:inline-flex text-xs font-medium px-2.5 py-1 rounded-full bg-amber-50 text-amber-700">
+                  <span className="hidden sm:inline-flex text-xs font-medium px-2.5 py-1 rounded-full bg-amber-500/10 text-amber-400">
                     {t("warehouse_count", { count: warehouseCount })}
                   </span>
                 )}
                 <span
                   className={`text-xs font-medium px-2.5 py-1 rounded-full ${
                     isActive
-                      ? "bg-green-50 text-green-700"
-                      : "bg-amber-50 text-amber-700"
+                      ? "bg-green-500/10 text-green-400"
+                      : "bg-amber-500/10 text-amber-400"
                   }`}
                 >
                   {isActive ? t("active") : t("planned")}
                 </span>
                 <svg
-                  className="w-4 h-4 text-gray-300 group-hover:text-gray-400 transition-colors"
+                  className="w-4 h-4 text-muted group-hover:text-foreground transition-colors"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"

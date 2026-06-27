@@ -6,7 +6,6 @@ import "leaflet/dist/leaflet.css";
 import {
   GeoJSON,
   MapContainer,
-  Polyline,
   TileLayer,
   CircleMarker,
   useMap,
@@ -14,21 +13,26 @@ import {
 import { cn } from "@/utils/cn";
 import {
   getFreightRouteByIso,
+  getGreatCircleRouteLatLngs,
   worldGeoData,
   type FreightRoute,
 } from "./freightRoutes";
+import {
+  RouteAnimatedDashLine,
+  RouteBaseLine,
+  RouteGlowLine,
+} from "./AnimatedRouteLine";
+import AnimatedRouteVehicle from "./AnimatedRouteVehicle";
 
-const FROM_COLOR = "#1E3A5F";
-const TO_COLOR = "#C8102E";
-const ROUTE_COLOR = "#1E3A5F";
+const FROM_COLOR = "#3B82F6";
+const TO_COLOR = "#B11226";
 
-/** GeoJSON / D3: [lng, lat] → Leaflet: [lat, lng] */
 function toLatLng([lng, lat]: [number, number]): [number, number] {
   return [lat, lng];
 }
 
 function getRouteLatLngs(route: FreightRoute): [number, number][] {
-  return [toLatLng(route.from.coords), toLatLng(route.to.coords)];
+  return getGreatCircleRouteLatLngs(route.from.coords, route.to.coords);
 }
 
 function FitRouteBounds({ positions }: { positions: [number, number][] }) {
@@ -95,7 +99,7 @@ export default function RouteMapView({
     return (
       <div
         className={cn(
-          "rounded-2xl border border-gray-100 bg-white p-8 text-center text-secondary/60 text-sm",
+          "surface-card p-8 text-center text-muted text-sm",
           className,
         )}
       >
@@ -108,20 +112,20 @@ export default function RouteMapView({
     if (iso === toCode) {
       return {
         fillColor: TO_COLOR,
-        fillOpacity: 0.28,
+        fillOpacity: 0.35,
         color: TO_COLOR,
         weight: 2.5,
-        opacity: 0.9,
+        opacity: 0.95,
         interactive: false,
       };
     }
     if (iso === fromCode) {
       return {
         fillColor: FROM_COLOR,
-        fillOpacity: 0.28,
+        fillOpacity: 0.32,
         color: FROM_COLOR,
         weight: 2.5,
-        opacity: 0.9,
+        opacity: 0.95,
         interactive: false,
       };
     }
@@ -144,12 +148,7 @@ export default function RouteMapView({
   };
 
   return (
-    <div
-      className={cn(
-        "route-map-root overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm",
-        className,
-      )}
-    >
+    <div className={cn("route-map-root surface-card overflow-hidden", className)}>
       <div className="relative isolate z-0 h-[min(520px,70vw)] min-h-[360px] w-full [&_.leaflet-container]:z-0 [&_.leaflet-container]:h-full [&_.leaflet-container]:w-full [&_.leaflet-container]:cursor-grab [&_.leaflet-container.leaflet-dragging]:cursor-grabbing">
         <MapContainer
           key={`${fromCode}-${toCode}`}
@@ -160,11 +159,11 @@ export default function RouteMapView({
           touchZoom
           doubleClickZoom
           zoomControl
-          style={{ height: "100%", width: "100%" }}
+          style={{ height: "100%", width: "100%", background: "#0b0f1a" }}
         >
           <TileLayer
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>'
-            url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
+            url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
           />
 
           <GeoJSON
@@ -178,18 +177,9 @@ export default function RouteMapView({
             }
           />
 
-          <Polyline
-            positions={routePositions}
-            pathOptions={{
-              color: ROUTE_COLOR,
-              weight: 4,
-              opacity: 0.9,
-              lineCap: "round",
-              lineJoin: "round",
-              dashArray: "10 8",
-              interactive: false,
-            }}
-          />
+          <RouteBaseLine positions={routePositions} />
+          <RouteGlowLine positions={routePositions} />
+          <RouteAnimatedDashLine positions={routePositions} />
 
           <CircleMarker
             center={toLatLng(route.from.coords)}
@@ -215,12 +205,13 @@ export default function RouteMapView({
             }}
           />
 
+          <AnimatedRouteVehicle positions={routePositions} />
           <FitRouteBounds positions={routePositions} />
         </MapContainer>
 
-        <div className="pointer-events-none absolute bottom-4 left-4 z-10 rounded-xl bg-white/95 p-3 text-xs shadow-lg backdrop-blur-sm">
+        <div className="pointer-events-none absolute bottom-4 left-4 z-10 rounded-xl border border-white/10 bg-background/85 p-3 text-xs text-foreground shadow-2xl backdrop-blur-md">
           <div className="mb-1.5 flex items-center gap-2">
-            <span className="h-3 w-3 rounded-sm bg-[#1E3A5F]" />
+            <span className="h-3 w-3 rounded-sm bg-[#3B82F6]" />
             <span>
               {route.from.name} ({fromCode})
             </span>

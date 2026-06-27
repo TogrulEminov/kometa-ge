@@ -29,14 +29,14 @@ export default async function ServicesDetailOverview({
         {servicesOverview?.title && (
           <h2
             title={servicesOverview?.title}
-            className="text-3xl text-secondary font-bold mt-2 mb-4"
+            className="text-3xl text-foreground font-bold mt-2 mb-4"
           >
             {servicesOverview?.title}
           </h2>
         )}
         {servicesOverview?.description && (
           <div
-            className="prose prose-lg max-w-none text-secondary/70 leading-relaxed mb-8"
+            className="prose prose-lg max-w-none text-muted leading-relaxed mb-8 [&_a]:text-primary"
             dangerouslySetInnerHTML={{
               __html: sanitizeHtml(servicesOverview?.description ?? ""),
             }}
@@ -54,7 +54,7 @@ export default async function ServicesDetailOverview({
             className="w-full h-[400px] object-cover"
           />
         ) : (
-          <div className="w-full h-[400px] bg-gray-400 rounded-lg" />
+          <div className="w-full h-[400px] bg-surface-elevated rounded-lg" />
         )}
       </div>
 
@@ -62,7 +62,7 @@ export default async function ServicesDetailOverview({
         {servicesOverview.items.map((tag, i) => (
           <span
             key={i}
-            className="px-4 py-2 text-secondary bg-white border border-gray-200 text-sm font-medium rounded-xl cursor-default transition-colors duration-300"
+            className="px-4 py-2 text-foreground bg-surface border border-white/10 text-sm font-medium rounded-xl cursor-default"
           >
             {tag.itemTitle as string}
           </span>

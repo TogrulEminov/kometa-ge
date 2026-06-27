@@ -3,7 +3,6 @@ import { sanitizeHtml } from "@/lib/domburify";
 import { AboutMainType, newInfoJson } from "@/services/interface/type";
 import { findJsonSection } from "@/utils/findJsonSection";
 import { getForCards } from "@/utils/getFullimageUrl";
-import Image from "next/image";
 
 export default function AboutContent({
   aboutInfo,
@@ -52,14 +51,14 @@ export default function AboutContent({
         {mainDescription?.title && (
           <h2
             title={mainDescription?.title}
-            className="font-display text-4xl font-bold mb-6"
+            className="font-display text-4xl font-bold mb-6 text-foreground"
           >
             {mainDescription?.title}
           </h2>
         )}
         {mainDescription?.description && (
           <article
-            className="text-gray-500 leading-relaxed text-lg mb-4"
+            className="text-muted leading-relaxed text-lg mb-4 prose"
             dangerouslySetInnerHTML={{
               __html: sanitizeHtml(mainDescription?.description),
             }}
@@ -75,13 +74,13 @@ export default function AboutContent({
           )}
           <h2
             title={benefits?.title}
-            className="font-display text-4xl font-bold mb-6"
+            className="font-display text-4xl font-bold mb-6 text-foreground"
           >
             {benefits?.title}
           </h2>
           {benefits?.description && (
             <article
-              className="text-gray-500 leading-relaxed text-lg mb-4"
+              className="text-muted leading-relaxed text-lg mb-4 prose"
               dangerouslySetInnerHTML={{
                 __html: sanitizeHtml(benefits?.description),
               }}

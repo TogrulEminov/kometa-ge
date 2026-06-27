@@ -1,10 +1,27 @@
 @import "tailwindcss";
 
+@custom-variant dark-site (&:where(.dark-site *));
+
 @theme {
   --color-primary: #b11226;
   --color-secondary: #1c1e29;
   --color-tertiary: #f2f2f2;
+  /* Light defaults — dashboard/auth */
+  --color-background: #ffffff;
+  --color-surface: #ffffff;
+  --color-surface-elevated: #f8fafc;
+  --color-foreground: #1c1e29;
+  --color-muted: #64748b;
   --font-inter: var(--font-inter);
+}
+
+/* Dark theme — locale public site only */
+.dark-site {
+  --color-background: #0b0f1a;
+  --color-surface: #141824;
+  --color-surface-elevated: #1a2030;
+  --color-foreground: #f1f5f9;
+  --color-muted: #94a3b8;
 }
 @layer base {
   body {
@@ -16,17 +33,24 @@
   .container {
     @apply mx-auto max-w-295 px-4;
   }
+  .surface-card {
+    @apply rounded-2xl border border-slate-200 bg-white shadow-lg;
+  }
+
+  .dark-site .surface-card {
+    @apply border-white/10 bg-surface shadow-lg;
+  }
   .prose {
-    @apply text-secondary text-base lg:text-lg leading-relaxed;
+    @apply text-muted text-base lg:text-lg leading-relaxed;
     max-width: 100%;
     :where(h1, h2, h3, h4) {
-      @apply text-secondary font-bold tracking-tight mt-6 mb-4;
+      @apply text-foreground font-bold tracking-tight mt-6 mb-4;
     }
     :where(h1) {
       @apply text-2xl lg:text-4xl;
     }
     :where(h2) {
-      @apply text-xl lg:text-2xl border-b border-gray-200 pb-1;
+      @apply text-xl lg:text-2xl border-b border-slate-200 pb-1;
     }
     :where(h3) {
       @apply text-lg lg:text-xl;
@@ -47,10 +71,10 @@
       @apply text-primary underline underline-offset-4  transition-colors;
     }
     :where(blockquote) {
-      @apply italic border-l-4 border-gray-300 pl-4 my-4 text-gray-600;
+      @apply italic border-l-4 border-slate-200 pl-4 my-4 text-muted;
     }
     :where(code) {
-      @apply bg-gray-100 text-red-500 rounded px-1.5 py-0.5 font-mono text-sm;
+      @apply bg-slate-100 text-primary rounded px-1.5 py-0.5 font-mono text-sm;
     }
     :where(pre) {
       @apply bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto font-mono text-sm my-4;
@@ -65,11 +89,31 @@
       @apply w-full text-left border-collapse my-6 text-sm;
     }
     :where(th) {
-      @apply border-b-2 border-gray-300 p-2 font-semibold;
+      @apply border-b-2 border-slate-200 p-2 font-semibold text-foreground;
     }
     :where(td) {
-      @apply border-b border-gray-200 p-2;
+      @apply border-b border-slate-100 p-2;
     }
+  }
+
+  .dark-site .prose :where(h2) {
+    @apply border-white/10;
+  }
+
+  .dark-site .prose :where(blockquote) {
+    @apply border-white/20;
+  }
+
+  .dark-site .prose :where(code) {
+    @apply bg-surface-elevated;
+  }
+
+  .dark-site .prose :where(th) {
+    @apply border-white/20;
+  }
+
+  .dark-site .prose :where(td) {
+    @apply border-white/10;
   }
 }
 /* ===== DETAILS/SUMMARY ANIMATIONS ===== */
@@ -191,6 +235,31 @@ details:not([open]) summary:hover .chevron-container {
 
 details:not([open]) summary:hover .chevron-icon {
   color: #ffffff;
+}
+
+.dark-site .ant-pagination .ant-pagination-item {
+  background-color: var(--color-surface) !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+.dark-site .ant-pagination .ant-pagination-item a {
+  color: var(--color-foreground) !important;
+}
+
+.dark-site .ant-pagination .ant-pagination-item-active {
+  border-color: var(--color-primary) !important;
+  background-color: var(--color-primary) !important;
+}
+
+.dark-site .ant-pagination .ant-pagination-item-active a {
+  color: #fff !important;
+}
+
+.dark-site .ant-pagination .ant-pagination-prev .ant-pagination-item-link,
+.dark-site .ant-pagination .ant-pagination-next .ant-pagination-item-link {
+  background-color: var(--color-surface) !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
+  color: var(--color-foreground) !important;
 }
 
 /* Scroll animation for header */
@@ -325,19 +394,238 @@ details:not([open]) summary:hover .chevron-icon {
   z-index: 0;
 }
 
+.route-vehicle-marker {
+  background: transparent !important;
+  border: none !important;
+}
+
+.route-vehicle-shell {
+  position: relative;
+  width: 64px;
+  height: 64px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  overflow: visible;
+}
+
+.route-vehicle-rotate {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  transform-origin: 50% 90%;
+  will-change: transform;
+  backface-visibility: hidden;
+}
+
+.route-vehicle-glow {
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  width: 28px;
+  height: 6px;
+  transform: translateX(-50%);
+  border-radius: 999px;
+  background: radial-gradient(
+    ellipse,
+    rgba(177, 18, 38, 0.35) 0%,
+    transparent 72%
+  );
+  pointer-events: none;
+}
+
+.route-vehicle-image {
+  position: relative;
+  z-index: 1;
+  width: 64px;
+  height: 64px;
+  object-fit: contain;
+  object-position: center bottom;
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-drag: none;
+  filter: brightness(0) invert(1)
+    drop-shadow(0 2px 6px rgba(0, 0, 0, 0.65));
+}
+
+.ui-select-dropdown.ant-select-dropdown {
+  background-color: var(--color-surface-elevated) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border-radius: 12px !important;
+  padding: 4px !important;
+}
+
+.ui-select-dropdown .ant-select-item {
+  color: var(--color-foreground) !important;
+  border-radius: 8px !important;
+}
+
+.ui-select-dropdown .ant-select-item-option-active,
+.ui-select-dropdown .ant-select-item-option-selected {
+  background-color: rgba(177, 18, 38, 0.15) !important;
+  color: var(--color-foreground) !important;
+}
+
+.dark-site .ui-select-field.ant-select,
+.dark-site .shipment-modal .ant-select {
+  --ant-select-background-color: #1a2030 !important;
+  --ant-select-color: #f1f5f9 !important;
+  --ant-select-border-color: rgba(255, 255, 255, 0.1) !important;
+  --ant-select-affix-color: #94a3b8 !important;
+  min-height: 48px;
+  border-radius: 12px !important;
+}
+
+.dark-site .ui-select-field.ant-select:hover:not(.ant-select-disabled),
+.dark-site .shipment-modal .ant-select:hover:not(.ant-select-disabled) {
+  --ant-select-border-color: rgba(255, 255, 255, 0.2) !important;
+}
+
+.dark-site .ui-select-field.ant-select-focused,
+.dark-site .shipment-modal .ant-select-focused {
+  --ant-select-border-color: rgba(177, 18, 38, 0.5) !important;
+}
+
+.dark-site .ui-select-field .ant-select-placeholder,
+.dark-site .shipment-modal .ant-select-placeholder {
+  color: #94a3b8 !important;
+}
+
+.dark-site .ant-modal .ant-modal-container,
+.dark-site .shipment-modal .ant-modal-container {
+  background-color: #141824 !important;
+  color: #f1f5f9 !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border-radius: 16px !important;
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.45) !important;
+}
+
+.dark-site .ant-modal .ant-modal-body,
+.dark-site .shipment-modal .ant-modal-body {
+  background-color: #141824 !important;
+  color: #f1f5f9 !important;
+}
+
+.dark-site .ant-modal .ant-select,
+.dark-site .ant-modal .ant-input,
+.dark-site .ant-modal .ant-input-affix-wrapper,
+.dark-site .ant-modal textarea.ant-input {
+  background-color: #1a2030 !important;
+  color: #f1f5f9 !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+.dark-site .ant-modal .ant-select-selection-placeholder,
+.dark-site .ant-modal .ant-select-placeholder,
+.dark-site .ant-modal .ant-input::placeholder,
+.dark-site .ant-modal textarea.ant-input::placeholder {
+  color: #94a3b8 !important;
+}
+
+@keyframes routeVehicleGlow {
+  0%,
+  100% {
+    opacity: 0.45;
+    transform: translateX(-50%) scale(0.92);
+  }
+  50% {
+    opacity: 1;
+    transform: translateX(-50%) scale(1.08);
+  }
+}
+
 [id^="section-"] {
   scroll-margin-top: 100px;
 }
 
-.contact-form-fields .ant-input:hover,
-.contact-form-fields textarea.ant-input:hover {
+.dark-site .contact-form-fields .ant-input:hover,
+.dark-site .contact-form-fields textarea.ant-input:hover {
   border-color: var(--color-primary) !important;
 }
 
-.contact-form-fields .ant-input:focus,
-.contact-form-fields .ant-input-focused,
-.contact-form-fields textarea.ant-input:focus {
+.dark-site .contact-form-fields .ant-input:focus,
+.dark-site .contact-form-fields .ant-input-focused,
+.dark-site .contact-form-fields textarea.ant-input:focus {
   border-color: var(--color-primary) !important;
   box-shadow: none !important;
+}
+
+.dark-site .contact-form-fields .ant-input,
+.dark-site .contact-form-fields .ant-input-affix-wrapper,
+.dark-site .contact-form-fields .ui-select-field.ant-select,
+.dark-site .contact-form-fields .ant-input-textarea textarea,
+.dark-site .shipment-form-fields .ant-input,
+.dark-site .shipment-form-fields .ant-input-affix-wrapper,
+.dark-site .shipment-form-fields .ui-select-field.ant-select,
+.dark-site .shipment-form-fields .ant-input-textarea textarea {
+  background-color: #1a2030 !important;
+  color: #f1f5f9 !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+.dark-site .contact-form-fields .ant-select-placeholder,
+.dark-site .contact-form-fields .ant-input::placeholder,
+.dark-site .contact-form-fields textarea.ant-input::placeholder,
+.dark-site .shipment-form-fields .ant-select-placeholder,
+.dark-site .shipment-form-fields .ant-input::placeholder,
+.dark-site .shipment-form-fields textarea.ant-input::placeholder {
+  color: #94a3b8 !important;
+}
+
+.hero-booking-form .ant-input,
+.hero-booking-form .ant-input-affix-wrapper,
+.hero-booking-form textarea.ant-input {
+  background-color: transparent !important;
+  border: none !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.45) !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  color: #fff !important;
+}
+
+.hero-booking-form .ant-input::placeholder,
+.hero-booking-form textarea.ant-input::placeholder {
+  color: rgba(255, 255, 255, 0.5) !important;
+}
+
+.hero-booking-form .ant-select {
+  --ant-select-background-color: transparent !important;
+  --ant-select-color: #fff !important;
+  --ant-select-border-color: rgba(255, 255, 255, 0.45) !important;
+  --ant-select-affix-color: rgba(255, 255, 255, 0.5) !important;
+  border: none !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.45) !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+
+.hero-booking-form .ant-select-placeholder {
+  color: rgba(255, 255, 255, 0.5) !important;
+}
+
+.dark-site details:not([open]) .faq-card {
+  background-color: var(--color-surface-elevated);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.dark-site details:not([open]) summary .faq-question {
+  color: var(--color-foreground);
+}
+
+.dark-site details:not([open]) summary .chevron-container {
+  background-color: rgba(255, 255, 255, 0.08);
+}
+
+.dark-site details:not([open]) summary .chevron-icon {
+  color: var(--color-muted);
+}
+
+.dark-site details:not([open]) .faq-card:hover {
+  border-color: rgba(177, 18, 38, 0.35);
+  box-shadow: 0 4px 20px -4px rgba(0, 0, 0, 0.35);
+}
+
+details:not([open]) summary:hover .faq-question {
+  color: var(--color-primary);
 }
 

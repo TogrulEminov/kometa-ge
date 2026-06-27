@@ -2,6 +2,7 @@ import { Link } from "@/i18n/navigation";
 import { newInfoJson, SubServicesType } from "@/services/interface/type";
 import { FaArrowRight } from "react-icons/fa";
 import { serviceSubHref } from "@/i18n/href";
+
 export default async function RelatedServices({
   sectionData,
   relatedServices,
@@ -21,7 +22,7 @@ export default async function RelatedServices({
         {sectionData.title && (
           <h2
             title={sectionData.title}
-            className="text-3xl font-bold mt-2 mb-4 text-secondary"
+            className="text-3xl font-bold mt-2 mb-4 text-foreground"
           >
             {sectionData.title}
           </h2>
@@ -29,21 +30,20 @@ export default async function RelatedServices({
         <div className="w-16 h-1 rounded-full mb-4 bg-primary" />
       </div>
 
-      {relatedServices.map((service) => {
-        const servicesCategorySlug = service.services?.translations?.[0];
-        const serviceTr = service.translations?.[0];
-        if (!serviceTr) return null;
-        return (
-          <Link
-            key={service.id}
-            href={serviceSubHref(
-              servicesCategorySlug?.slug ?? "",
-              serviceTr.slug ?? "",
-            )}
-            className="group block relative rounded-2xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-500"
-          >
-            <div className="absolute inset-0 bg-secondary/80" />
-            <div className="absolute bottom-0 left-0 right-0 p-8">
+      <div className="space-y-4">
+        {relatedServices.map((service) => {
+          const servicesCategorySlug = service.services?.translations?.[0];
+          const serviceTr = service.translations?.[0];
+          if (!serviceTr) return null;
+          return (
+            <Link
+              key={service.id}
+              href={serviceSubHref(
+                servicesCategorySlug?.slug ?? "",
+                serviceTr.slug ?? "",
+              )}
+              className="group block bg-secondary rounded-2xl p-8 shadow-xl hover:shadow-2xl transition-all duration-500"
+            >
               <div className="flex items-center justify-between">
                 <div>
                   <h3
@@ -58,14 +58,14 @@ export default async function RelatedServices({
                     </p>
                   )}
                 </div>
-                <div className="w-14 h-14 rounded-full flex items-center justify-center text-white transition-all duration-300 flex-shrink-0 backdrop-blur-sm">
+                <div className="w-14 h-14 rounded-full flex items-center justify-center text-white transition-all duration-300 flex-shrink-0 bg-white/10">
                   <FaArrowRight className="w-6 h-6" />
                 </div>
               </div>
-            </div>
-          </Link>
-        );
-      })}
+            </Link>
+          );
+        })}
+      </div>
     </div>
   );
 }

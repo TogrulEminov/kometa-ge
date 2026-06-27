@@ -19,7 +19,7 @@ export default function Statistics({
         )}
         <h2
           title={statistics.title}
-          className="text-secondary text-3xl font-bold mt-2 mb-4"
+          className="text-foreground text-3xl font-bold mt-2 mb-4"
         >
           {statistics.title}
         </h2>

@@ -55,7 +55,7 @@ export default async function ServicesCategoryDetail({
     "delivery",
   );
   return (
-    <div className="lg:py-20 py-10 bg-tertiary">
+    <div className="lg:py-20 py-10 bg-background">
       <div className="container">
         <div className="flex flex-col lg:flex-row gap-8">
           <aside className="lg:w-[30%] shrink-0 lg:order-1 order-2">

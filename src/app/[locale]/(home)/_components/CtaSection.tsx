@@ -53,7 +53,7 @@ export default async function CTASection({
   ];
 
   return (
-    <section className="relative w-full overflow-hidden bg-white py-10 lg:py-20">
+    <section className="relative w-full overflow-hidden bg-background py-10 lg:py-20">
       <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <SectionContentComponent
           subTitle={sectionContentTr?.subTitle ?? ""}
@@ -69,17 +69,17 @@ export default async function CTASection({
               <a
                 key={index}
                 href={item.href}
-                className="group flex flex-col items-start gap-4 rounded-2xl border border-[#1c1e29]/[0.06] bg-[#f2f2f2] p-6 transition-all duration-300 hover:border-[#b11226]/10 hover:bg-white hover:shadow-xl hover:shadow-[#b11226]/[0.04]"
+                className="group flex flex-col items-start gap-4 rounded-2xl border border-white/10 bg-surface p-6 transition-all duration-300 hover:border-primary/30 hover:bg-surface-elevated hover:shadow-xl hover:shadow-primary/10"
               >
                 <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#b11226]/[0.08] text-lg text-[#b11226] transition-all duration-300 group-hover:bg-[#b11226] group-hover:text-white group-hover:scale-105">
                   {item.icon}
                 </div>
 
                 <div>
-                  <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-[#1c1e29]/30">
+                  <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-muted">
                     {item.label}
                   </p>
-                  <p className="mt-1 text-sm font-bold text-[#1c1e29] leading-snug">
+                  <p className="mt-1 text-sm font-bold text-foreground leading-snug">
                     {item.value}
                   </p>
                 </div>

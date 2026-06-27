@@ -26,7 +26,7 @@ export default function ServiceOverview({
         )}
         <h2
           title={servicesOverviewTr?.title}
-          className="text-secondary text-3xl font-bold mt-2 mb-4"
+          className="text-foreground text-3xl font-bold mt-2 mb-4"
         >
           {servicesOverviewTr?.title}
         </h2>
@@ -34,7 +34,7 @@ export default function ServiceOverview({
       </div>
       {servicesOverviewTr?.description && (
         <div
-          className="prose prose-lg max-w-none text-secondary/70 leading-relaxed mb-8"
+          className="prose prose-lg max-w-none text-muted leading-relaxed mb-8 [&_a]:text-primary"
           dangerouslySetInnerHTML={{
             __html: sanitizeHtml(servicesOverviewTr?.description ?? ""),
           }}
@@ -50,7 +50,7 @@ export default function ServiceOverview({
           src={imageUrl ?? ""}
         />
       ) : (
-        <div className="w-full h-full bg-gray-100 rounded-lg" />
+        <div className="w-full h-full bg-surface-elevated rounded-lg" />
       )}
     </div>
   );

@@ -1,193 +1,270 @@
 "use client";
-import { Modal } from "antd";
+
+import { SendOutlined } from "@ant-design/icons";
+import { Form, Input, Select } from "antd";
+import { AnimatePresence, motion } from "framer-motion";
 import { useTranslations } from "next-intl";
-import { useForm } from "react-hook-form";
-import {
-  CallActionInputType,
-  callActionSchema,
-} from "@/actions/ui/form.schema";
-import { zodResolver } from "@hookform/resolvers/zod";
-import FormWrapper from "@/globalElement/form/FormWrapper";
-import type { CSSProperties } from "react";
-import FormSelect from "@/globalElement/form/FormSelect";
-import { COUNTRY_SELECT_OPTIONS } from "@/utils/countryOptions";
-import FormInput from "@/globalElement/form/FormInput";
-import FormPhone from "@/globalElement/form/FormPhone";
-import FormTextarea from "@/globalElement/form/FormTextarea";
+import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import { useToggleState, useToggleStore } from "@/hooks/useToggleStore";
 import { shipmentModalKey } from "@/services/interface/constant-keys";
-
-const noFocusStyle: CSSProperties = {
-  outline: "none",
-  boxShadow: "none",
-};
-
-const fieldBaseStyle: CSSProperties = {
-  backgroundColor: "#f3f4f6",
-  border: "none",
-  borderRadius: "12px",
-  ...noFocusStyle,
-};
-
-const selectStyles = {
-  root: {
-    ...fieldBaseStyle,
-    height: "48px",
-    color: "#1c1e29",
-  },
-  placeholder: {
-    color: "#9ca3af",
-  },
-};
-
-const inputStyles = {
-  root: {
-    ...fieldBaseStyle,
-  },
-  input: {
-    ...fieldBaseStyle,
-    color: "#1c1e29",
-    fontSize: "14px",
-    fontWeight: 400,
-    padding: "12px 16px",
-    height: "48px",
-    width: "100%",
-  },
-};
-
-const inputClassNames = {
-  input: "[&::placeholder]:text-gray-400!",
-};
-
-const textareaStyles = {
-  root: {
-    ...fieldBaseStyle,
-  },
-  textarea: {
-    ...fieldBaseStyle,
-    color: "#1c1e29",
-    fontSize: "14px",
-    fontWeight: 400,
-    padding: "12px 16px",
-    width: "100%",
-    minHeight: "100px",
-    resize: "none" as const,
-  },
-};
-
-const textareaClassNames = {
-  textarea: "[&::placeholder]:text-gray-400!",
-};
+import { COUNTRY_SELECT_OPTIONS } from "@/utils/countryOptions";
+import {
+  uiFormColors,
+  uiFormLabelClassName,
+  uiInputClassName,
+  uiInputStyles,
+  uiSelectClassNames,
+  uiSelectPopupClassName,
+  uiSelectStyles,
+  uiSubmitButtonClassName,
+  uiTextareaClassName,
+  uiTextareaStyles,
+} from "@/lib/ui/form";
 
 export default function ShipmentModal() {
   const t = useTranslations("atoms.components.callActionHero");
-
   const { close } = useToggleStore();
   const isOpen = useToggleState(shipmentModalKey);
-  const generalForm = useForm<CallActionInputType>({
-    resolver: zodResolver(callActionSchema),
-    defaultValues: {
-      from: "",
-      to: "",
-      email: "",
-      telephone: "",
-      message: "",
-    },
-  });
+  const [form] = Form.useForm();
+  const [submitted, setSubmitted] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
-  const onSubmit = async (data: CallActionInputType) => {
-    console.log(data);
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (!isOpen) return;
+    document.body.style.overflow = "hidden";
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") close(shipmentModalKey);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => {
+      document.body.style.overflow = "";
+      window.removeEventListener("keydown", onKey);
+    };
+  }, [isOpen, close]);
+
+  const handleSubmit = async (values: unknown) => {
+    console.log(values);
+    setSubmitted(true);
+    form.resetFields();
+
+    setTimeout(() => {
+      setSubmitted(false);
+      close(shipmentModalKey);
+    }, 1500);
   };
 
-  return (
-    <Modal
-      open={isOpen}
-      onCancel={() => close(shipmentModalKey)}
-      footer={null}
-      centered
-      width={800}
-      destroyOnHidden
-      zIndex={1300}
-      style={{ top: 0 }}
-      styles={{
-        mask: {
-          backdropFilter: "blur(10px)",
-          backgroundColor: "rgba(0,0,0,0.5)",
-          zIndex: 1300,
-        },
-        wrapper: {
-          zIndex: 1300,
-        },
-      }}
-    >
-      <div className="mb-5">
-        <strong className="text-3xl sm:text-4xl font-black uppercase text-[#1c1e29]">
-          {t("title")}
-        </strong>
-        <p className="mt-2 text-sm text-gray-500">{t("description")}</p>
-      </div>
+  if (!mounted) return null;
 
-      <div className="h-px w-full bg-gray-200 mb-5" />
+  return createPortal(
+    <AnimatePresence>
+      {isOpen && (
+        <>
+          <motion.div
+            key="shipment-backdrop"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            className="fixed inset-0 z-[1300] bg-black/65 backdrop-blur-sm"
+            onClick={() => close(shipmentModalKey)}
+          />
 
-      <FormWrapper
-        methods={generalForm}
-        schema={callActionSchema}
-        onSubmit={onSubmit}
-        className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-x-6 gap-y-4"
-      >
-        <FormSelect
-          label={t("form.pickup_location")}
-          options={COUNTRY_SELECT_OPTIONS}
-          fieldName="from"
-          showSearch
-          optionFilterProp="label"
-          variant="borderless"
-          styles={selectStyles}
-        />
-        <FormSelect
-          label={t("form.delivery_location")}
-          options={COUNTRY_SELECT_OPTIONS}
-          fieldName="to"
-          showSearch
-          optionFilterProp="label"
-          variant="borderless"
-          styles={selectStyles}
-        />
-        <FormInput
-          label={t("form.email_address")}
-          fieldName="email"
-          type="email"
-          placeholder="Example: User@Website.Com"
-          variant="borderless"
-          styles={inputStyles}
-          classNames={inputClassNames}
-        />
-        <FormPhone
-          label={t("form.telephone")}
-          fieldName="telephone"
-          placeholder="+(602) 448 763 22"
-          variant="borderless"
-          styles={inputStyles}
-          classNames={inputClassNames}
-        />
-        <FormTextarea
-          wrapperClassName="md:col-span-2!"
-          label={t("form.message")}
-          fieldName="message"
-          placeholder="Additional details..."
-          variant="borderless"
-          styles={textareaStyles}
-          classNames={textareaClassNames}
-        />
-        <div className="flex items-end md:col-span-2">
-          <button
-            type="submit"
-            className="w-full cursor-pointer bg-[#B11226] hover:bg-[#8f0e1e] text-white font-semibold uppercase tracking-wider text-sm py-3 rounded-xl transition-colors duration-200"
-          >
-            {t("form.submit")}
-          </button>
-        </div>
-      </FormWrapper>
-    </Modal>
+          <div className="pointer-events-none fixed inset-0 z-[1301] flex items-center justify-center p-4">
+            <motion.div
+              key="shipment-panel"
+              initial={{ opacity: 0, scale: 0.94, y: 10 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.94, y: 10 }}
+              transition={{ type: "spring", stiffness: 380, damping: 30 }}
+              className="pointer-events-auto relative w-full max-w-[800px] overflow-hidden rounded-2xl border border-white/10 shadow-[0_24px_80px_rgba(0,0,0,0.45)]"
+              style={{
+                backgroundColor: uiFormColors.modalBg,
+                color: uiFormColors.text,
+              }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <button
+                type="button"
+                aria-label="Close"
+                onClick={() => close(shipmentModalKey)}
+                className="absolute right-4 top-4 flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg text-[#94a3b8] transition-colors hover:bg-white/10 hover:text-[#f1f5f9]"
+              >
+                <svg
+                  className="h-4 w-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
+              </button>
+
+              <div className="shipment-form-fields p-6 sm:p-8">
+                <div className="mb-5 pr-8">
+                  <h2
+                    className="text-3xl font-black uppercase sm:text-4xl"
+                    style={{ color: uiFormColors.text }}
+                  >
+                    {t("title")}
+                  </h2>
+                  <p className="mt-2 text-sm" style={{ color: uiFormColors.muted }}>
+                    {t("description")}
+                  </p>
+                </div>
+
+                <div className="mb-5 h-px w-full bg-white/10" />
+
+                <Form
+                  form={form}
+                  onFinish={handleSubmit}
+                  layout="vertical"
+                  requiredMark={false}
+                >
+                  <div className="grid gap-4 sm:grid-cols-2 lg:gap-6">
+                    <div>
+                      <label className={uiFormLabelClassName}>
+                        {t("form.pickup_location")} *
+                      </label>
+                      <Form.Item
+                        name="from"
+                        rules={[
+                          { required: true, message: t("form.pickup_location") },
+                        ]}
+                        className="mb-0!"
+                      >
+                        <Select
+                          showSearch
+                          optionFilterProp="label"
+                          placeholder={t("form.pickup_location")}
+                          options={COUNTRY_SELECT_OPTIONS}
+                          variant="outlined"
+                          classNames={{
+                            ...uiSelectClassNames,
+                            popup: { root: uiSelectPopupClassName },
+                          }}
+                          styles={uiSelectStyles}
+                        />
+                      </Form.Item>
+                    </div>
+
+                    <div>
+                      <label className={uiFormLabelClassName}>
+                        {t("form.delivery_location")} *
+                      </label>
+                      <Form.Item
+                        name="to"
+                        rules={[
+                          { required: true, message: t("form.delivery_location") },
+                        ]}
+                        className="mb-0!"
+                      >
+                        <Select
+                          showSearch
+                          optionFilterProp="label"
+                          placeholder={t("form.delivery_location")}
+                          options={COUNTRY_SELECT_OPTIONS}
+                          variant="outlined"
+                          classNames={{
+                            ...uiSelectClassNames,
+                            popup: { root: uiSelectPopupClassName },
+                          }}
+                          styles={uiSelectStyles}
+                        />
+                      </Form.Item>
+                    </div>
+
+                    <div>
+                      <label className={uiFormLabelClassName}>
+                        {t("form.email_address")} *
+                      </label>
+                      <Form.Item
+                        name="email"
+                        rules={[
+                          { required: true, message: t("form.email_address") },
+                          { type: "email", message: t("form.email_address") },
+                        ]}
+                        className="mb-0!"
+                      >
+                        <Input
+                          type="email"
+                          placeholder="Example: User@Website.Com"
+                          variant="outlined"
+                          classNames={{ root: uiInputClassName, input: uiInputClassName }}
+                          styles={uiInputStyles}
+                        />
+                      </Form.Item>
+                    </div>
+
+                    <div>
+                      <label className={uiFormLabelClassName}>
+                        {t("form.telephone")} *
+                      </label>
+                      <Form.Item
+                        name="telephone"
+                        rules={[
+                          { required: true, message: t("form.telephone") },
+                        ]}
+                        className="mb-0!"
+                      >
+                        <Input
+                          placeholder="+(602) 448 763 22"
+                          variant="outlined"
+                          classNames={{ root: uiInputClassName, input: uiInputClassName }}
+                          styles={uiInputStyles}
+                        />
+                      </Form.Item>
+                    </div>
+
+                    <div className="sm:col-span-2">
+                      <label className={uiFormLabelClassName}>
+                        {t("form.message")}
+                      </label>
+                      <Form.Item name="message" className="mb-0!">
+                        <Input.TextArea
+                          rows={3}
+                          placeholder="Additional details..."
+                          variant="outlined"
+                          classNames={{ textarea: uiTextareaClassName }}
+                          styles={uiTextareaStyles}
+                        />
+                      </Form.Item>
+                    </div>
+
+                    <Form.Item className="mb-0! sm:col-span-2">
+                      <button
+                        type="submit"
+                        className={`${uiSubmitButtonClassName} flex w-full items-center justify-center gap-2 text-white ${
+                          submitted ? "bg-green-600!" : ""
+                        }`}
+                      >
+                        {submitted ? (
+                          "Submitted ✓"
+                        ) : (
+                          <>
+                            <SendOutlined />
+                            {t("form.submit")}
+                          </>
+                        )}
+                      </button>
+                    </Form.Item>
+                  </div>
+                </Form>
+              </div>
+            </motion.div>
+          </div>
+        </>
+      )}
+    </AnimatePresence>,
+    document.body,
   );
 }

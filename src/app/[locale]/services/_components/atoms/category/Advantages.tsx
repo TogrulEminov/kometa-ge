@@ -18,7 +18,7 @@ export default async function Advantages({
         )}
         <h2
           title={advantages.title}
-          className="text-secondary text-3xl font-bold mt-2 mb-4"
+          className="text-foreground text-3xl font-bold mt-2 mb-4"
         >
           {advantages.title}
         </h2>
@@ -29,16 +29,16 @@ export default async function Advantages({
         {advantages.items.map((item: jsonItem, i) => (
           <div
             key={i}
-            className="bg-white rounded-2xl p-6 border border-gray-100   transition-all duration-300 group"
+            className="surface-card rounded-2xl p-6 transition-all duration-300 group"
           >
             <div className="size-14 rounded-2xl bg-primary/10 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-all duration-300 mb-4">
               <FaCheckCircle className="w-6 h-6" />
             </div>
-            <strong className="text-secondary block font-bold text-lg mb-2 group-hover:text-primary transition-colors duration-300">
+            <strong className="text-foreground block font-bold text-lg mb-2 group-hover:text-primary transition-colors duration-300">
               {item.itemTitle}
             </strong>
             <article
-              className="text-secondary/60 text-sm leading-relaxed"
+              className="text-muted text-sm leading-relaxed"
               dangerouslySetInnerHTML={{
                 __html: sanitizeHtml(item.itemDescription ?? ""),
               }}

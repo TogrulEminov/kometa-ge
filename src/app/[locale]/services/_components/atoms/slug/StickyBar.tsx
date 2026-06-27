@@ -219,15 +219,15 @@ export default function StickyBarDetail({
         </p>
         <button
           type="button"
-          className="w-full bg-white text-primary font-bold py-3 px-4 rounded-xl hover:bg-tertiary transition-colors duration-300 flex items-center justify-center gap-2 relative z-10"
+          className="w-full bg-foreground text-primary font-bold py-3 px-4 rounded-xl hover:bg-foreground/90 transition-colors duration-300 flex items-center justify-center gap-2 relative z-10"
         >
           <FaPhoneAlt className="w-4 h-4" />
           {t("stickySidebar.contact.button")}
         </button>
       </div>
 
-      <div className="bg-white rounded-2xl p-6 border border-gray-100">
-        <h3 className="text-secondary font-bold text-lg mb-4">
+      <div className="surface-card p-6">
+        <h3 className="text-foreground font-bold text-lg mb-4">
           {t("stickySidebar.contact.name")}
         </h3>
         <div className="space-y-3">
@@ -235,9 +235,9 @@ export default function StickyBarDetail({
             <a
               key={item.id}
               href={item.href}
-              className="flex items-center gap-3 text-secondary/70 text-sm hover:text-primary transition-colors"
+              className="flex items-center gap-3 text-muted text-sm hover:text-foreground transition-colors"
             >
-              <div className="w-9 h-9 rounded-lg bg-tertiary flex items-center justify-center text-primary">
+              <div className="w-9 h-9 rounded-lg bg-surface-elevated flex items-center justify-center text-primary">
                 <item.icon className="w-4 h-4" />
               </div>
               <span>{item.value}</span>

@@ -10,6 +10,7 @@ import {
 import { findJsonSection } from "@/utils/findJsonSection";
 import { sanitizeHtml } from "@/lib/domburify";
 import { getForCards } from "@/utils/getFullimageUrl";
+
 export default function HeroSection({
   aboutInfo,
 }: {
@@ -23,8 +24,8 @@ export default function HeroSection({
 
   const imageUrl = getForCards(aboutInfo?.imageUrl as FileType);
   return (
-    <section className="relative bg-white overflow-hidden py-10 lg:py-20 border-b border-b-tertiary">
-      <div className="container ">
+    <section className="relative bg-background overflow-hidden py-10 lg:py-20 border-b border-white/10">
+      <div className="container">
         <div className="grid grid-cols-12 gap-8 items-start">
           <div className="col-span-12 lg:col-span-9 space-y-5">
             {aboutInfoTr?.subTitle && (
@@ -32,7 +33,7 @@ export default function HeroSection({
                 {aboutInfoTr?.subTitle}
               </span>
             )}
-            <h1 className="text-secondary text-4xl sm:text-5xl lg:text-6xl font-bold leading-[1.1]  max-w-4xl">
+            <h1 className="text-foreground text-4xl sm:text-5xl lg:text-6xl font-bold leading-[1.1] max-w-4xl">
               {highlightActiveWord({
                 activeWord: aboutInfoTr?.hightlight ?? "",
                 activeWordClassName: "text-primary relative",
@@ -41,7 +42,7 @@ export default function HeroSection({
             </h1>
             {aboutInfoTr?.shortDescription && (
               <div
-                className="border-l-[3px] border-secondary pl-6  max-w-3xl prose"
+                className="border-l-[3px] border-primary pl-6 max-w-3xl prose text-muted"
                 dangerouslySetInnerHTML={{
                   __html: sanitizeHtml(aboutInfoTr?.shortDescription),
                 }}
@@ -78,7 +79,7 @@ export default function HeroSection({
               priority
             />
           ) : (
-            <div className="w-full h-75 sm:h-100 lg:h-125 bg-gray-100 rounded-2xl" />
+            <div className="w-full h-75 sm:h-100 lg:h-125 bg-surface-elevated rounded-2xl" />
           )}
         </figure>
       </div>

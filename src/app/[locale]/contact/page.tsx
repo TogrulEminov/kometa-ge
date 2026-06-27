@@ -55,7 +55,6 @@ export default async function ContactPage({ params }: PageProps) {
         title={categoryTr?.title ?? ""}
         subtitle={bannerDescription?.description ?? ""}
         breadcrumbs={[{ label: categoryTr?.title ?? "" }]}
-        variant="dark"
       />
       <Suspense fallback={null}>
         <CardArea

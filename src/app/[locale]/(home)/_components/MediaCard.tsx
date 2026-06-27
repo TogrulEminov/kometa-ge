@@ -24,7 +24,7 @@ export default async function MediaSection({ locale }: SectionLocale) {
   const sectionContentTr = sectionContent?.translations?.[0];
   if (!mediaData?.length || !sectionContentTr) return null;
   return (
-    <section className="w-full pb-10  pt-10 lg:pt-20 border-t border-t-gray-100">
+    <section className="w-full border-t border-white/5 pb-10 pt-10 lg:pt-20">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 xl:px-12">
         <SectionContentComponent
           title={sectionContentTr?.title ?? ""}

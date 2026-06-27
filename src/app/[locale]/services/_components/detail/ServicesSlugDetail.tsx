@@ -60,9 +60,8 @@ export default function ServicesSlugDetail({
     "main_service",
   );
   return (
-    <section className="bg-tertiary">
-      {/* Main Content */}
-      <div className="container py-12">
+    <section className="bg-background lg:py-20 py-10">
+      <div className="container">
         <div className="flex flex-col lg:flex-row gap-8">
           {/* Left Sidebar - 30% */}
           <aside className="lg:w-[30%]   hrink-0 lg:order-1 order-2">

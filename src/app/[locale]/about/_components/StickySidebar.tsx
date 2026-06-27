@@ -38,16 +38,16 @@ export function Navigation({
 }) {
   const t = useTranslations("atoms.components.stickySidebar");
   return (
-    <div className="bg-tertiary rounded-2xl p-6 lg:p-8">
-      <h3 className="font-bold text-secondary mb-5 text-lg">{t("table_of_contents")}</h3>
+    <div className="surface-card rounded-2xl p-6 lg:p-8">
+      <h3 className="font-bold text-foreground mb-5 text-lg">{t("table_of_contents")}</h3>
       <ul className="space-y-2.5">
         {descriptionTitles.map((item) => (
           <li key={item.type}>
             <a
               href={`#section-${item.type}`}
-              className="text-sm text-gray-500 hover:text-primary transition-colors flex items-center gap-2.5 py-1.5 group"
+              className="text-sm text-muted hover:text-primary transition-colors flex items-center gap-2.5 py-1.5 group"
             >
-              <span className="w-1.5 h-1.5 bg-gray-300 group-hover:bg-primary rounded-full transition-colors" />
+              <span className="w-1.5 h-1.5 bg-white/20 group-hover:bg-primary rounded-full transition-colors" />
               {item.title}
             </a>
           </li>

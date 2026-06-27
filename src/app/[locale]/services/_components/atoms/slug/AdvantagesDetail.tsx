@@ -15,7 +15,10 @@ export default async function AdvantagesDetail({
             {advantages.subTitle}
           </span>
         )}
-        <h2 title={advantages.title} className="text-3xl font-bold mt-2 mb-4">
+        <h2
+          title={advantages.title}
+          className="text-3xl font-bold mt-2 mb-4 text-foreground"
+        >
           {advantages.title}
         </h2>
         <div className="w-16 h-1 rounded-full bg-primary" />
@@ -23,16 +26,19 @@ export default async function AdvantagesDetail({
 
       <div className="grid grid-cols-1 gap-4">
         {advantages.items.map((item: jsonItem, i: number) => (
-          <div className="group bg-white rounded-2xl p-6  border border-gray-100  transition-all duration-300 flex items-start gap-6">
+          <div
+            key={i}
+            className="group surface-card p-6 transition-all duration-300 flex items-start gap-6"
+          >
             <div className="w-16 h-16 rounded-2xl flex items-center justify-center text-white font-bold text-xl shrink-0 transition-colors duration-300 bg-secondary">
               {String(i + 1).padStart(2, "0")}
             </div>
             <div>
-              <strong className="font-bold text-lg mb-2 transition-colors duration-300 text-secondary">
+              <strong className="font-bold text-lg mb-2 transition-colors duration-300 text-foreground group-hover:text-primary">
                 {item.itemTitle as string}
               </strong>
               <article
-                className="text-sm leading-relaxed"
+                className="text-sm leading-relaxed text-muted"
                 dangerouslySetInnerHTML={{
                   __html: sanitizeHtml(item.itemDescription ?? ""),
                 }}

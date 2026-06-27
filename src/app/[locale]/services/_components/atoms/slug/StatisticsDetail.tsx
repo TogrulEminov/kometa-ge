@@ -12,17 +12,17 @@ export default function StatisticsDetail({
     <div id="statistics" className="scroll-mt-8 mt-16">
       <div className="mb-8">
         {statistics.subTitle && (
-          <span className="text-sm  text-primary font-bold tracking-wider uppercase">
+          <span className="text-sm text-primary font-bold tracking-wider uppercase">
             {statistics.subTitle}
           </span>
         )}
         <h2
           title={statistics.title}
-          className="text-3xl font-bold mt-2 mb-4 text-secondary"
+          className="text-3xl font-bold mt-2 mb-4 text-foreground"
         >
           {statistics.title}
         </h2>
-        <div className="w-16 h-1 text-primary rounded-full" />
+        <div className="w-16 h-1 bg-primary rounded-full" />
       </div>
 
       <div className="rounded-2xl p-8 bg-secondary">
@@ -30,7 +30,7 @@ export default function StatisticsDetail({
           {statistics.items.map((stat: jsonItem, i: number) => {
             const isNumber = !isNaN(Number(stat.itemValue));
             return (
-              <div className="text-center">
+              <div key={i} className="text-center">
                 <div className="text-4xl font-bold text-white mb-2">
                   {isNumber ? (
                     <CountUp
@@ -46,10 +46,7 @@ export default function StatisticsDetail({
                     </span>
                   )}
                 </div>
-                <div
-                  className="text-sm font-medium flex items-center justify-center gap-2"
-                  style={{ color: "rgba(255,255,255,0.6)" }}
-                >
+                <div className="text-sm font-medium text-white/60">
                   {stat.itemTitle as string}
                 </div>
               </div>

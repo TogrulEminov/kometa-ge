@@ -58,7 +58,6 @@ export default async function ServicesPage({
         title={categoryTr?.title ?? ""}
         subtitle={bannerDescription?.description ?? ""}
         breadcrumbs={[{ label: categoryTr?.title ?? "" }]}
-        variant="dark"
       />
 
       <Suspense fallback={null}>

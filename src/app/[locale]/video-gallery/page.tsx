@@ -51,7 +51,6 @@ export default async function VideoGalleryPage({ params, searchParams }: PagePro
         title={categoryTr?.title ?? ""}
         subtitle={bannerDescription?.description ?? ""}
         breadcrumbs={[{ label: categoryTr?.title ?? "" }]}
-        variant="dark"
       />
       <Suspense fallback={null}>
         <CardArea

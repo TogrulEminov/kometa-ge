@@ -1,4 +1,5 @@
 "use client";
+
 import {
   CallActionInputType,
   callActionSchema,
@@ -8,80 +9,11 @@ import FormPhone from "@/globalElement/form/FormPhone";
 import FormSelect from "@/globalElement/form/FormSelect";
 import FormTextarea from "@/globalElement/form/FormTextarea";
 import FormWrapper from "@/globalElement/form/FormWrapper";
+import { uiHeroFormLabelClassName } from "@/lib/ui/form";
 import { COUNTRY_SELECT_OPTIONS } from "@/utils/countryOptions";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslations } from "next-intl";
 import { useForm } from "react-hook-form";
-import type { CSSProperties } from "react";
-
-const noFocusStyle: CSSProperties = {
-  outline: "none",
-  boxShadow: "none",
-};
-
-const selectStyles = {
-  root: {
-    backgroundColor: "transparent",
-    border: "none",
-    borderBottom: "1px solid white",
-    borderRadius: 0,
-    color: "white",
-    ...noFocusStyle,
-  },
-  placeholder: {
-    color: "rgba(255, 255, 255, 0.5)",
-  },
-};
-
-const inputStyles = {
-  root: {
-    backgroundColor: "transparent",
-    border: "none",
-    borderBottom: "1px solid white",
-    borderRadius: 0,
-    ...noFocusStyle,
-  },
-  input: {
-    backgroundColor: "transparent",
-    border: "none",
-    color: "white",
-    fontSize: "14px",
-    fontWeight: 400,
-    padding: "0 0 10px 0",
-    width: "100%",
-    ...noFocusStyle,
-  },
-};
-
-const inputClassNames = {
-  input: "[&::placeholder]:text-white/50!",
-};
-
-const textareaStyles = {
-  root: {
-    backgroundColor: "transparent",
-    border: "none",
-    borderBottom: "1px solid white",
-    borderRadius: 0,
-    ...noFocusStyle,
-  },
-  textarea: {
-    backgroundColor: "transparent",
-    border: "none",
-    color: "white",
-    fontSize: "14px",
-    fontWeight: 400,
-    padding: "0 0 10px 0",
-    width: "100%",
-    minHeight: "100px",
-    resize: "none" as const,
-    ...noFocusStyle,
-  },
-};
-
-const textareaClassNames = {
-  textarea: "[&::placeholder]:text-white/50!",
-};
 
 export default function FormComponent() {
   const t = useTranslations("atoms.components.callActionHero");
@@ -100,13 +32,14 @@ export default function FormComponent() {
   const onSubmit = (data: CallActionInputType) => {
     console.log(data);
   };
+
   return (
-    <div className="bg-[#B11226] rounded-2xl  min-h-100 p-7 lg:-mt-68 text-white">
-      <strong className="text-2xl block font-bold uppercase mb-1">
+    <div className="hero-booking-form min-h-100 rounded-2xl bg-[#B11226] p-7 text-white lg:-mt-68">
+      <strong className="mb-1 block text-2xl font-bold uppercase">
         {t("title")}
       </strong>
-      <p className="text-white/70 text-sm mb-4">{t("description")}</p>
-      <hr className="border-white/20 mb-5" />
+      <p className="mb-4 text-sm text-white/70">{t("description")}</p>
+      <hr className="mb-5 border-white/20" />
       <FormWrapper
         methods={generalForm}
         schema={callActionSchema}
@@ -115,52 +48,49 @@ export default function FormComponent() {
       >
         <FormSelect
           label={t("form.pickup_location")}
+          labelClassName={uiHeroFormLabelClassName}
           options={COUNTRY_SELECT_OPTIONS}
           fieldName="from"
           showSearch
           optionFilterProp="label"
           variant="borderless"
-          styles={selectStyles}
         />
         <FormSelect
           label={t("form.delivery_location")}
+          labelClassName={uiHeroFormLabelClassName}
           options={COUNTRY_SELECT_OPTIONS}
           fieldName="to"
           showSearch
           optionFilterProp="label"
           variant="borderless"
-          styles={selectStyles}
         />
         <FormInput
           label={t("form.email_address")}
+          labelClassName={uiHeroFormLabelClassName}
           fieldName="email"
           type="email"
           placeholder="Example: User@Website.Com"
           variant="borderless"
-          styles={inputStyles}
-          classNames={inputClassNames}
         />
         <FormPhone
           label={t("form.telephone")}
+          labelClassName={uiHeroFormLabelClassName}
           fieldName="telephone"
           placeholder="+(602) 448 763 22"
           variant="borderless"
-          styles={inputStyles}
-          classNames={inputClassNames}
         />
         <FormTextarea
           wrapperClassName="lg:col-span-2!"
           label={t("form.message")}
+          labelClassName={uiHeroFormLabelClassName}
           fieldName="message"
           placeholder="Additional details..."
           variant="borderless"
-          styles={textareaStyles}
-          classNames={textareaClassNames}
         />
-        <div className="flex items-end col-span-2">
+        <div className="col-span-2 flex items-end">
           <button
             type="submit"
-            className="w-full cursor-pointer bg-white text-[#B11226] hover:bg-gray-100 font-semibold uppercase tracking-wider text-sm py-3 rounded-lg transition-colors duration-200"
+            className="w-full cursor-pointer rounded-lg bg-white py-3 text-sm font-semibold uppercase tracking-wider text-[#B11226] transition-colors duration-200 hover:bg-white/90"
           >
             {t("form.submit")}
           </button>

@@ -19,13 +19,13 @@ export default function DirectionsContainer({
   paginations,
 }: Props) {
   return (
-    <section className="lg:py-20 py-10">
+    <section className="lg:py-20 py-10 bg-background">
       <div className="container space-y-10">
         <SectionContentComponent
           highlightWord={
             sectionContent?.highlightWord as string | null | undefined
           }
-          rootClass="max-w-full [&_article]:max-w-full"
+          rootClass="max-w-full [&_article]:max-w-full [&_h1]:text-foreground [&_strong]:text-foreground [&_article]:text-muted"
           title={sectionContent?.title ?? ""}
           description={sectionContent?.description ?? ""}
           type="vertical"

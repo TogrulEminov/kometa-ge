@@ -13,7 +13,7 @@ export default async function MainLayoutProvider({ children, locale }: Props) {
       <Suspense fallback={null}>
         <HeaderServer locale={locale} />
       </Suspense>
-      <main className="lg:pt-[48px]">
+      <main className="lg:pt-[48px] bg-background">
         <Suspense>{children}</Suspense>
       </main>
       <Suspense fallback={null}>

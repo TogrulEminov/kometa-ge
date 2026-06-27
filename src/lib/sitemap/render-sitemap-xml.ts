@@ -32,7 +32,7 @@ export function renderSitemapXml(entries: MetadataRoute.Sitemap) {
           ([lang, href]) =>
             indent(
               2,
-              `<xhtml:link rel="alternate" hreflang="${escapeXml(lang)}" href="${escapeXml(href)}" />`,
+              `<xhtml:link rel="alternate" hreflang="${escapeXml(lang)}" href="${escapeXml(href)}"></xhtml:link>`,
             ),
         );
 
@@ -55,7 +55,7 @@ export function renderSitemapXml(entries: MetadataRoute.Sitemap) {
     .join("\n");
 
   return `<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
+<urlset xmlns="https://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="https://www.w3.org/1999/xhtml">
 ${urls}
 </urlset>
 `;

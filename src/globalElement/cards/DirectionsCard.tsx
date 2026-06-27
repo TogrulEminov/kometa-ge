@@ -42,7 +42,7 @@ export default function DirectionsCard({
               className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-700"
             />
           ) : (
-            <div className="w-full h-full bg-gray-100 rounded-xl" />
+            <div className="w-full h-full bg-surface-elevated rounded-xl" />
           )}
         </div>
         <div className="absolute -bottom-5 left-4 size-12 rounded-full bg-primary text-white flex items-center justify-center text-sm font-bold shadow-lg z-10">
@@ -50,20 +50,20 @@ export default function DirectionsCard({
         </div>
       </div>
 
-      <div className="mt-6 pt-6 pb-5 px-5 bg-white border border-gray-200 rounded-xl group-hover:border-primary group-hover:shadow-lg transition-all duration-300">
+      <div className="mt-6 pt-6 pb-5 px-5 bg-surface border border-white/10 rounded-xl group-hover:border-primary group-hover:shadow-[0_16px_40px_rgba(177,18,38,0.18)] transition-all duration-300">
         <Tag
           {...(isHeading ? { title: itemTr?.title ?? "" } : {})}
-          className="text-base lg:text-lg  font-bold min-h-12 block text-secondary leading-snug mb-2 group-hover:text-primary transition-colors duration-300"
+          className="text-base lg:text-lg font-bold min-h-12 block text-foreground leading-snug mb-2 group-hover:text-primary transition-colors duration-300"
         >
           {itemTr?.title ?? ""}
         </Tag>
 
-        <p className="text-xs text-accent-hover leading-relaxed line-clamp-2 mb-4">
+        <p className="text-xs text-muted leading-relaxed line-clamp-2 mb-4">
           {itemTr?.shortDescription ?? ""}
         </p>
 
         <div className="flex items-center gap-2">
-          <span className="text-xs font-semibold text-[#9CA3AF] group-hover:text-primary transition-colors duration-300 tracking-wider uppercase">
+          <span className="text-xs font-semibold text-muted group-hover:text-primary transition-colors duration-300 tracking-wider uppercase">
             {t("buttons.read_more")}
           </span>
           <div className="h-px w-0 group-hover:w-8 bg-primary transition-all duration-500" />
@@ -72,7 +72,7 @@ export default function DirectionsCard({
             height="12"
             viewBox="0 0 12 12"
             fill="none"
-            className="text-[#9CA3AF] group-hover:text-primary group-hover:translate-x-1 transition-all duration-300 opacity-0 group-hover:opacity-100"
+            className="text-muted group-hover:text-primary group-hover:translate-x-1 transition-all duration-300 opacity-0 group-hover:opacity-100"
           >
             <path
               d="M3 6H9M9 6L6 3M9 6L6 9"

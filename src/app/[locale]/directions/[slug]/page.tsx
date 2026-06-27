@@ -60,7 +60,6 @@ export default async function DirectionsDetailPage({ params }: PageProps) {
           { label: categoryTr?.title ?? "", href: "/directions" },
           { label: directionTr?.title ?? "" },
         ]}
-        variant="dark"
       />
       <Suspense fallback={null}>
         <Content

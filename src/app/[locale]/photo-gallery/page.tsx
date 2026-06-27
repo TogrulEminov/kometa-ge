@@ -57,7 +57,6 @@ export default async function PhotoGalleryPage({
         title={categoryTr?.title ?? ""}
         subtitle={bannerDescription?.description ?? ""}
         breadcrumbs={[{ label: categoryTr?.title ?? "" }]}
-        variant="dark"
       />
       <Suspense fallback={null}>
         <CardArea

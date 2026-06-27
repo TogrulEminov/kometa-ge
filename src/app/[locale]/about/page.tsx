@@ -68,11 +68,10 @@ export default async function AboutPage({ params }: PageProps) {
         title={aboutCategoriesTr?.title ?? ""}
         subtitle={catDescription?.description ?? ""}
         breadcrumbs={[{ label: aboutCategoriesTr?.title ?? "" }]}
-        variant="image"
       />
       <HeroSection aboutInfo={aboutInfo as unknown as AboutMainType} />
       <Suspense fallback={null}>
-        <section className="py-10 lg:py-20  border-b border-b-black/5">
+        <section className="bg-background py-10 lg:py-20 border-b border-white/10">
           <div className="container">
             <div className="grid lg:grid-cols-12 gap-12">
               <div className="lg:col-span-4 order-2 lg:order-1">

@@ -19,7 +19,7 @@ export default function ServicesContainer({
   paginations,
 }: Props) {
   return (
-    <section className="lg:py-20 py-10">
+    <section className="lg:py-20 py-10 bg-background">
       <div className="container space-y-10">
         <SectionContentComponent
           highlightWord={

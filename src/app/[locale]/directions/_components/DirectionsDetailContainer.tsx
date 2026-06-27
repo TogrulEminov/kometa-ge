@@ -18,7 +18,7 @@ export default function DirectionsDetailContainer({
   socials: Social[];
 }) {
   return (
-    <div className="lg:py-20 py-10 bg-tertiary min-h-screen">
+    <div className="lg:py-20 py-10 bg-background min-h-screen">
       <div className="container">
         <div className="flex flex-col lg:flex-row gap-8">
           <aside className="lg:w-[30%] shrink-0 lg:order-1 order-2">

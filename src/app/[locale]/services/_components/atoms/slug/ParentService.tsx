@@ -24,7 +24,7 @@ export default async function ParentService({
         )}
         <h2
           title={parentServiceTr.title}
-          className="text-3xl font-bold mt-2 mb-4 text-secondary"
+          className="text-3xl font-bold mt-2 mb-4 text-foreground"
         >
           {parentServiceTr.title}
         </h2>
@@ -41,7 +41,7 @@ export default async function ParentService({
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-6">
             {parentService.iconsUrl && (
-              <div className="size-20 rounded-2xl flex items-center text-primary bg-gray-100 justify-center transition-all duration-300">
+              <div className="size-20 rounded-2xl flex items-center text-primary bg-surface-elevated justify-center transition-all duration-300">
                 <DynamicIcon iconName={parentService.iconsUrl} className="size-10" />
               </div>
             )}

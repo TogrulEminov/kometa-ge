@@ -11,9 +11,9 @@ export default function NoDataComponent({ className }: Props) {
       <div className="container px-4">
         <article className="flex items-center justify-center max-w-md flex-col gap-y-6 text-center mx-auto">
           {/* Simple Icon */}
-          <div className="w-24 h-24 rounded-2xl bg-gray-100 flex items-center justify-center">
+          <div className="w-24 h-24 rounded-2xl bg-surface-elevated flex items-center justify-center">
             <svg
-              className="w-12 h-12 text-gray-400"
+              className="w-12 h-12 text-muted"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -28,10 +28,10 @@ export default function NoDataComponent({ className }: Props) {
           </div>
 
           <div className="space-y-2">
-            <h3 className="text-xl font-semibold text-gray-900">
+            <h3 className="text-xl font-semibold text-foreground">
               {t("noResultComponent.title")}
             </h3>
-            <p className="text-gray-500  text-sm leading-relaxed">
+            <p className="text-muted text-sm leading-relaxed">
               {t("noResultComponent.description")}
             </p>
           </div>

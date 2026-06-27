@@ -63,7 +63,6 @@ export default async function ServicesCategory({ params }: PageProps) {
           { label: categoryTr?.title ?? "", href: "/services" },
           { label: servicesTr?.title ?? "" },
         ]}
-        variant="dark"
       />
       <Suspense fallback={null}>
         <Content

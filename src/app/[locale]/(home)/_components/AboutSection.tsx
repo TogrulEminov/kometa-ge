@@ -42,7 +42,7 @@ export default async function HomeAboutComponent({ locale }: SectionLocale) {
                 className="w-full h-[480px] object-cover"
               />
             ) : (
-              <div className="w-full h-[480px] bg-gray-100 rounded-2xl" />
+              <div className="w-full h-[480px] bg-surface-elevated rounded-2xl" />
             )}
             {features?.title && (
               <div className="absolute bottom-4  left-4 w-fit  max-w-sm rounded-sm bg-[#B11226] px-7 py-6">
@@ -73,16 +73,16 @@ export default async function HomeAboutComponent({ locale }: SectionLocale) {
                 {aboutTr?.subTitle}
               </span>
             )}
-            <h2 className="text-[#1C1E29] text-4xl lg:text-5xl font-bold uppercase leading-tight">
+            <h2 className="text-foreground text-4xl lg:text-5xl font-bold uppercase leading-tight">
               Delivering Trust, One Route at a Time
             </h2>
 
-            <p className="text-gray-500 text-sm leading-relaxed max-w-lg">
+            <p className="text-muted text-sm leading-relaxed max-w-lg">
               Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut elit
               tellus, luctus nec ullamcorper mattis, pulvinar dapibus leo.
             </p>
 
-            <hr className="border-gray-200" />
+            <hr className="border-white/10" />
 
             {/* Stats */}
             <div className="grid grid-cols-3 gap-6">
@@ -93,7 +93,7 @@ export default async function HomeAboutComponent({ locale }: SectionLocale) {
                     suffix={(stat.itemSuffix as string) ?? ""}
                     className="text-[#B11226] text-4xl font-bold"
                   />
-                  <span className="text-[#1C1E29] text-xs font-semibold uppercase tracking-wider">
+                  <span className="text-foreground text-xs font-semibold uppercase tracking-wider">
                     {stat.itemTitle}
                   </span>
                 </div>

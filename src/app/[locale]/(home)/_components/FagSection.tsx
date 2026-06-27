@@ -17,7 +17,7 @@ export default async function FAQSplitServer({ locale }: SectionLocale) {
   const sectionContentTr = sectionContent?.translations?.[0];
   if (!faqData?.length || !sectionContentTr) return null;
   return (
-    <section className="w-full py-10 border-b border-b-gray-200 lg:py-20 bg-white">
+    <section className="w-full py-10 border-b border-b-white/10 lg:py-20 bg-background">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16">
           {/* LEFT: Sticky Header */}
@@ -31,7 +31,7 @@ export default async function FAQSplitServer({ locale }: SectionLocale) {
                 subTitle={sectionContentTr?.subTitle ?? ""}
               />
               <div className="animate-fade-in-up delay-400 mt-8">
-                <p className="text-gray-400 text-sm mb-4">
+                <p className="text-muted text-sm mb-4">
                   {t("still_have_questions")}
                 </p>
                 <Link
@@ -52,20 +52,20 @@ export default async function FAQSplitServer({ locale }: SectionLocale) {
               if (!itemTr?.description) return null;
               return (
                 <details key={item.id} className="faq-item group">
-                  <summary className="faq-card cursor-pointer rounded-2xl border border-gray-100 bg-tertiary">
+                  <summary className="faq-card cursor-pointer rounded-2xl border border-white/10 bg-surface-elevated">
                     <div className="flex items-center justify-between gap-4 p-6 md:p-7">
                       <div className="flex items-center gap-4">
                         {/* Question Icon */}
                         <FaQuestion className="text-primary group-open:text-white transition-colors duration-300" />
 
-                        <strong className="faq-question text-base md:text-lg font-bold text-secondary">
+                        <strong className="faq-question text-base md:text-lg font-bold text-foreground">
                           {itemTr?.title ?? ""}
                         </strong>
                       </div>
 
-                      <div className="chevron-container shrink-0 w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center">
+                      <div className="chevron-container shrink-0 w-8 h-8 rounded-full bg-white/10 flex items-center justify-center">
                         <svg
-                          className="chevron-icon w-3 h-3 text-gray-500"
+                          className="chevron-icon w-3 h-3 text-muted"
                           fill="none"
                           stroke="currentColor"
                           viewBox="0 0 24 24"

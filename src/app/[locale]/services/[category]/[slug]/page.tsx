@@ -76,7 +76,6 @@ export default async function ServicesPage({ params }: PageProps) {
           },
           { label: servicesSubTr?.title ?? "" },
         ]}
-        variant="dark"
       />
       <Suspense fallback={null}>
         <Content

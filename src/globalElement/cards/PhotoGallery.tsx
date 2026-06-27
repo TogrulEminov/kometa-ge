@@ -27,7 +27,7 @@ export default function GalleryCardV2EB({ item }: { item: PhotoGalleryType }) {
             src={imageUrl ?? ""}
           />
         ) : (
-          <div className="w-full h-full bg-gray-100 rounded-2xl" />
+          <div className="w-full h-full bg-surface-elevated rounded-2xl" />
         )}
         {/* Dark overlay on hover */}
         <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-colors duration-500" />

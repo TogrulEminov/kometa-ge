@@ -13,7 +13,7 @@ export default async function Process({ process }: { process: newInfoJson }) {
         )}
         <h2
           title={process.title}
-          className="text-secondary text-3xl font-bold mt-2 mb-4"
+          className="text-foreground text-3xl font-bold mt-2 mb-4"
         >
           {process.title}
         </h2>
@@ -32,11 +32,11 @@ export default async function Process({ process }: { process: newInfoJson }) {
               )}
             </div>
             <div className="flex-1 pb-8">
-              <strong className="text-secondary block font-bold text-xl mb-2 group-hover:text-primary transition-colors duration-300">
+              <strong className="text-foreground block font-bold text-xl mb-2 group-hover:text-primary transition-colors duration-300">
                 {step.itemTitle as string}
               </strong>
               <article
-                className="text-secondary/60 text-sm leading-relaxed"
+                className="text-muted text-sm leading-relaxed"
                 dangerouslySetInnerHTML={{
                   __html: sanitizeHtml(step.itemDescription ?? ""),
                 }}

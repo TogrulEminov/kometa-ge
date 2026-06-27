@@ -1,85 +1,93 @@
 "use client";
-import FormInput from "@/globalElement/form/FormInput";
-import FormWrapper from "@/globalElement/form/FormWrapper";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import z from "zod";
-import FormPhone from "@/globalElement/form/FormPhone";
-import FormTextarea from "@/globalElement/form/FormTextarea";
+
+import { Form, Input } from "antd";
 import { useTranslations } from "next-intl";
-const formSchema = z.object({
-  name: z.string().nullish(),
-  surname: z.string().nullish(),
-  email: z.string().nullish(),
-  phone: z.string().nullish(),
-  message: z.string().optional(),
-  services: z.string().nullish(),
-});
-
-type SchemaInput = z.infer<typeof formSchema>;
-
-const contactInputClassName =
-  "w-full bg-gray-50 h-12 border border-transparent outline-none shadow-none ring-0 rounded-xl px-5 py-4 text-secondary text-sm placeholder-gray-400 transition-colors hover:!border-primary focus:!border-primary focus:ring-0! focus:ring-offset-0!";
-
-const contactTextareaClassName =
-  "w-full bg-gray-50 border border-transparent outline-none shadow-none ring-0 rounded-xl px-5 py-4 text-secondary text-sm placeholder-gray-400 resize-none transition-colors hover:!border-primary focus:!border-primary focus:ring-0! focus:ring-offset-0!";
+import {
+  uiFormLabelClassName,
+  uiInputClassName,
+  uiSubmitButtonClassName,
+  uiTextareaClassName,
+} from "@/lib/ui/form";
 
 export default function ContactForm() {
-  const t=useTranslations("atoms.components.contactInfo");
-  const generalForm = useForm<SchemaInput>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      email: "",
-      message: "",
-      name: "",
-      phone: "",
-      services: "",
-      surname: "",
-    },
-  });
-  const onSubmit = (data: SchemaInput) => {
-    console.log(data);
+  const t = useTranslations("atoms.components.contactInfo");
+  const [form] = Form.useForm();
+
+  const handleSubmit = (values: unknown) => {
+    console.log(values);
+    form.resetFields();
   };
+
   return (
-    <FormWrapper methods={generalForm} schema={formSchema} onSubmit={onSubmit}>
-      <div className="contact-form-fields grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-6">
-        <FormInput
-          placeholder={t("form.first_name")}
-          fieldName="name"
-          className={contactInputClassName}
-        />
+    <Form form={form} onFinish={handleSubmit} layout="vertical" requiredMark={false}>
+      <div className="contact-form-fields grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-5">
+        <div>
+          <label className={uiFormLabelClassName}>{t("form.first_name")}</label>
+          <Form.Item name="name" className="mb-0!">
+            <Input
+              placeholder={t("form.first_name")}
+              variant="outlined"
+              classNames={{ input: uiInputClassName }}
+            />
+          </Form.Item>
+        </div>
 
-        <FormInput
-          placeholder={t("form.last_name")}
-          fieldName="surname"
-          className={contactInputClassName}
-        />
-        <FormInput
-          placeholder={t("form.email")}
-          fieldName="email"
-          wrapperClassName="sm:col-span-2!"
-          className={contactInputClassName}
-        />
-        <FormPhone
-          fieldName="phone"
-          wrapperClassName="sm:col-span-2!"
-          className={contactInputClassName}
-        />
-        <FormTextarea
-          fieldName="message"
-          rows={4}
-          placeholder={t("form.message")}
-          wrapperClassName="sm:col-span-2!"
-          className={contactTextareaClassName}
-        />
+        <div>
+          <label className={uiFormLabelClassName}>{t("form.last_name")}</label>
+          <Form.Item name="surname" className="mb-0!">
+            <Input
+              placeholder={t("form.last_name")}
+              variant="outlined"
+              classNames={{ input: uiInputClassName }}
+            />
+          </Form.Item>
+        </div>
 
-        <button
-          type="submit"
-          className="w-full sm:col-span-2 bg-secondary hover:bg-primary text-white font-semibold py-4 rounded-xl transition-all duration-300 hover:shadow-lg hover:shadow-primary/20"
-        >
-          {t("form.submit")}
-        </button>
+        <div className="sm:col-span-2">
+          <label className={uiFormLabelClassName}>{t("form.email")}</label>
+          <Form.Item
+            name="email"
+            rules={[{ type: "email" }]}
+            className="mb-0!"
+          >
+            <Input
+              type="email"
+              placeholder={t("form.email")}
+              variant="outlined"
+              classNames={{ input: uiInputClassName }}
+            />
+          </Form.Item>
+        </div>
+
+        <div className="sm:col-span-2">
+          <label className={uiFormLabelClassName}>{t("form.phone")}</label>
+          <Form.Item name="phone" className="mb-0!">
+            <Input
+              placeholder={t("form.phone")}
+              variant="outlined"
+              classNames={{ input: uiInputClassName }}
+            />
+          </Form.Item>
+        </div>
+
+        <div className="sm:col-span-2">
+          <label className={uiFormLabelClassName}>{t("form.message")}</label>
+          <Form.Item name="message" className="mb-0!">
+            <Input.TextArea
+              rows={4}
+              placeholder={t("form.message")}
+              variant="outlined"
+              classNames={{ textarea: uiTextareaClassName }}
+            />
+          </Form.Item>
+        </div>
+
+        <Form.Item className="mb-0! sm:col-span-2">
+          <button type="submit" className={`${uiSubmitButtonClassName} w-full text-white`}>
+            {t("form.submit")}
+          </button>
+        </Form.Item>
       </div>
-    </FormWrapper>
+    </Form>
   );
 }

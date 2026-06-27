@@ -81,7 +81,7 @@ export default function Language() {
 
       {open && (
         <div className="absolute right-0 top-full z-50 pt-2">
-          <div className="min-w-24 overflow-hidden rounded-sm border border-gray-100 bg-white p-1.5 shadow-xl">
+          <div className="min-w-24 overflow-hidden rounded-sm border border-white/10 bg-surface p-1.5 shadow-xl">
             {languages
               .filter((language) => language.code !== currentLocale)
               .map((language) => (
@@ -90,7 +90,7 @@ export default function Language() {
                   type="button"
                   onClick={() => handleChangeLanguage(language.code)}
                   disabled={isPending}
-                  className="w-full cursor-pointer rounded-sm px-4 py-1.5 text-left text-[13px] font-semibold text-gray-600 transition-all duration-200 hover:bg-primary hover:text-white disabled:cursor-not-allowed disabled:opacity-50"
+                  className="w-full cursor-pointer rounded-sm px-4 py-1.5 text-left text-[13px] font-semibold text-muted transition-all duration-200 hover:bg-primary hover:text-white disabled:cursor-not-allowed disabled:opacity-50"
                   aria-label={`Change language to ${language.display}`}
                 >
                   {isPending ? "..." : language.display}

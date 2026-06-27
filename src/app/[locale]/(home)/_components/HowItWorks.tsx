@@ -31,7 +31,7 @@ export default async function HowItWorksScroll({ locale }: SectionLocale) {
               fill
             />
           ) : (
-            <div className="w-full h-full bg-gray-100 rounded-2xl" />
+            <div className="w-full h-full bg-surface-elevated rounded-2xl" />
           )}
           <div className="absolute inset-0 rounded-2xl">
             <div className="absolute inset-0 bg-gradient-to-b from-secondary/10 to-secfrom-secondary/40" />
@@ -89,7 +89,7 @@ export default async function HowItWorksScroll({ locale }: SectionLocale) {
             <span className="inline-block bg-primary text-white text-[10px] font-bold tracking-[0.15em] uppercase px-5 py-2 rounded-full w-fit">
               How It Work
             </span>
-            <h2 className="text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-extrabold text-secondary uppercase tracking-tight mt-4 leading-[1.05]">
+            <h2 className="text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-extrabold text-foreground uppercase tracking-tight mt-4 leading-[1.05]">
               From Order To
               <br />
               Delivery, Simplified
