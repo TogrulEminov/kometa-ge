@@ -1,10 +1,8 @@
-import { CACHE_TAG_GROUPS } from "@/actions/ui/cachetags";
 import { getPathname } from "@/i18n/navigation";
 import { routing } from "@/i18n/routing";
 import { db } from "@/lib/prisma";
 import { CustomLocales } from "@/services/interface/type";
 import type { MetadataRoute } from "next";
-import { cacheLife, cacheTag } from "next/cache";
 
 const LOCALES = routing.locales;
 const DEFAULT_LOCALE = routing.defaultLocale as CustomLocales;
@@ -278,13 +276,6 @@ async function buildDirectionEntries(): Promise<MetadataRoute.Sitemap> {
 }
 
 export async function buildSitemapEntries(): Promise<MetadataRoute.Sitemap> {
-  "use cache";
-  cacheLife("hours");
-  cacheTag(CACHE_TAG_GROUPS.SITEMAP);
-  cacheTag(CACHE_TAG_GROUPS.SERVICES);
-  cacheTag(CACHE_TAG_GROUPS.SUB_SERVICES);
-  cacheTag(CACHE_TAG_GROUPS.DIRECTIONS);
-
   try {
     const serviceEntries = await buildServiceEntries();
     const subServiceEntries = await buildSubServiceEntries();
