@@ -6,14 +6,16 @@ declare global {
   var prisma: PrismaClient | undefined;
 }
 
+const isBuildPhase = process.env.NEXT_PHASE === "phase-production-build";
+
 const createPrismaClient = () => {
   const connectionString =
     process.env.DATABASE_URL_POOL || process.env.DATABASE_URL;
   const pool = new Pool({
     connectionString,
-    max: process.env.NODE_ENV === "production" ? 3 : 20,
+    max: isBuildPhase ? 15 : process.env.NODE_ENV === "production" ? 5 : 20,
     idleTimeoutMillis: 30000,
-    connectionTimeoutMillis: 2000,
+    connectionTimeoutMillis: isBuildPhase ? 30000 : 10000,
   });
 
   const adapter = new PrismaPg(pool);

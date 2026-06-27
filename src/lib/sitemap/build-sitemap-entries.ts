@@ -285,17 +285,19 @@ export async function buildSitemapEntries(): Promise<MetadataRoute.Sitemap> {
   cacheTag(CACHE_TAG_GROUPS.SUB_SERVICES);
   cacheTag(CACHE_TAG_GROUPS.DIRECTIONS);
 
-  const [serviceEntries, subServiceEntries, directionEntries] =
-    await Promise.all([
-      buildServiceEntries(),
-      buildSubServiceEntries(),
-      buildDirectionEntries(),
-    ]);
+  try {
+    const serviceEntries = await buildServiceEntries();
+    const subServiceEntries = await buildSubServiceEntries();
+    const directionEntries = await buildDirectionEntries();
 
-  return [
-    ...buildStaticEntries(),
-    ...serviceEntries,
-    ...subServiceEntries,
-    ...directionEntries,
-  ];
+    return [
+      ...buildStaticEntries(),
+      ...serviceEntries,
+      ...subServiceEntries,
+      ...directionEntries,
+    ];
+  } catch (error) {
+    console.error("Failed to build dynamic sitemap entries:", error);
+    return buildStaticEntries();
+  }
 }
