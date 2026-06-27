@@ -23,9 +23,9 @@ const nextConfig: NextConfig = {
 
   images: {
     remotePatterns: [
-      { protocol: "https", hostname: "**.kometa.ge" },
-      { protocol: "https", hostname: "**.kometa.ge" },
-      { protocol: "https", hostname: "kometa.ge" },
+      { protocol: "https", hostname: "**.kometa-ge.vercel.app" },
+      { protocol: "https", hostname: "**.kometa-ge.vercel.app" },
+      { protocol: "https", hostname: "kometa-ge.vercel.app" },
       { protocol: "https", hostname: "**.r2.dev" },
       { protocol: "https", hostname: "blobs.**" },
       { protocol: "https", hostname: "res.cloudinary.com" },
@@ -166,36 +166,46 @@ const nextConfig: NextConfig = {
       ].join(" "),
     ].join("; ");
 
+    const baseSecurityHeaders = [
+      { key: "X-DNS-Prefetch-Control", value: "on" },
+      { key: "X-Frame-Options", value: "SAMEORIGIN" },
+      { key: "X-Content-Type-Options", value: "nosniff" },
+      { key: "X-XSS-Protection", value: "1; mode=block" },
+      { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
+      {
+        key: "Strict-Transport-Security",
+        value: "max-age=63072000; includeSubDomains; preload",
+      },
+      {
+        key: "Permissions-Policy",
+        value: "camera=(), microphone=(), geolocation=(self)",
+      },
+      {
+        key: "Link",
+        value: `<https://${MAIN_DOMAIN}>; rel=preconnect`,
+      },
+    ];
+
     return [
       {
-        source: "/:path*",
+        source: "/sitemap.xml",
+        headers: baseSecurityHeaders,
+      },
+      {
+        source: "/robots.txt",
+        headers: baseSecurityHeaders,
+      },
+      {
+        source: "/llms.txt",
+        headers: baseSecurityHeaders,
+      },
+      {
+        source: "/((?!sitemap\\.xml|robots\\.txt|llms\\.txt).*)",
         headers: [
-          { key: "X-DNS-Prefetch-Control", value: "on" },
-          { key: "X-Frame-Options", value: "SAMEORIGIN" },
-          { key: "X-Content-Type-Options", value: "nosniff" },
-
-          // ✅ X-XSS-Protection köhnəlmiş headerdır, modern browserlər ignore edir
-          // Saxlanılır backward compat üçün
-          { key: "X-XSS-Protection", value: "1; mode=block" },
-
-          { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
-          {
-            key: "Strict-Transport-Security",
-            value: "max-age=63072000; includeSubDomains; preload",
-          },
-          {
-            key: "Permissions-Policy",
-            value: "camera=(), microphone=(), geolocation=(self)",
-          },
+          ...baseSecurityHeaders,
           {
             key: "Content-Security-Policy",
             value: csp,
-          },
-
-          // ✅ DƏYİŞDİ: Link header düzgün format
-          {
-            key: "Link",
-            value: `<https://${MAIN_DOMAIN}>; rel=preconnect`,
           },
         ],
       },

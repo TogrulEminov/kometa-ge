@@ -18,6 +18,10 @@ function formatLastModified(value: Date | string | undefined) {
   return date.toISOString();
 }
 
+function indent(level: number, value: string) {
+  return `${"  ".repeat(level)}${value}`;
+}
+
 export function renderSitemapXml(entries: MetadataRoute.Sitemap) {
   const urls = entries
     .map((entry) => {
@@ -26,28 +30,33 @@ export function renderSitemapXml(entries: MetadataRoute.Sitemap) {
         .filter((entry): entry is [string, string] => Boolean(entry[1]))
         .map(
           ([lang, href]) =>
-            `<xhtml:link rel="alternate" hreflang="${escapeXml(lang)}" href="${escapeXml(href)}" />`,
-        )
-        .join("\n");
+            indent(
+              2,
+              `<xhtml:link rel="alternate" hreflang="${escapeXml(lang)}" href="${escapeXml(href)}" />`,
+            ),
+        );
 
-      return [
-        "<url>",
-        `<loc>${escapeXml(entry.url)}</loc>`,
-        alternateLinks,
-        lastModified ? `<lastmod>${lastModified}</lastmod>` : "",
+      const lines = [
+        indent(1, "<url>"),
+        indent(2, `<loc>${escapeXml(entry.url)}</loc>`),
+        ...alternateLinks,
+        lastModified ? indent(2, `<lastmod>${lastModified}</lastmod>`) : "",
         entry.changeFrequency
-          ? `<changefreq>${entry.changeFrequency}</changefreq>`
+          ? indent(2, `<changefreq>${entry.changeFrequency}</changefreq>`)
           : "",
-        entry.priority != null ? `<priority>${entry.priority}</priority>` : "",
-        "</url>",
-      ]
-        .filter(Boolean)
-        .join("\n");
+        entry.priority != null
+          ? indent(2, `<priority>${entry.priority}</priority>`)
+          : "",
+        indent(1, "</url>"),
+      ].filter(Boolean);
+
+      return lines.join("\n");
     })
     .join("\n");
 
   return `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
 ${urls}
-</urlset>`;
+</urlset>
+`;
 }

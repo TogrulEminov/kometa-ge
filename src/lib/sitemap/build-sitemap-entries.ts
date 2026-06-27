@@ -36,7 +36,7 @@ type LocalizedHref =
     };
 
 function getWebsiteUrl() {
-  return (process.env.NEXT_PUBLIC_BASE_URL || "https://kometa.ge").replace(
+  return (process.env.NEXT_PUBLIC_BASE_URL || "https://kometa-ge.vercel.app").replace(
     /\/$/,
     "",
   );
