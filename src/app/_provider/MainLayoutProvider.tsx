@@ -1,5 +1,6 @@
 import Footer from "@/components/layout/footer/Footer";
 import HeaderServer from "@/components/layout/header/HeaderServer";
+import StickyWhatsAppServer from "@/components/layout/StickyWhatsAppServer";
 import { CustomLocales } from "@/services/interface/type";
 import React, { Suspense } from "react";
 import ShipmentModal from "../[locale]/(home)/_components/atoms/FormModal";
@@ -21,6 +22,9 @@ export default async function MainLayoutProvider({ children, locale }: Props) {
       </Suspense>
       <Suspense fallback={null}>
         <ShipmentModal />
+      </Suspense>
+      <Suspense fallback={null}>
+        <StickyWhatsAppServer />
       </Suspense>
     </>
   );

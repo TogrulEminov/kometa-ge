@@ -10,6 +10,7 @@ import {
   CircleMarker,
   useMap,
 } from "react-leaflet";
+import { useRemountableMap } from "@/hooks/useRemountableMap";
 import { cn } from "@/utils/cn";
 import {
   getFreightRouteByIso,
@@ -95,6 +96,9 @@ export default function RouteMapView({
     return [(fromLat + toLat) / 2, (fromLng + toLng) / 2];
   }, [route]);
 
+  const mapKey = `${fromCode}-${toCode}`;
+  const isMapVisible = useRemountableMap(mapKey);
+
   if (!route) {
     return (
       <div
@@ -149,9 +153,15 @@ export default function RouteMapView({
 
   return (
     <div className={cn("route-map-root surface-card overflow-hidden", className)}>
-      <div className="relative isolate z-0 h-[min(520px,70vw)] min-h-[360px] w-full [&_.leaflet-container]:z-0 [&_.leaflet-container]:h-full [&_.leaflet-container]:w-full [&_.leaflet-container]:cursor-grab [&_.leaflet-container.leaflet-dragging]:cursor-grabbing">
+      <div
+        key={mapKey}
+        className="relative isolate z-0 h-[min(520px,70vw)] min-h-[360px] w-full [&_.leaflet-container]:z-0 [&_.leaflet-container]:h-full [&_.leaflet-container]:w-full [&_.leaflet-container]:cursor-grab [&_.leaflet-container.leaflet-dragging]:cursor-grabbing"
+      >
+        {!isMapVisible ? (
+          <div className="h-full w-full bg-background" aria-hidden />
+        ) : (
         <MapContainer
-          key={`${fromCode}-${toCode}`}
+          key={mapKey}
           center={mapCenter}
           zoom={4}
           scrollWheelZoom
@@ -208,6 +218,7 @@ export default function RouteMapView({
           <AnimatedRouteVehicle positions={routePositions} />
           <FitRouteBounds positions={routePositions} />
         </MapContainer>
+        )}
 
         <div className="pointer-events-none absolute bottom-4 left-4 z-10 rounded-xl border border-white/10 bg-background/85 p-3 text-xs text-foreground shadow-2xl backdrop-blur-md">
           <div className="mb-1.5 flex items-center gap-2">

@@ -125,9 +125,22 @@ export default function AnimatedRouteVehicle({
     frameRef.current = requestAnimationFrame(animate);
 
     return () => {
-      if (frameRef.current) cancelAnimationFrame(frameRef.current);
-      marker.remove();
-      markerRef.current = null;
+      if (frameRef.current !== null) {
+        cancelAnimationFrame(frameRef.current);
+        frameRef.current = null;
+      }
+
+      const marker = markerRef.current;
+      if (marker) {
+        try {
+          if (map.getPane("markerPane")) {
+            marker.remove();
+          }
+        } catch {
+          // Map already destroyed during React unmount.
+        }
+        markerRef.current = null;
+      }
     };
   }, [map, positions, wheelAnchorY]);
 

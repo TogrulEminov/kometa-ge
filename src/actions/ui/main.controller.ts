@@ -4,6 +4,7 @@ import {
   CategoryKey,
   CustomLocales,
   SectionKey,
+  SocialMediaKey,
 } from "@/services/interface/type";
 import { cacheLife, cacheTag } from "next/cache";
 import { CACHE_TAG_GROUPS } from "./cachetags";
@@ -910,6 +911,22 @@ export async function fetchSocials() {
   cacheLife("hours");
   cacheTag(CACHE_TAG_GROUPS.SOCIAL_MEDIA);
   return db.social.findMany({
+    select: {
+      id: true,
+      socialName: true,
+      socialLink: true,
+      iconName: true,
+    },
+  });
+}
+export async function fetchSocialsByKey({ key }: { key: SocialMediaKey }) {
+  "use cache";
+  cacheLife("hours");
+  cacheTag(CACHE_TAG_GROUPS.SOCIAL_MEDIA);
+  return db.social.findFirst({
+    where: {
+      iconName: key,
+    },
     select: {
       id: true,
       socialName: true,
