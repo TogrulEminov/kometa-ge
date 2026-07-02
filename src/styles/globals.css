@@ -41,12 +41,8 @@
     @apply border-white/10 bg-surface shadow-lg;
   }
 
-  .badge-branch {
-    @apply inline-flex items-center text-xs font-medium px-2.5 py-1 rounded-full border;
-  }
-
   .badge-branch-office {
-    @apply badge-branch bg-primary/10 text-primary border-primary/20;
+    @apply inline-flex items-center rounded-full border px-2.5 py-1 text-xs font-medium bg-primary/10 text-primary border-primary/20;
   }
 
   .dark-site .badge-branch-office {
@@ -54,7 +50,7 @@
   }
 
   .badge-branch-warehouse {
-    @apply badge-branch bg-violet-100 text-violet-700 border-violet-200;
+    @apply inline-flex items-center rounded-full border px-2.5 py-1 text-xs font-medium bg-violet-100 text-violet-700 border-violet-200;
   }
 
   .dark-site .badge-branch-warehouse {
@@ -62,7 +58,7 @@
   }
 
   .badge-branch-active {
-    @apply badge-branch bg-emerald-100 text-emerald-700 border-emerald-200;
+    @apply inline-flex items-center rounded-full border px-2.5 py-1 text-xs font-medium bg-emerald-100 text-emerald-700 border-emerald-200;
   }
 
   .dark-site .badge-branch-active {
@@ -70,7 +66,7 @@
   }
 
   .badge-branch-planned {
-    @apply badge-branch bg-slate-100 text-slate-600 border-slate-200;
+    @apply inline-flex items-center rounded-full border px-2.5 py-1 text-xs font-medium bg-slate-100 text-slate-600 border-slate-200;
   }
 
   .dark-site .badge-branch-planned {
