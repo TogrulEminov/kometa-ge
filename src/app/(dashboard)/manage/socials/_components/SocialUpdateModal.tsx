@@ -90,6 +90,7 @@ export default function SocialUpdateModal({
       okText="Update"
       footer={null}
       cancelText="Cancel"
+      onCancel={handleCancel}
       okButtonProps={{
         size: "large",
         className: "h-10",
