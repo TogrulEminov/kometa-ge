@@ -1,20 +1,13 @@
-"use client";
-
-import { fetchSocialsByKey } from "@/actions/ui/main.controller";
-import { clearPhoneRegex } from "@/lib/domburify";
-import { SocialMediaKey } from "@/services/interface/type";
+import { Social } from "@/services/interface/type";
 import { useTranslations } from "next-intl";
 import { FaWhatsapp } from "react-icons/fa6";
 
-export  default async function StickyWhatsApp() {
+export default function StickyWhatsApp({ whatsapp }: { whatsapp: Social }) {
   const t = useTranslations("atoms.components.contactInfo");
-  const whatsapp =await fetchSocialsByKey({ key: SocialMediaKey.whatsapp });
-  if (!whatsapp?.socialLink) {
-    return null;
-  }
+
   return (
     <a
-      href={whatsapp.socialLink}
+      href={whatsapp?.socialLink}
       target="_blank"
       rel="noopener noreferrer"
       aria-label={t("whatsapp")}
