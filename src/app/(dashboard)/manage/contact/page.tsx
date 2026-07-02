@@ -20,8 +20,6 @@ export default function ContactPage() {
       },
     },
   );
-  console.log(existingData);
-
   return (
     <section className={"flex flex-col gap-4 mb-4.5"}>
       <LanguageComponent locale={locale} />

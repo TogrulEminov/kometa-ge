@@ -505,6 +505,7 @@ export async function fetchAboutMainInfo({
         select: {
           id: true,
           isoCode: true,
+          status: true,
           offices: {
             where: {
               isDeleted: false,

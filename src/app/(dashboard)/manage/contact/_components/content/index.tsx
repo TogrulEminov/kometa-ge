@@ -5,7 +5,6 @@ import { useAction } from "@/hooks/useServerActions";
 import { CustomLocales, IContactInformation } from "@/services/interface/type";
 import {
   UpsertContactFormValues,
-  UpsertContactInput,
   upsertContactSchema,
 } from "@/actions/client/contact/contact.schema";
 import { useForm } from "react-hook-form";
@@ -14,10 +13,11 @@ import { upsertContact } from "@/actions/client/contact/contact.controller";
 import FormWrapper from "@/globalElement/form/FormWrapper";
 import FieldBlock from "@/app/(dashboard)/_components/contentBlock";
 import FormInput from "@/globalElement/form/FormInput";
-import FormTextarea from "@/globalElement/form/FormTextarea";
 import FormPhone from "@/globalElement/form/FormPhone";
 import NavigateBtn from "@/app/(dashboard)/_components/navigateBtn";
 import SubmitAdminButton from "@/app/(dashboard)/_components/submitBtn";
+
+const CONTACT_FORM_ID = "contact-information-form";
 
 interface Props {
   existingData: IContactInformation | undefined;
@@ -26,7 +26,7 @@ interface Props {
 
 export default function Content({ existingData, refetch }: Props) {
   const searchParams = useSearchParams();
-  const locale = searchParams?.get("locale") ?? "az";
+  const locale = (searchParams?.get("locale") ?? "en") as CustomLocales;
   const router = useRouter();
   const translations = existingData?.translations?.[0];
   const generalForm = useForm<UpsertContactFormValues>({
@@ -40,18 +40,16 @@ export default function Content({ existingData, refetch }: Props) {
       longitude: existingData?.longitude ?? "",
       whatsapp: existingData?.whatsapp ?? "",
       adress: translations?.adress ?? "",
-      locale: locale as CustomLocales,
+      locale,
     },
   });
   const {
     formState: { isDirty },
-    reset,
   } = generalForm;
 
   const { execute, isExecuting } = useAction(upsertContact, {
     queryKey: contact_information_list,
     onSuccess() {
-      reset();
       router.refresh();
       refetch();
     },
@@ -59,13 +57,15 @@ export default function Content({ existingData, refetch }: Props) {
       console.error(err);
     },
   });
+
   const onSubmit = async (data: UpsertContactFormValues) => {
-    execute(data);
+    await execute(data);
   };
 
   return (
     <section className="flex flex-col gap-4 mb-2">
       <FormWrapper
+        id={CONTACT_FORM_ID}
         methods={generalForm}
         onSubmit={onSubmit}
         schema={upsertContactSchema}
@@ -133,6 +133,7 @@ export default function Content({ existingData, refetch }: Props) {
           <div className="grid grid-cols-2 gap-4 mt-auto max-w-lg">
             <NavigateBtn />
             <SubmitAdminButton
+              formId={CONTACT_FORM_ID}
               title={existingData ? "Update" : "Add"}
               isLoading={isExecuting}
               disabled={!isDirty || isExecuting}

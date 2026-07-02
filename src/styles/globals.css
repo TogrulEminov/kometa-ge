@@ -40,6 +40,43 @@
   .dark-site .surface-card {
     @apply border-white/10 bg-surface shadow-lg;
   }
+
+  .badge-branch {
+    @apply inline-flex items-center text-xs font-medium px-2.5 py-1 rounded-full border;
+  }
+
+  .badge-branch-office {
+    @apply badge-branch bg-primary/10 text-primary border-primary/20;
+  }
+
+  .dark-site .badge-branch-office {
+    @apply bg-primary/15 text-rose-300 border-primary/30;
+  }
+
+  .badge-branch-warehouse {
+    @apply badge-branch bg-violet-100 text-violet-700 border-violet-200;
+  }
+
+  .dark-site .badge-branch-warehouse {
+    @apply bg-violet-500/15 text-violet-300 border-violet-500/25;
+  }
+
+  .badge-branch-active {
+    @apply badge-branch bg-emerald-100 text-emerald-700 border-emerald-200;
+  }
+
+  .dark-site .badge-branch-active {
+    @apply bg-emerald-500/15 text-emerald-300 border-emerald-500/25;
+  }
+
+  .badge-branch-planned {
+    @apply badge-branch bg-slate-100 text-slate-600 border-slate-200;
+  }
+
+  .dark-site .badge-branch-planned {
+    @apply bg-white/8 text-slate-300 border-white/15;
+  }
+
   .prose {
     @apply text-muted text-base lg:text-lg leading-relaxed;
     max-width: 100%;

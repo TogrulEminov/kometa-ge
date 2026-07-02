@@ -98,21 +98,19 @@ export default function BranchCards({
 
               <div className="flex items-center gap-2 flex-shrink-0">
                 {officeCount > 0 && (
-                  <span className="hidden sm:inline-flex text-xs font-medium px-2.5 py-1 rounded-full bg-primary/10 text-primary">
+                  <span className="hidden sm:inline-flex badge-branch-office">
                     {t("office_count", { count: officeCount })}
                   </span>
                 )}
                 {warehouseCount > 0 && (
-                  <span className="hidden sm:inline-flex text-xs font-medium px-2.5 py-1 rounded-full bg-amber-500/10 text-amber-400">
+                  <span className="hidden sm:inline-flex badge-branch-warehouse">
                     {t("warehouse_count", { count: warehouseCount })}
                   </span>
                 )}
                 <span
-                  className={`text-xs font-medium px-2.5 py-1 rounded-full ${
-                    isActive
-                      ? "bg-green-500/10 text-green-400"
-                      : "bg-amber-500/10 text-amber-400"
-                  }`}
+                  className={
+                    isActive ? "badge-branch-active" : "badge-branch-planned"
+                  }
                 >
                   {isActive ? t("active") : t("planned")}
                 </span>

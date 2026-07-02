@@ -8,6 +8,7 @@ interface SubmitButtonProps {
   isLoading: boolean;
   disabled?: boolean;
   onModalClose?: () => void;
+  formId?: string;
 }
 
 const SubmitAdminButton: React.FC<SubmitButtonProps> = ({
@@ -15,6 +16,7 @@ const SubmitAdminButton: React.FC<SubmitButtonProps> = ({
   isLoading,
   disabled,
   onModalClose,
+  formId,
 }) => {
   const isUpdate = Boolean(title);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -122,6 +124,7 @@ const SubmitAdminButton: React.FC<SubmitButtonProps> = ({
               </button>
               <button
                 type="submit"
+                form={formId}
                 disabled={isLoading}
                 className="flex-1 px-4 py-2.5 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 disabled:opacity-50 cursor-pointer"
               >

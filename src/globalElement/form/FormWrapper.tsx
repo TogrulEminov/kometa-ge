@@ -15,16 +15,18 @@ interface Props<T extends FieldValues, S extends z.ZodTypeAny> {
   schema: S;
   onSubmit?: SubmitHandler<T>;
   className?: string;
+  id?: string;
 }
 
 export default function FormWrapper<
   T extends FieldValues,
   S extends z.ZodTypeAny,
->({ children, methods, schema, onSubmit, className }: Props<T, S>) {
+>({ children, methods, schema, onSubmit, className, id }: Props<T, S>) {
   return (
     <FormSchemaContext.Provider value={{ schema }}>
       <HookFormProvider {...methods}>
         <form
+          id={id}
           className={cn("w-full", className)}
           onSubmit={onSubmit ? methods.handleSubmit(onSubmit) : undefined}
         >

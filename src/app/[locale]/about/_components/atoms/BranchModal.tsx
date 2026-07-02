@@ -73,10 +73,10 @@ export default function BranchModal({ branch, onClose }: Props) {
                   {office.translations?.[0]?.city}
                 </span>
                 <span
-                  className={`ml-auto rounded-full px-2 py-0.5 text-xs font-medium ${
+                  className={`ml-auto ${
                     office.type === "warehouse"
-                      ? "bg-amber-500/10 text-amber-400"
-                      : "bg-primary/10 text-primary"
+                      ? "badge-branch-warehouse"
+                      : "badge-branch-office"
                   }`}
                 >
                   {office.type === "warehouse" ? t("warehouse") : t("office")}
@@ -184,25 +184,23 @@ export default function BranchModal({ branch, onClose }: Props) {
     <div className="flex items-center justify-between border-t border-white/10 px-6 py-4">
       <div className="flex items-center gap-2">
         {officeCount > 0 && (
-          <span className="rounded-full bg-primary/10 px-2.5 py-1 text-xs font-medium text-primary">
+          <span className="badge-branch-office">
             {t("office_count", { count: officeCount })}
           </span>
         )}
         {warehouseCount > 0 && (
-          <span className="rounded-full bg-amber-500/10 px-2.5 py-1 text-xs font-medium text-amber-400">
+          <span className="badge-branch-warehouse">
             {t("warehouse_count", { count: warehouseCount })}
           </span>
         )}
       </div>
       <span
-        className={`flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium ${
-          isActive
-            ? "bg-green-500/10 text-green-400"
-            : "bg-amber-500/10 text-amber-400"
+        className={`flex items-center gap-1.5 ${
+          isActive ? "badge-branch-active" : "badge-branch-planned"
         }`}
       >
         {isActive && (
-          <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-green-500" />
+          <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-emerald-400" />
         )}
         {isActive ? t("active") : t("planned")}
       </span>
@@ -282,12 +280,12 @@ export default function BranchModal({ branch, onClose }: Props) {
           {(officeCount > 0 || warehouseCount > 0) && (
             <div className="flex gap-2 px-5 pt-3">
               {officeCount > 0 && (
-                <span className="rounded-full bg-primary/10 px-2.5 py-1 text-xs font-medium text-primary">
+                <span className="badge-branch-office">
                   {t("office_count", { count: officeCount })}
                 </span>
               )}
               {warehouseCount > 0 && (
-                <span className="rounded-full bg-amber-500/10 px-2.5 py-1 text-xs font-medium text-amber-400">
+                <span className="badge-branch-warehouse">
                   {t("warehouse_count", { count: warehouseCount })}
                 </span>
               )}
