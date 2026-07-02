@@ -31,7 +31,7 @@ export default function ContactSection({
           type="vertical"
           heading="h1"
           description={sectionContent?.description ?? ""}
-          rootClass="[&_h1]:text-foreground [&_article]:text-muted"
+          rootClass="[&_h1]:text-foreground [&_article]:text-muted [&_article]:max-w-4xl!"
         />
 
         <InfoxBox contactInfo={data} />

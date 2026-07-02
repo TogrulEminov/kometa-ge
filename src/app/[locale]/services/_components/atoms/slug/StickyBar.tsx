@@ -1,7 +1,7 @@
 "use client";
 
 import { Link, usePathname } from "@/i18n/navigation";
-import { serviceSubHref } from "@/i18n/href";
+import { serviceMainHref, serviceSubHref } from "@/i18n/href";
 import { clearPhoneRegex } from "@/lib/domburify";
 import {
   IContactInformation,
@@ -10,6 +10,11 @@ import {
 } from "@/services/interface/type";
 import { DynamicIcon } from "@/utils/DynamicIcon";
 import { renderSocialIcon } from "@/utils/renderSocialIcon";
+import {
+  findExpandedServiceId,
+  isServiceCategoryActive,
+  isSubServicePathActive,
+} from "@/utils/serviceStickyBar";
 import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
 import { FaMapMarkerAlt, FaPhoneAlt } from "react-icons/fa";
@@ -19,36 +24,6 @@ import {
   FaEnvelope,
   FaWhatsapp,
 } from "react-icons/fa6";
-
-function findExpandedServiceId(
-  services: ServicesType[],
-  pathname: string,
-  category: string,
-): string | null {
-  for (const service of services) {
-    const hasActiveChild = service.subServices?.some((child) => {
-      const slug = child.translations[0]?.slug;
-      return Boolean(slug && pathname.includes(slug));
-    });
-
-    if (hasActiveChild) {
-      return service.id;
-    }
-  }
-
-  for (const service of services) {
-    const slug = service.translations[0]?.slug ?? "";
-    if (slug && pathname.includes(slug)) {
-      return service.id;
-    }
-  }
-
-  const categoryService = services.find(
-    (service) => service.translations[0]?.slug === category,
-  );
-
-  return categoryService?.id ?? null;
-}
 
 export default function StickyBarDetail({
   services,
@@ -78,8 +53,13 @@ export default function StickyBarDetail({
     setExpandedService(expandedService === id ? null : id);
   };
 
-  const isSlugActive = (slug?: string | null) =>
-    isMounted && Boolean(slug && pathname.includes(slug));
+  const isSubServiceActive = (parentSlug: string, subSlug?: string | null) =>
+    isMounted &&
+    Boolean(
+      parentSlug &&
+        subSlug &&
+        isSubServicePathActive(pathname, parentSlug, subSlug),
+    );
 
   const getServiceButtonClassName = (
     isActive: boolean,
@@ -96,8 +76,11 @@ export default function StickyBarDetail({
     return "text-gray-400 hover:text-white hover:bg-white/5";
   };
 
-  const getSubServiceLinkClassName = (slug?: string | null) =>
-    isSlugActive(slug)
+  const getSubServiceLinkClassName = (
+    parentSlug: string,
+    subSlug?: string | null,
+  ) =>
+    isSubServiceActive(parentSlug, subSlug)
       ? "bg-primary text-white"
       : "text-gray-400 hover:text-white hover:bg-white/5";
 
@@ -138,59 +121,88 @@ export default function StickyBarDetail({
         <nav className="space-y-1">
           {services.map((service) => {
             const serviceSlug = service.translations[0]?.slug ?? "";
+            const hasSubServices = Boolean(service.subServices?.length);
             const hasActiveChild =
               isMounted &&
               (service.subServices?.some((child) =>
-                isSlugActive(child.translations[0]?.slug),
+                isSubServiceActive(serviceSlug, child.translations[0]?.slug),
               ) ??
                 false);
-            const isActive = isSlugActive(serviceSlug) || hasActiveChild;
+            const isActive =
+              isMounted &&
+              (isServiceCategoryActive(pathname, serviceSlug) || hasActiveChild);
             const isExpanded =
               isMounted &&
               (expandedService === service.id || hasActiveChild);
+            const rowClassName = `flex items-center gap-1 rounded-xl text-sm font-medium transition-all duration-300 ${getServiceButtonClassName(
+              isActive,
+              isExpanded,
+            )}`;
 
             return (
               <div key={service.id}>
-                <button
-                  type="button"
-                  onClick={() => {
-                    if (service.subServices?.length) {
-                      toggleService(service.id);
-                    }
-                  }}
-                  className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-300 ${getServiceButtonClassName(
-                    isActive,
-                    isExpanded,
-                  )}`}
-                >
-                  {service.iconUrl && (
-                    <span className="text-lg">
-                      <DynamicIcon iconName={service.iconUrl} />
+                {hasSubServices ? (
+                  <div className={rowClassName}>
+                    <Link
+                      href={serviceMainHref(serviceSlug)}
+                      className="flex min-w-0 flex-1 items-center gap-3 px-4 py-3"
+                    >
+                      {service.iconUrl && (
+                        <span className="text-lg">
+                          <DynamicIcon iconName={service.iconUrl} />
+                        </span>
+                      )}
+                      <span className="flex-1 text-left">
+                        {service.translations[0]?.title}
+                      </span>
+                    </Link>
+                    <button
+                      type="button"
+                      onClick={() => toggleService(service.id)}
+                      aria-expanded={isExpanded}
+                      aria-label={`Toggle ${service.translations[0]?.title}`}
+                      className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg text-inherit transition-colors hover:bg-white/10"
+                    >
+                      <FaChevronDown
+                        className={`h-3 w-3 transition-transform duration-300 ${
+                          isExpanded ? "rotate-180" : "-rotate-90"
+                        }`}
+                      />
+                    </button>
+                  </div>
+                ) : (
+                  <Link
+                    href={serviceMainHref(serviceSlug)}
+                    className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-300 ${getServiceButtonClassName(
+                      isActive,
+                      false,
+                    )}`}
+                  >
+                    {service.iconUrl && (
+                      <span className="text-lg">
+                        <DynamicIcon iconName={service.iconUrl} />
+                      </span>
+                    )}
+                    <span className="flex-1 text-left">
+                      {service.translations[0]?.title}
                     </span>
-                  )}
-                  <span className="flex-1 text-left">
-                    {service.translations[0]?.title}
-                  </span>
-                  {service.subServices?.length ? (
-                    <FaChevronDown
-                      className={`w-3 h-3 transition-transform duration-300 ${
-                        isExpanded ? "-rotate-180" : "-rotate-90"
-                      }`}
-                    />
-                  ) : (
-                    <FaChevronRight className="w-3 h-3 opacity-50" />
-                  )}
-                </button>
+                    <FaChevronRight className="h-3 w-3 opacity-50" />
+                  </Link>
+                )}
 
-                {service.subServices?.length && isExpanded ? (
+                {hasSubServices && isExpanded ? (
                   <div className="ml-4 mt-1 space-y-1 border-l-2 border-primary/30 pl-4">
                     {service.subServices.map((child) => {
                       const servicesTr = child.translations[0];
                       return (
                         <Link
                           key={child.id}
-                          href={serviceSubHref(category, servicesTr.slug ?? "")}
+                          href={serviceSubHref(
+                            serviceSlug,
+                            servicesTr.slug ?? "",
+                          )}
                           className={`flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm transition-all duration-300 ${getSubServiceLinkClassName(
+                            serviceSlug,
                             servicesTr.slug,
                           )}`}
                         >
