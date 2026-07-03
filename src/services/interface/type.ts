@@ -632,3 +632,15 @@ export type CertificatesType = {
 export type SectionLocale = {
   locale: CustomLocales;
 };
+
+export type FormSubmissionModel = {
+  id: string;
+  type: "CONTACT" | "HERO_BOOKING" | "SHIPMENT_MODAL";
+  status: "NEW" | "READ" | "ARCHIVED";
+  locale: CustomLocales | null;
+  payload: Record<string, unknown>;
+  ipAddress: string | null;
+  userAgent: string | null;
+  createdAt: Date;
+  updatedAt: Date;
+};

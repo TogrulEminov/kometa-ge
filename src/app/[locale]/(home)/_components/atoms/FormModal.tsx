@@ -1,13 +1,18 @@
 "use client";
 
 import { SendOutlined } from "@ant-design/icons";
-import { Form, Input, Select } from "antd";
+import { Form, Input, message, Select } from "antd";
 import { AnimatePresence, motion } from "framer-motion";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
+import { useAction } from "next-safe-action/hooks";
+import { submitBookingForm } from "@/actions/ui/form.controller";
+import FormSubmitSuccess from "@/components/form/FormSubmitSuccess";
+import TurnstileField from "@/components/TurnstileField";
 import { useToggleState, useToggleStore } from "@/hooks/useToggleStore";
 import { shipmentModalKey } from "@/services/interface/constant-keys";
+import { CustomLocales } from "@/services/interface/type";
 import { COUNTRY_SELECT_OPTIONS } from "@/utils/countryOptions";
 import {
   uiFormColors,
@@ -24,11 +29,25 @@ import {
 
 export default function ShipmentModal() {
   const t = useTranslations("atoms.components.callActionHero");
+  const locale = useLocale() as CustomLocales;
   const { close } = useToggleStore();
   const isOpen = useToggleState(shipmentModalKey);
   const [form] = Form.useForm();
-  const [submitted, setSubmitted] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const [turnstileToken, setTurnstileToken] = useState("");
+
+  const { execute, isExecuting, hasSucceeded, reset } = useAction(
+    submitBookingForm,
+    {
+      onSuccess: () => {
+        form.resetFields();
+        setTurnstileToken("");
+      },
+      onError: ({ error }) => {
+        message.error(error.serverError || t("form.error"));
+      },
+    },
+  );
 
   useEffect(() => {
     setMounted(true);
@@ -47,15 +66,49 @@ export default function ShipmentModal() {
     };
   }, [isOpen, close]);
 
-  const handleSubmit = async (values: unknown) => {
-    console.log(values);
-    setSubmitted(true);
-    form.resetFields();
+  useEffect(() => {
+    if (!isOpen) {
+      setTurnstileToken("");
+      reset();
+    }
+  }, [isOpen, reset]);
 
-    setTimeout(() => {
-      setSubmitted(false);
+  useEffect(() => {
+    if (!hasSucceeded || !isOpen) return;
+
+    const timer = setTimeout(() => {
+      reset();
       close(shipmentModalKey);
-    }, 1500);
+    }, 2500);
+
+    return () => clearTimeout(timer);
+  }, [hasSucceeded, isOpen, reset, close]);
+
+  const handleReset = () => {
+    reset();
+    form.resetFields();
+    setTurnstileToken("");
+  };
+
+  const handleSubmit = async (values: {
+    from: string;
+    to: string;
+    email: string;
+    telephone: string;
+    message?: string;
+  }) => {
+    if (!turnstileToken && process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY) {
+      message.error("Please complete the captcha");
+      return;
+    }
+
+    await execute({
+      ...values,
+      message: values.message ?? "",
+      turnstileToken: turnstileToken || "dev-bypass",
+      locale,
+      formType: "SHIPMENT_MODAL",
+    });
   };
 
   if (!mounted) return null;
@@ -124,6 +177,15 @@ export default function ShipmentModal() {
 
                 <div className="mb-5 h-px w-full bg-white/10" />
 
+                {hasSucceeded ? (
+                  <FormSubmitSuccess
+                    variant="modal"
+                    title={t("form.success_title")}
+                    description={t("form.success_description")}
+                    resetLabel={t("form.success_reset")}
+                    onReset={handleReset}
+                  />
+                ) : (
                 <Form
                   form={form}
                   onFinish={handleSubmit}
@@ -240,15 +302,22 @@ export default function ShipmentModal() {
                       </Form.Item>
                     </div>
 
+                    <div className="sm:col-span-2">
+                      <TurnstileField
+                        onVerify={setTurnstileToken}
+                        onExpire={() => setTurnstileToken("")}
+                        theme="dark"
+                      />
+                    </div>
+
                     <Form.Item className="mb-0! sm:col-span-2">
                       <button
                         type="submit"
-                        className={`${uiSubmitButtonClassName} flex w-full items-center justify-center gap-2 text-white ${
-                          submitted ? "bg-green-600!" : ""
-                        }`}
+                        disabled={isExecuting}
+                        className={`${uiSubmitButtonClassName} flex w-full items-center justify-center gap-2 text-white disabled:opacity-60`}
                       >
-                        {submitted ? (
-                          "Submitted ✓"
+                        {isExecuting ? (
+                          "..."
                         ) : (
                           <>
                             <SendOutlined />
@@ -259,6 +328,7 @@ export default function ShipmentModal() {
                     </Form.Item>
                   </div>
                 </Form>
+                )}
               </div>
             </motion.div>
           </div>

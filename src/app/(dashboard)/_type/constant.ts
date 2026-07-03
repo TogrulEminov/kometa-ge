@@ -9,6 +9,7 @@ import {
   LuRoute,
   LuBuilding,
   LuTrash2,
+  LuInbox,
 } from "react-icons/lu";
 import { Role } from "@/services/interface/type";
 import { GiKnightBanner } from "react-icons/gi";
@@ -60,6 +61,9 @@ export const pageRoutes = {
   },
   contact: {
     root: "/manage/contact",
+  },
+  formSubmissions: {
+    root: "/manage/form-submissions",
   },
   servicesMain: {
     root: "/manage/services-main",
@@ -222,6 +226,11 @@ export const menuSections: MenuSection[] = [
         icon: LuFileCheck,
       },
       { href: pageRoutes.contact.root, label: "Contact", icon: LuMail },
+      {
+        href: pageRoutes.formSubmissions.root,
+        label: "Form Messages",
+        icon: LuInbox,
+      },
       { href: pageRoutes.aboutPage.root, label: "About", icon: IoInformation },
       {
         href: pageRoutes.youtubeMedia.root,
