@@ -1,61 +1,55 @@
-import { Button, Popconfirm, Tag } from "antd";
+import { Popconfirm, Tag } from "antd";
 import type { ColumnsType } from "antd/es/table";
-import { FormStatus, FormType } from "@/generated/prisma/enums";
+import { FormType } from "@/generated/prisma/enums";
 import type { FormSubmissionModel } from "@/services/interface/type";
-import { LuEye, LuTrash2 } from "react-icons/lu";
+import { LuTrash2 } from "react-icons/lu";
 
 type Payload = Record<string, string | undefined>;
 
-function getPreview(payload: unknown) {
+function getContact(payload: unknown) {
   const data = (payload ?? {}) as Payload;
-  return (
-    data.email ||
-    data.name ||
-    data.telephone ||
-    data.phone ||
-    "—"
-  );
+  return data.email || data.name || data.telephone || data.phone || "—";
+}
+
+function getMessagePreview(payload: unknown) {
+  const data = (payload ?? {}) as Payload;
+  const message = data.message?.trim();
+  if (!message) {
+    if (data.from && data.to) return `${data.from} → ${data.to}`;
+    return "—";
+  }
+  return message.length > 80 ? `${message.slice(0, 80)}...` : message;
 }
 
 type ColumnProps = {
-  onView: (record: FormSubmissionModel) => void;
-  onMarkRead: (id: string) => void;
-  onArchive: (id: string) => void;
   onDelete: (id: string) => void;
   typeLabels: Record<FormType, string>;
-  statusColors: Record<FormStatus, string>;
 };
 
 export function Columns({
-  onView,
-  onMarkRead,
-  onArchive,
   onDelete,
   typeLabels,
-  statusColors,
 }: ColumnProps): ColumnsType<FormSubmissionModel> {
   return [
     {
       title: "Type",
       dataIndex: "type",
       width: 140,
-      render: (type: FormType) => (
-        <Tag color="purple">{typeLabels[type]}</Tag>
-      ),
+      render: (type: FormType) => <Tag color="purple">{typeLabels[type]}</Tag>,
     },
     {
       title: "Contact",
       key: "contact",
+      width: 200,
       render: (_, record) => (
-        <span className="font-medium">{getPreview(record.payload)}</span>
+        <span className="font-medium">{getContact(record.payload)}</span>
       ),
     },
     {
-      title: "Status",
-      dataIndex: "status",
-      width: 100,
-      render: (status: FormStatus) => (
-        <Tag color={statusColors[status]}>{status}</Tag>
+      title: "Message",
+      key: "message",
+      render: (_, record) => (
+        <span className="text-gray-600">{getMessagePreview(record.payload)}</span>
       ),
     },
     {
@@ -71,37 +65,21 @@ export function Columns({
       render: (date: Date) => new Date(date).toLocaleString(),
     },
     {
-      title: "Actions",
+      title: "",
       key: "actions",
-      width: 200,
+      width: 60,
       render: (_, record) => (
-        <div
-          className="flex items-center gap-1"
-          onClick={(e) => e.stopPropagation()}
+        <Popconfirm
+          title="Delete this message?"
+          onConfirm={() => onDelete(record.id)}
         >
-          <Button
-            type="text"
-            size="small"
-            icon={<LuEye />}
-            onClick={() => onView(record)}
-          />
-          {record.status === FormStatus.NEW && (
-            <Button size="small" onClick={() => onMarkRead(record.id)}>
-              Read
-            </Button>
-          )}
-          {record.status !== FormStatus.ARCHIVED && (
-            <Button size="small" onClick={() => onArchive(record.id)}>
-              Archive
-            </Button>
-          )}
-          <Popconfirm
-            title="Delete this message?"
-            onConfirm={() => onDelete(record.id)}
+          <button
+            type="button"
+            className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg text-red-500 hover:bg-red-50"
           >
-            <Button type="text" danger size="small" icon={<LuTrash2 />} />
-          </Popconfirm>
-        </div>
+            <LuTrash2 className="h-4 w-4" />
+          </button>
+        </Popconfirm>
       ),
     },
   ];

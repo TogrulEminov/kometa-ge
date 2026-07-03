@@ -9,7 +9,7 @@ const MAIN_DOMAIN = "kometa-ge.vercel.app";
 
 const nextConfig: NextConfig = {
   output: "standalone",
-  serverExternalPackages: ["sharp"],
+  serverExternalPackages: ["sharp", "nodemailer", "ejs"],
   reactStrictMode: false,
   poweredByHeader: true,
   trailingSlash: false,

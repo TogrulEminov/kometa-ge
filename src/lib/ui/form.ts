@@ -67,6 +67,25 @@ export const uiSelectClassName = uiSelectClassNames.root;
 
 export const uiSelectPopupClassName = "ui-select-dropdown";
 
+export const uiBorderlessSelectClassNames = {
+  root: "ui-borderless-select w-full min-h-12",
+};
+
+export const uiBorderlessSelectStyles = {
+  root: {
+    backgroundColor: "transparent",
+    border: "none",
+    borderBottom: "1px solid rgba(255, 255, 255, 0.45)",
+    borderRadius: 0,
+    color: "#f1f5f9",
+    boxShadow: "none",
+    minHeight: 48,
+  },
+  placeholder: {
+    color: "rgba(255, 255, 255, 0.5)",
+  },
+};
+
 export const uiModalClassName = cn(
   "[&_.ant-modal-container]:!bg-[#141824]",
   "[&_.ant-modal-container]:!border [&_.ant-modal-container]:!border-white/10",

@@ -12,7 +12,7 @@ import FormPhone from "@/globalElement/form/FormPhone";
 import FormSelect from "@/globalElement/form/FormSelect";
 import FormTextarea from "@/globalElement/form/FormTextarea";
 import FormWrapper from "@/globalElement/form/FormWrapper";
-import { uiHeroFormLabelClassName } from "@/lib/ui/form";
+import { uiHeroFormLabelClassName, uiBorderlessSelectClassNames, uiBorderlessSelectStyles, uiSelectPopupClassName } from "@/lib/ui/form";
 import { CustomLocales } from "@/services/interface/type";
 import { COUNTRY_SELECT_OPTIONS } from "@/utils/countryOptions";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -102,6 +102,11 @@ export default function FormComponent() {
             showSearch
             optionFilterProp="label"
             variant="borderless"
+            classNames={{
+              ...uiBorderlessSelectClassNames,
+              popup: { root: uiSelectPopupClassName },
+            }}
+            styles={uiBorderlessSelectStyles}
           />
           <FormSelect
             label={t("form.delivery_location")}
@@ -111,6 +116,11 @@ export default function FormComponent() {
             showSearch
             optionFilterProp="label"
             variant="borderless"
+            classNames={{
+              ...uiBorderlessSelectClassNames,
+              popup: { root: uiSelectPopupClassName },
+            }}
+            styles={uiBorderlessSelectStyles}
           />
           <FormInput
             label={t("form.email_address")}

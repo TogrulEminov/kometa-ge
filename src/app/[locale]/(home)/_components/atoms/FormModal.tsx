@@ -17,11 +17,11 @@ import { COUNTRY_SELECT_OPTIONS } from "@/utils/countryOptions";
 import {
   uiFormColors,
   uiFormLabelClassName,
+  uiBorderlessSelectClassNames,
+  uiBorderlessSelectStyles,
   uiInputClassName,
   uiInputStyles,
-  uiSelectClassNames,
   uiSelectPopupClassName,
-  uiSelectStyles,
   uiSubmitButtonClassName,
   uiTextareaClassName,
   uiTextareaStyles,
@@ -209,12 +209,12 @@ export default function ShipmentModal() {
                           optionFilterProp="label"
                           placeholder={t("form.pickup_location")}
                           options={COUNTRY_SELECT_OPTIONS}
-                          variant="outlined"
+                          variant="borderless"
                           classNames={{
-                            ...uiSelectClassNames,
+                            ...uiBorderlessSelectClassNames,
                             popup: { root: uiSelectPopupClassName },
                           }}
-                          styles={uiSelectStyles}
+                          styles={uiBorderlessSelectStyles}
                         />
                       </Form.Item>
                     </div>
@@ -235,12 +235,12 @@ export default function ShipmentModal() {
                           optionFilterProp="label"
                           placeholder={t("form.delivery_location")}
                           options={COUNTRY_SELECT_OPTIONS}
-                          variant="outlined"
+                          variant="borderless"
                           classNames={{
-                            ...uiSelectClassNames,
+                            ...uiBorderlessSelectClassNames,
                             popup: { root: uiSelectPopupClassName },
                           }}
-                          styles={uiSelectStyles}
+                          styles={uiBorderlessSelectStyles}
                         />
                       </Form.Item>
                     </div>

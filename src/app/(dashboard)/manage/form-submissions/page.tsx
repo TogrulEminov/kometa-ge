@@ -1,26 +1,15 @@
 "use client";
 
 import { useState } from "react";
-import {
-  Button,
-  Empty,
-  Input,
-  Modal,
-  Pagination,
-  Select,
-  Spin,
-  Table,
-  Tag,
-} from "antd";
+import { Button, Empty, Input, Pagination, Select, Spin, Table } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
 import {
   deleteFormSubmission,
   getFormSubmissions,
-  updateFormSubmissionStatus,
 } from "@/actions/client/form-submissions/form-submissions.controller";
 import { form_submissions_list } from "../../_type/query-key";
 import { useAction, useServerQuery } from "@/hooks/useServerActions";
-import { FormStatus, FormType } from "@/generated/prisma/enums";
+import { FormType } from "@/generated/prisma/enums";
 import type { FormSubmissionModel } from "@/services/interface/type";
 import { Columns } from "./Columns";
 
@@ -30,19 +19,38 @@ const TYPE_LABELS: Record<FormType, string> = {
   SHIPMENT_MODAL: "Shipment Modal",
 };
 
-const STATUS_COLORS: Record<FormStatus, string> = {
-  NEW: "red",
-  READ: "blue",
-  ARCHIVED: "default",
-};
+type Payload = Record<string, string | undefined>;
+
+function renderPayloadDetails(payload: unknown) {
+  const data = (payload ?? {}) as Payload;
+  const rows = [
+    ["Name", [data.name, data.surname].filter(Boolean).join(" ")],
+    ["Email", data.email],
+    ["Phone", data.phone || data.telephone],
+    ["Pickup", data.from],
+    ["Delivery", data.to],
+    ["Message", data.message],
+  ].filter(([, value]) => value);
+
+  return (
+    <div className="grid gap-2 py-2 sm:grid-cols-2">
+      {rows.map(([label, value]) => (
+        <div key={label} className="rounded-lg bg-gray-50 p-3">
+          <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">
+            {label}
+          </p>
+          <p className="mt-1 text-sm text-gray-800 whitespace-pre-wrap">{value}</p>
+        </div>
+      ))}
+    </div>
+  );
+}
 
 export default function FormSubmissionsPage() {
   const [page, setPage] = useState(1);
   const [query, setQuery] = useState("");
   const [search, setSearch] = useState("");
   const [typeFilter, setTypeFilter] = useState<FormType | undefined>();
-  const [statusFilter, setStatusFilter] = useState<FormStatus | undefined>();
-  const [selected, setSelected] = useState<FormSubmissionModel | null>(null);
 
   const { data, isLoading, isError, refetch } = useServerQuery(
     form_submissions_list,
@@ -53,14 +61,9 @@ export default function FormSubmissionsPage() {
         pageSize: 20,
         query: search,
         type: typeFilter,
-        status: statusFilter,
       },
     },
   );
-
-  const { execute: updateStatus } = useAction(updateFormSubmissionStatus, {
-    queryKey: form_submissions_list,
-  });
 
   const { execute: deleteSubmission } = useAction(deleteFormSubmission, {
     queryKey: form_submissions_list,
@@ -74,27 +77,8 @@ export default function FormSubmissionsPage() {
     setSearch(query.trim());
   };
 
-  const handleMarkRead = async (id: string) => {
-    await updateStatus({ id, status: FormStatus.READ });
-    if (selected?.id === id) {
-      setSelected((prev) =>
-        prev ? { ...prev, status: FormStatus.READ } : null,
-      );
-    }
-  };
-
-  const handleArchive = async (id: string) => {
-    await updateStatus({ id, status: FormStatus.ARCHIVED });
-    if (selected?.id === id) {
-      setSelected((prev) =>
-        prev ? { ...prev, status: FormStatus.ARCHIVED } : null,
-      );
-    }
-  };
-
   const handleDelete = async (id: string) => {
     await deleteSubmission({ id });
-    if (selected?.id === id) setSelected(null);
   };
 
   return (
@@ -129,20 +113,6 @@ export default function FormSubmissionsPage() {
             value: t,
           }))}
         />
-        <Select
-          allowClear
-          placeholder="Status"
-          style={{ width: 140 }}
-          value={statusFilter}
-          onChange={(v) => {
-            setStatusFilter(v);
-            setPage(1);
-          }}
-          options={Object.values(FormStatus).map((s) => ({
-            label: s,
-            value: s,
-          }))}
-        />
         <Button type="primary" onClick={handleSearch}>
           Search
         </Button>
@@ -164,18 +134,13 @@ export default function FormSubmissionsPage() {
             rowKey="id"
             dataSource={submissions}
             columns={Columns({
-              onView: setSelected,
-              onMarkRead: handleMarkRead,
-              onArchive: handleArchive,
               onDelete: handleDelete,
               typeLabels: TYPE_LABELS,
-              statusColors: STATUS_COLORS,
             })}
             pagination={false}
-            onRow={(record) => ({
-              onClick: () => setSelected(record),
-              className: "cursor-pointer",
-            })}
+            expandable={{
+              expandedRowRender: (record) => renderPayloadDetails(record.payload),
+            }}
           />
         )}
       </div>
@@ -190,46 +155,6 @@ export default function FormSubmissionsPage() {
           />
         </div>
       )}
-
-      <Modal
-        open={!!selected}
-        onCancel={() => setSelected(null)}
-        footer={null}
-        title="Message detail"
-        width={640}
-      >
-        {selected && (
-          <div className="space-y-4">
-            <div className="flex flex-wrap gap-2">
-              <Tag color="purple">{TYPE_LABELS[selected.type]}</Tag>
-              <Tag color={STATUS_COLORS[selected.status]}>{selected.status}</Tag>
-              {selected.locale && <Tag>{selected.locale}</Tag>}
-            </div>
-            <p className="text-sm text-gray-500">
-              {new Date(selected.createdAt).toLocaleString()}
-              {selected.ipAddress && ` · IP: ${selected.ipAddress}`}
-            </p>
-            <pre className="max-h-80 overflow-auto rounded-lg bg-gray-50 p-4 text-sm whitespace-pre-wrap">
-              {JSON.stringify(selected.payload, null, 2)}
-            </pre>
-            <div className="flex flex-wrap gap-2 pt-2">
-              {selected.status === FormStatus.NEW && (
-                <Button onClick={() => handleMarkRead(selected.id)}>
-                  Mark as read
-                </Button>
-              )}
-              {selected.status !== FormStatus.ARCHIVED && (
-                <Button onClick={() => handleArchive(selected.id)}>
-                  Archive
-                </Button>
-              )}
-              <Button danger onClick={() => handleDelete(selected.id)}>
-                Delete
-              </Button>
-            </div>
-          </div>
-        )}
-      </Modal>
     </div>
   );
 }

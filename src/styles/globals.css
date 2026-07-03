@@ -589,7 +589,7 @@ details:not([open]) summary:hover .chevron-icon {
 .dark-site .contact-form-fields .ant-input-textarea textarea,
 .dark-site .shipment-form-fields .ant-input,
 .dark-site .shipment-form-fields .ant-input-affix-wrapper,
-.dark-site .shipment-form-fields .ui-select-field.ant-select,
+.dark-site .shipment-form-fields .ui-select-field.ant-select:not(.ui-borderless-select),
 .dark-site .shipment-form-fields .ant-input-textarea textarea {
   background-color: #1a2030 !important;
   color: #f1f5f9 !important;
@@ -633,6 +633,27 @@ details:not([open]) summary:hover .chevron-icon {
 }
 
 .hero-booking-form .ant-select-placeholder {
+  color: rgba(255, 255, 255, 0.5) !important;
+}
+
+.shipment-form-fields .ui-borderless-select.ant-select,
+.hero-booking-form .ui-borderless-select.ant-select,
+.hero-booking-form .ant-select:not(.ui-select-field) {
+  --ant-select-background-color: transparent !important;
+  --ant-select-color: #f1f5f9 !important;
+  --ant-select-border-color: rgba(255, 255, 255, 0.45) !important;
+  --ant-select-affix-color: rgba(255, 255, 255, 0.5) !important;
+  background-color: transparent !important;
+  border: none !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.45) !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  min-height: 48px;
+}
+
+.shipment-form-fields .ui-borderless-select .ant-select-placeholder,
+.hero-booking-form .ui-borderless-select .ant-select-placeholder,
+.hero-booking-form .ant-select:not(.ui-select-field) .ant-select-placeholder {
   color: rgba(255, 255, 255, 0.5) !important;
 }
 
