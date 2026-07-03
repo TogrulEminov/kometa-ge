@@ -150,7 +150,7 @@ export default function StickyBar({
                     >
                       {service.iconUrl && (
                         <span className="text-lg">
-                          <DynamicIcon iconName={service.iconUrl} />
+                          <DynamicIcon iconName={service?.iconUrl ?? ""} />
                         </span>
                       )}
                       <span className="flex-1 text-left">
@@ -207,9 +207,11 @@ export default function StickyBar({
                             servicesTr.slug,
                           )}`}
                         >
-                          <span className="text-base">
-                            <DynamicIcon iconName={child.iconsUrl} />
-                          </span>
+                          {child.iconsUrl && (
+                            <span className="text-base">
+                              <DynamicIcon iconName={child.iconsUrl} size={18} />
+                            </span>
+                          )}
                           <span>{servicesTr.title}</span>
                         </Link>
                       );

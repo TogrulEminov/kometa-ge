@@ -6,6 +6,8 @@ import { ServicesType } from "@/services/interface/type";
 import { getForCards } from "@/utils/getFullimageUrl";
 import { useTranslations } from "next-intl";
 import { serviceMainHref } from "@/i18n/href";
+import { DynamicIcon } from "@/utils/DynamicIcon";
+import { MdOutlineWarehouse } from "react-icons/md";
 
 export default function ServiceCard({ item }: { item: ServicesType }) {
   const imageUrl = getForCards(item?.imageUrl);
@@ -32,9 +34,13 @@ export default function ServiceCard({ item }: { item: ServicesType }) {
         <div className="absolute inset-0 bg-linear-to-t from-primary/70 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
       </div>
 
-      <div className="relative -mt-10 mx-auto size-20 rounded-lg bg-surface border-2 border-primary flex items-center justify-center transition-all duration-500 group-hover:bg-primary group-hover:scale-110 z-10">
+      <div className="relative -mt-10 mx-auto size-24 rounded-lg bg-surface border-2 border-primary flex items-center justify-center transition-all duration-500 group-hover:bg-primary group-hover:scale-110 z-10">
         <span className="text-primary transition-colors duration-500 group-hover:text-white">
-          <FaTruck size={40} />
+          {item.iconUrl ? (
+            <DynamicIcon iconName={item.iconUrl} size={48} />
+          ) : (
+            <MdOutlineWarehouse size={48} />
+          )}
         </span>
       </div>
 

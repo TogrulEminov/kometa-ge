@@ -206,9 +206,11 @@ export default function StickyBarDetail({
                             servicesTr.slug,
                           )}`}
                         >
-                          <span className="text-base">
-                            <DynamicIcon iconName={child.iconsUrl} />
-                          </span>
+                          {child.iconsUrl && (
+                            <span className="text-base">
+                              <DynamicIcon iconName={child.iconsUrl} size={18} />
+                            </span>
+                          )}
                           <span>{servicesTr.title}</span>
                         </Link>
                       );

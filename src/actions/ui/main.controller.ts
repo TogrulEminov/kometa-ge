@@ -121,6 +121,7 @@ export async function fetchServices({
           },
           select: {
             id: true,
+            iconsUrl: true,
             translations: {
               where: { locale },
               select: {
@@ -197,6 +198,7 @@ export async function fetchServicesRelated({
         },
         select: {
           id: true,
+          iconsUrl: true,
           translations: {
             where: { locale },
             select: {
@@ -787,6 +789,7 @@ export async function fetchRelatedSubServices({
         select: {
           id: true,
           imageUrl: FILE_SELECT,
+          iconUrl: true,
           translations: {
             where: { locale, slug: category },
             select: { title: true, id: true, slug: true, locale: true },
@@ -840,6 +843,7 @@ export async function fetchServicesDetailMain({
         },
         select: {
           id: true,
+          iconsUrl: true,
           imageUrl: FILE_SELECT,
           gallery: FILE_SELECT,
           translations: {
