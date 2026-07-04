@@ -1,0 +1,145 @@
+{
+  "notfound": {
+    "title": "გვერდი, რომელსაც ეძებთ, ვერ მოიძებნა",
+    "description": "გვერდი, რომელსაც ეძებთ, არ არსებობს ან წაშლილია. გთხოვთ, შეამოწმოთ URL მისამართი და სცადოთ ხელახლა, ან დაბრუნდეთ მთავარ გვერდზე.",
+    "button": "დაბრუნება"
+  },
+  "noResult": {
+    "title": "შედეგები ვერ მოიძებნა",
+    "description": "თქვენი ძიების შესაბამისი ინფორმაცია ვერ მოიძებნა. გთხოვთ, სცადოთ სხვა საძიებო სიტყვა."
+  },
+  "noResultComponent": {
+    "title": "ინფორმაცია მიუწვდომელია",
+    "description": "ამჟამად აქ ინფორმაცია არ არის ხელმისაწვდომი. ის მალე განახლდება!",
+    "btn": "მთავარ გვერდზე დაბრუნება"
+  },
+  "atoms": {
+    "buttons": {
+      "contact_us": "დაგვიკავშირდით",
+      "read_more": "ვრცლად",
+      "get_started": "დაწყება",
+      "watch_on_youtube": "ნახვა YouTube-ზე",
+      "get_a_quote": "ფასის მოთხოვნა"
+    },
+    "components": {
+      "tracking": {
+        "placeholder": "შეიყვანეთ თვალთვალის ID",
+        "button": "მოძებნა"
+      },
+      "contactInfo": {
+        "phone": "ტელეფონი",
+        "support": "მხარდაჭერა",
+        "email": "ელფოსტა",
+        "address": "მისამართი",
+        "whatsapp": "მოგვწერეთ WhatsApp-ზე",
+        "social_networks": "სოციალური ქსელები",
+        "contact_us": "დაგვიკავშირდით",
+        "contact_us_description": "ჩვენ აქ ვართ დასახმარებლად. დაუკავშირდით ჩვენს გუნდს.",
+        "send_a_message": "შეტყობინების გაგზავნა",
+        "send_description": "შეავსეთ ფორმა და მალე დაგიკავშირდებით.",
+        "company_name": "Kometa GE",
+        "head_office": "მთავარი ოფისი",
+        "follow_us_on_social_media": "გამოგვყევით სოციალურ ქსელებში",
+        "get_directions": "მარშრუტის ნახვა",
+        "form": {
+          "first_name": "სახელი",
+          "last_name": "გვარი",
+          "email": "ელფოსტა",
+          "phone": "ტელეფონი",
+          "message": "შეტყობინება",
+          "submit": "გაგზავნა",
+          "success_title": "შეტყობინება გაიგზავნა!",
+          "success_description": "მადლობა დაკავშირებისთვის. ჩვენი გუნდი მალე დაგიკავშირდებათ.",
+          "success_reset": "კიდევ ერთი შეტყობინება",
+          "error": "შეტყობინების გაგზავნა ვერ მოხერხდა. სცადეთ ხელახლა."
+        }
+      },
+      "callActionHero": {
+        "title": "გადაზიდვის დაჯავშნა",
+        "description": "დაგვიტოვეთ თქვენი საკონტაქტო ინფორმაცია.",
+        "form": {
+          "pickup_location": "ჩატვირთვის ადგილი",
+          "delivery_location": "მიწოდების ადგილი",
+          "email_address": "ელფოსტის მისამართი",
+          "telephone": "ტელეფონი",
+          "message": "შეტყობინება",
+          "submit": "გაგზავნა",
+          "success_title": "მოთხოვნა მიღებულია!",
+          "success_description": "თქვენი გადაზიდვის მოთხოვნა მიღებულია. მალე დაგიკავშირდებით.",
+          "success_reset": "ახალი მოთხოვნა",
+          "error": "მოთხოვნის გაგზავნა ვერ მოხერხდა. სცადეთ ხელახლა."
+        }
+      },
+      "header": {
+        "button": "ფასის მოთხოვნა",
+        "pages": {
+          "about": "ჩვენ შესახებ",
+          "certificates": "სერტიფიკატები",
+          "services": "სერვისები",
+          "directions": "მიმართულებები",
+          "media": "მედია",
+          "photoGallery": "ფოტო გალერეა",
+          "videoGallery": "ვიდეო გალერეა",
+          "contact": "კონტაქტი"
+        }
+      },
+      "footer": {
+        "main_links_title": "მთავარი ბმულები",
+        "services_title": "სერვისები",
+        "directions_title": "მიმართულებები",
+        "contact_title": "კონტაქტი",
+        "site_by": "ვებგვერდი შექმნილია",
+        "copy_right": "© {year} Kometa GE. ყველა უფლება დაცულია",
+        "main_links": {
+          "about": "ჩვენ შესახებ",
+          "services": "სერვისები",
+          "directions": "მიმართულებები",
+          "photo_gallery": "ფოტო გალერეა",
+          "video_gallery": "ვიდეო გალერეა",
+          "contact": "კონტაქტი",
+          "privacy_policy": "კონფიდენციალურობის პოლიტიკა",
+          "terms_of_service": "მომსახურების პირობები"
+        }
+      },
+      "fag": {
+        "contact_us": "დაგვიკავშირდით",
+        "still_have_questions": "კიდევ გაქვთ კითხვები?"
+      },
+      "cta": {
+        "request_a_callback": "უკან დარეკვის მოთხოვნა",
+        "leave_your_phone_number": "დატოვეთ თქვენი ტელეფონის ნომერი და ჩვენი გუნდი 24 საათის განმავლობაში დაგიკავშირდებათ. სწრაფი, სანდო და პროფესიონალური მომსახურება.",
+        "send_request": "მოთხოვნის გაგზავნა",
+        "address": "მისამართი",
+        "email": "ელფოსტა",
+        "phone": "ტელეფონი",
+        "whatsapp": "WhatsApp"
+      },
+      "branchModal": {
+        "no_offices": "ოფისები არ არის",
+        "coming_soon": "მალე გაიხსნება",
+        "warehouse": "საწყობი",
+        "office": "ოფისი",
+        "active": "აქტიური",
+        "planned": "დაგეგმილი",
+        "one_location": "1 ლოკაცია",
+        "locations_count": "{count} ლოკაცია",
+        "office_count": "{count} ოფისი",
+        "warehouse_count": "{count} საწყობი",
+        "no_locations": "ლოკაციები არ არის",
+        "coming_soon_description": "ეს ფილიალი მალე გაიხსნება"
+      },
+      "stickySidebar": {
+        "table_of_contents": "სარჩევი",
+        "services_titles": "ყველა სერვისი",
+        "social_networks": "გამოგვყევით სოციალურ ქსელებში",
+        "directions_titles": "ყველა მიმართულება",
+        "contact": {
+          "title": "გაქვთ კითხვა?",
+          "name": "დაგვიკავშირდით",
+          "description": "თუ გაქვთ შეკითხვები ჩვენს სერვისებთან დაკავშირებით, დაგვიკავშირდით. ჩვენ მაქსიმალურად სწრაფად გიპასუხებთ.",
+          "button": "დაგვიკავშირდით"
+        }
+      }
+    }
+  }
+}

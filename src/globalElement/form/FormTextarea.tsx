@@ -7,6 +7,7 @@ interface BaseFormInputProps extends TextAreaProps {
   wrapperClassName?: string;
   fieldName: string;
   label?: string | undefined;
+  labelClassName?: string;
 }
 
 export type FormInputProps = BaseFormInputProps;
@@ -14,13 +15,19 @@ const { TextArea } = Input;
 
 export default function FormTextarea({
   label,
+  labelClassName,
   fieldName,
   className,
   wrapperClassName,
   ...rest
 }: FormInputProps) {
   return (
-    <FieldWrapper fieldName={fieldName} label={label} className={wrapperClassName}>
+    <FieldWrapper
+      fieldName={fieldName}
+      label={label}
+      labelClassName={labelClassName}
+      className={wrapperClassName}
+    >
       {(field, fieldState) => (
         <TextArea
           {...field}

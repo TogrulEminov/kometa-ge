@@ -22,6 +22,7 @@ type RenderFieldProps<
 interface FieldWrapperProps<T extends FieldValues, K extends Path<T>> {
   fieldName: K;
   label?: string;
+  labelClassName?: string;
   className?: string;
   children: (
     fieldProps: RenderFieldProps<T, K>,
@@ -32,6 +33,7 @@ interface FieldWrapperProps<T extends FieldValues, K extends Path<T>> {
 export function FieldWrapper<T extends FieldValues, K extends Path<T>>({
   fieldName,
   label,
+  labelClassName,
   children,
   className,
 }: FieldWrapperProps<T, K>) {
@@ -45,7 +47,13 @@ export function FieldWrapper<T extends FieldValues, K extends Path<T>>({
   return (
     <div className={cn(className, "flex flex-col gap-1")}>
       {label && (
-        <label htmlFor={id} className="text-sm font-medium flex items-center">
+        <label
+          htmlFor={id}
+          className={cn(
+            "flex items-center text-sm font-medium text-slate-700 dark-site:text-foreground",
+            labelClassName,
+          )}
+        >
           {label}
           {isRequired && (
             <span className="text-red-500 ml-1" title="Mütləq doldurulmalıdır">

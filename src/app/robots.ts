@@ -2,7 +2,7 @@ import { MetadataRoute } from "next";
 
 export default function robots(): MetadataRoute.Robots {
   const websiteUrl = (
-    process.env.NEXT_PUBLIC_BASE_URL || "https://kometa.ge"
+    process.env.NEXT_PUBLIC_BASE_URL || "https://kometa-ge.vercel.app"
   ).replace(/\/$/, "");
 
   // Bütün botlar üçün ortaq qadağalar
@@ -30,11 +30,6 @@ export default function robots(): MetadataRoute.Robots {
         disallow: "/",
       },
     ],
-    sitemap: [
-      `${websiteUrl}/sitemap.xml`,
-      `${websiteUrl}/sitemap-az.xml`,
-      `${websiteUrl}/sitemap-en.xml`,
-      `${websiteUrl}/sitemap-ru.xml`,
-    ],
+    sitemap: `${websiteUrl}/sitemap.xml`,
   };
 }

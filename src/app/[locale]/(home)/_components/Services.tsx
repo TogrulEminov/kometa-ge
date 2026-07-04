@@ -1,25 +1,34 @@
+import {
+  fetchSectionByKeys,
+  fetchServices,
+} from "@/actions/ui/main.controller";
 import SectionContentComponent from "@/components/SectionContent";
 import ServiceCard from "@/globalElement/cards/ServicesCard";
-import MySwiper from "@/lib/swiper";
-import React from "react";
+import { CustomLocales, ServicesType } from "@/services/interface/type";
 
-export default function HomeServicesSection() {
+export default async function HomeServicesSection({
+  locale,
+}: {
+  locale: CustomLocales;
+}) {
+  const services = await fetchServices({ pageNumber: 1, locale });
+  const sectionInfo = await fetchSectionByKeys({ key: "services", locale });
+  const sectionTr = sectionInfo?.translations?.[0];
+  if (!services?.data?.length || !sectionInfo?.translations?.length) return null;
   return (
     <section className="py-10 lg:py-20">
       <div className="container">
         <SectionContentComponent
-          title="Our Services "
+          title={sectionTr?.title ?? ""}
           type="vertical"
           rootClass="[&_article]:max-w-4xl!"
-          subTitle={"Transportation services"}
-          description={
-            "We handle the international transportation of heavy machinery and various goods with our own vehicles and professional team. Every transportation process, whether by road, rail, or other logistics solutions, is executed with high precision and security."
-          }
+          subTitle={sectionTr?.subTitle}
+          description={sectionTr?.description ?? ""}
         />
 
         <div className="grid lg:grid-cols-3 gap-5">
-          {Array.from({ length: 3 }).map((item, i) => {
-            return <ServiceCard key={i} />;
+          {services?.data?.map((item, i) => {
+            return <ServiceCard key={i}  item={item as ServicesType}/>;
           })}
         </div>
       </div>

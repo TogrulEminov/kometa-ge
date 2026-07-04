@@ -49,3 +49,16 @@ export function getFreightRouteByIso(
 
   return { from, to };
 }
+
+export function getGreatCircleRouteLatLngs(
+  fromCoords: [number, number],
+  toCoords: [number, number],
+  segments = 72,
+): [number, number][] {
+  const interpolate = d3.geoInterpolate(fromCoords, toCoords);
+
+  return Array.from({ length: segments + 1 }, (_, index) => {
+    const [lng, lat] = interpolate(index / segments);
+    return [lat, lng] as [number, number];
+  });
+}

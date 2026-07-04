@@ -1,60 +1,65 @@
-"use client";
-
-import { Button } from "antd";
-import {
-  SendOutlined,
-  MailOutlined,
-  EnvironmentOutlined,
-  ClockCircleOutlined,
-} from "@ant-design/icons";
+ 
 import { FaPhoneAlt } from "react-icons/fa";
 import SectionContentComponent from "@/components/SectionContent";
+import { CustomLocales } from "@/services/interface/type";
+import {
+  fetchContactInformation,
+  fetchSectionByKeys,
+} from "@/actions/ui/main.controller";
+import { clearPhoneRegex } from "@/lib/domburify";
+import { getTranslations } from "next-intl/server";
+import CtaButton from "./atoms/CtaButton";
+import { FaEnvelope, FaMap, FaWhatsapp } from "react-icons/fa6";
 
-export default function CTASection() {
+export default async function CTASection({
+  locale,
+}: {
+  locale: CustomLocales;
+}) {
+  const sectionContent = await fetchSectionByKeys({
+    key: "contact",
+    locale: locale as CustomLocales,
+  });
+  const t = await getTranslations("atoms.components.cta");
+  const contactInfoData = await fetchContactInformation(locale);
+  const contactInfoTr = contactInfoData?.translations?.[0];
+  const sectionContentTr = sectionContent?.translations?.[0];
+  if (!sectionContentTr || !contactInfoTr) return null;
   const contactInfo = [
     {
       icon: <FaPhoneAlt />,
-      label: "Phone",
-      value: "+994 12 345 67 89",
-      href: "tel:+994123456789",
+      label: t("phone"),
+      value: contactInfoData?.phone ?? "",
+      href: `tel:${clearPhoneRegex(contactInfoData?.phone ?? "")}`,
     },
     {
-      icon: <MailOutlined />,
-      label: "Email",
-      value: "info@kometa-ge.az",
-      href: "mailto:info@kometa-ge.az",
+      icon: <FaEnvelope />,
+      label: t("email"),
+      value: contactInfoData?.email ?? "",
+      href: `mailto:${contactInfoData?.email ?? ""}`,
     },
     {
-      icon: <EnvironmentOutlined />,
-      label: "Address",
-      value: "Heydar Aliyev Ave., Baku",
-      href: "#",
+      icon: <FaMap />,
+      label: t("address"),
+      value: contactInfoTr?.adress ?? "",
+      href: contactInfoData?.adressLink ?? "",
     },
     {
-      icon: <ClockCircleOutlined />,
-      label: "Working Hours",
-      value: "Mon - Fri 09:00 - 18:00",
-      href: "#",
+      icon: <FaWhatsapp />,
+      label: t("whatsapp"),
+      value: contactInfoData?.whatsapp ?? "",
+      href: `https://wa.me/${clearPhoneRegex(contactInfoData?.whatsapp ?? "")}`,
     },
-  ];
-
-  const benefits = [
-    "Free consultation",
-    "24/7 support service",
-    "Real-time tracking",
-    "Affordable pricing offers",
   ];
 
   return (
-    <section className="relative w-full overflow-hidden bg-white py-10 lg:py-20">
+    <section className="relative w-full overflow-hidden bg-background py-10 lg:py-20">
       <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <SectionContentComponent
-          subTitle={"Contact us"}
-          title="Still Have Questions?"
+          subTitle={sectionContentTr?.subTitle ?? ""}
+          title={sectionContentTr?.title ?? ""}
           type="vertical"
-          description={
-            "Our team is ready to answer all your questions about logistics and freight services."
-          }
+          description={sectionContentTr?.description ?? ""}
         />
 
         <div className="grid items-stretch gap-6 lg:grid-cols-2 lg:gap-8">
@@ -64,17 +69,17 @@ export default function CTASection() {
               <a
                 key={index}
                 href={item.href}
-                className="group flex flex-col items-start gap-4 rounded-2xl border border-[#1c1e29]/[0.06] bg-[#f2f2f2] p-6 transition-all duration-300 hover:border-[#b11226]/10 hover:bg-white hover:shadow-xl hover:shadow-[#b11226]/[0.04]"
+                className="group flex flex-col items-start gap-4 rounded-2xl border border-white/10 bg-surface p-6 transition-all duration-300 hover:border-primary/30 hover:bg-surface-elevated hover:shadow-xl hover:shadow-primary/10"
               >
                 <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#b11226]/[0.08] text-lg text-[#b11226] transition-all duration-300 group-hover:bg-[#b11226] group-hover:text-white group-hover:scale-105">
                   {item.icon}
                 </div>
 
                 <div>
-                  <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-[#1c1e29]/30">
+                  <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-muted">
                     {item.label}
                   </p>
-                  <p className="mt-1 text-sm font-bold text-[#1c1e29] leading-snug">
+                  <p className="mt-1 text-sm font-bold text-foreground leading-snug">
                     {item.value}
                   </p>
                 </div>
@@ -96,23 +101,15 @@ export default function CTASection() {
               </div>
 
               <h3 className="mt-7 text-2xl font-black text-white leading-tight">
-                Request a Callback
+                {t("request_a_callback")}
               </h3>
 
               <p className="mt-3 text-sm leading-[1.7] text-white/40">
-                Leave your phone number and our team will contact you within 24
-                hours. Fast, reliable and professional support guaranteed.
+                {t("leave_your_phone_number")}
               </p>
 
               {/* CTA Button */}
-              <Button
-                type="primary"
-                size="large"
-                className="!mt-10 !h-14 !w-full !rounded-xl !bg-[#b11226] !text-sm !font-bold uppercase tracking-[0.08em] !text-white hover:!bg-[#8f0e1f] hover:!shadow-xl hover:!shadow-[#b11226]/20 transition-all duration-300"
-              >
-                <SendOutlined className="mr-2" />
-                Send Request
-              </Button>
+              <CtaButton />
             </div>
           </div>
         </div>

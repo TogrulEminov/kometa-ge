@@ -1,0 +1,70 @@
+"use client";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import {
+  imageSchema,
+  ImageSchemaInput,
+} from "@/app/(dashboard)/_type/global.type";
+import { about_section_list } from "@/app/(dashboard)/_type/query-key";
+import { useAction } from "@/hooks/useServerActions";
+import OneImageView from "@/app/(dashboard)/_components/imageView/single";
+import FieldBlock from "@/app/(dashboard)/_components/contentBlock";
+import SingleUploadImage from "@/app/(dashboard)/_components/upload/single";
+import NavigateBtn from "@/app/(dashboard)/_components/navigateBtn";
+import SubmitAdminButton from "@/app/(dashboard)/_components/submitBtn";
+import FormWrapper from "@/globalElement/form/FormWrapper";
+import { AboutHomeType,  } from "@/services/interface/type";
+import { uptadeAboutSectionInfoImage } from "@/actions/client/aboutSection/aboutSection.controller";
+
+interface Props {
+  existingData: AboutHomeType | undefined;
+  refetch: () => void;
+}
+export default function UpdateImageComponent({ existingData, refetch }: Props) {
+  const generalForm = useForm<ImageSchemaInput>({
+    resolver: zodResolver(imageSchema),
+    defaultValues: {
+      imageId: undefined,
+    },
+  });
+  const { execute, isExecuting } = useAction(uptadeAboutSectionInfoImage, {
+    queryKey: about_section_list,
+    onSuccess: async () => {
+      await refetch();
+      generalForm.reset({ imageId: undefined });
+    },
+  });
+  const onSubmit = async (data: ImageSchemaInput) => {
+    await execute(data);
+  };
+  return (
+    <>
+      <section className={"flex flex-col gap-4 mb-4.5"}>
+        <FormWrapper
+          methods={generalForm}
+          schema={imageSchema}
+          onSubmit={onSubmit}
+          className={"grid grid-cols-1 gap-2"}
+        >
+          <OneImageView
+            selectedImage={existingData?.imageUrl || null}
+            onDeleteSuccess={refetch}
+          />
+
+          <FieldBlock>
+            <SingleUploadImage fieldName="imageId" onRemoveSuccess={refetch} />
+          </FieldBlock>
+
+          <div className={"grid grid-cols-2 gap-5 max-w-lg"}>
+            <NavigateBtn />
+            <SubmitAdminButton
+              title={"true"}
+              isLoading={isExecuting}
+              disabled={!generalForm.formState.isDirty || isExecuting}
+            />
+          </div>
+        </FormWrapper>
+      </section>
+    </>
+  );
+}

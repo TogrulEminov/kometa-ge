@@ -4,6 +4,7 @@ import { getMessages, setRequestLocale } from "next-intl/server";
 import { Inter, DM_Sans } from "next/font/google";
 import MainLayoutProvider from "../_provider/MainLayoutProvider";
 import { routing } from "@/i18n/routing";
+import { CustomLocales } from "@/services/interface/type";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -35,13 +36,20 @@ export default async function LocalLayout({
   const messages = await getMessages();
 
   return (
-    <html lang={locale} className="scroll-smooth" suppressHydrationWarning>
+    <html
+      lang={locale}
+      className="scroll-smooth"
+      data-scroll-behavior="smooth"
+      suppressHydrationWarning
+    >
       <body
-        className={`${inter.variable} antialiased`}
+        className={`${inter.variable} dark-site bg-background text-foreground antialiased`}
         suppressHydrationWarning
       >
         <NextIntlClientProvider locale={locale} messages={messages}>
-          <MainLayoutProvider>{children}</MainLayoutProvider>
+          <MainLayoutProvider locale={locale as CustomLocales}>
+            {children}
+          </MainLayoutProvider>
         </NextIntlClientProvider>
       </body>
     </html>

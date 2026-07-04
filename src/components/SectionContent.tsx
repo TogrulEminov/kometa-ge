@@ -2,7 +2,7 @@ import { sanitizeHtml } from "@/lib/domburify";
 import { cn } from "@/utils/cn";
 import { highlightActiveWord } from "@/utils/highlight";
 import { JSX } from "react";
-type HeadingTag = "strong" | "h2" | "h3" | "h4" | "h5" | "h6";
+type HeadingTag = "strong" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
 
 interface Props {
   title: string;
@@ -30,7 +30,7 @@ export default function SectionContentComponent({
   const Tag = heading as keyof JSX.IntrinsicElements;
 
   const headingClass = cn(
-    "font-bold text-secondary block leading-tight",
+    "font-bold text-foreground block leading-tight",
     heading === "strong" && "block",
     "text-2xl xl:text-4xl",
   );
@@ -71,7 +71,7 @@ export default function SectionContentComponent({
       </div>
       {description && (
         <article
-          className="text-gray-500 max-w-2xl text-base xl:text-lg leading-relaxed"
+          className="text-muted max-w-2xl text-base xl:text-lg leading-relaxed [&_a]:text-primary"
           dangerouslySetInnerHTML={{ __html: sanitizeHtml(description) }}
         />
       )}

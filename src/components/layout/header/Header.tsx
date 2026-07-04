@@ -1,13 +1,30 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { useState } from "react";
 import { useMotionValueEvent, useScroll } from "motion/react";
 import { cn } from "@/utils/cn";
 import HeaderTop from "./HeaderTop";
 import HeaderBottom from "./HeaderBottom";
-import ShipmentModal from "@/app/[locale]/(home)/_components/atoms/FormModal";
+import Sidebar from "@/components/layout/sidebar";
+import {
+  DirectionsType,
+  IContactInformation,
+  ServicesType,
+  Social,
+} from "@/services/interface/type";
 
-export default function Header() {
+export default function Header({
+  contactInfo,
+  socials,
+  directions,
+  services,
+}: {
+  contactInfo: IContactInformation;
+  socials: Social[];
+  directions: DirectionsType[];
+  services: ServicesType[];
+}) {
   const { scrollY } = useScroll();
   const [isSticky, setIsSticky] = useState(false);
   useMotionValueEvent(scrollY, "change", (current) => {
@@ -18,17 +35,24 @@ export default function Header() {
       setIsSticky(false);
     }
   });
-  const [isOpen, setIsOpen] = useState(false);
 
   return (
     <>
       <header
-        className={cn("top-0 w-full z-[1100]", isSticky ? "fixed" : "absolute")}
+        className={cn("top-0 w-full z-1100", isSticky ? "fixed" : "absolute")}
       >
-        <HeaderTop isSticky={isSticky} />
-        <HeaderBottom isSticky={isSticky} setIsOpen={setIsOpen} />
+        <HeaderTop
+          isSticky={isSticky}
+          contactInfo={contactInfo}
+          socials={socials}
+        />
+        <HeaderBottom
+          isSticky={isSticky}
+          directions={directions}
+          services={services}
+        />
       </header>
-      <ShipmentModal open={isOpen} onClose={() => setIsOpen(false)} />
+      <Sidebar directions={directions} services={services} />
     </>
   );
 }

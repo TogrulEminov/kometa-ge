@@ -1,0 +1,59 @@
+{
+  "categories": [
+    {
+      "value": "home",
+      "label": "Home"
+    },
+    {
+      "value": "directions",
+      "label": "Directions"
+    },
+    {
+      "value": "services",
+      "label": "Services"
+    },
+    {
+      "value": "about",
+      "label": "About Us"
+    },
+    {
+      "value": "certificates",
+      "label": "Certificates"
+    },
+    {
+      "value": "videoGallery",
+      "label": "Video Gallery"
+    },
+    {
+      "value": "photoGallery",
+      "label": "Photo Gallery"
+    },
+    {
+      "value": "contact",
+      "label": "Contact"
+    }
+  ],
+  "sectionsContent": [
+    {
+      "value": "services",
+      "label": "Services Section"
+    },
+    {
+      "value": "directions",
+      "label": "Directions Section"
+    },
+    {
+      "value": "media",
+      "label": "Media Section"
+    },
+
+    {
+      "value": "contact",
+      "label": "Contact Section"
+    },
+    {
+      "value": "faq",
+      "label": "FAQ Section"
+    }
+  ]
+}

@@ -1,0 +1,226 @@
+.tiptap.ProseMirror {
+  background: #fff;
+  min-height: 100px;
+  color: #374151;
+  font-size: 17px;
+  line-height: 1.75;
+  padding: 1em;
+}
+
+.tiptap.ProseMirror.ProseMirror-focused {
+  border: unset;
+  outline: unset;
+}
+
+.custom-bullet-list {
+  padding-left: 25px;
+  list-style: disc !important;
+}
+
+.custom-ordered-list {
+  padding-left: 25px;
+  list-style: decimal !important;
+}
+
+h1.custom-heading {
+  font-weight: bolder;
+}
+
+h2.custom-heading {
+  font-weight: bold;
+}
+
+h3.custom-heading {
+  font-weight: bold;
+}
+
+.tiptap {
+  :first-child {
+    margin-top: 0;
+  }
+
+  hr {
+    border: none;
+    border-top: 1px solid #e5e7eb;
+    cursor: pointer;
+    margin: 2rem 0;
+
+    &.ProseMirror-selectednode {
+      border-top: 1px solid #e5e7eb;
+    }
+  }
+
+  blockquote {
+    border-left: 3px solid #e5e7eb;
+    background: #f8f8f8;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    margin: 1.5rem 0;
+    padding-left: 1rem;
+  }
+
+  a {
+    color: blue;
+    text-decoration: underline;
+    cursor: pointer;
+  }
+}
+
+/* Editorun daxili sahəsi */
+.tiptap {
+  outline: none !important;
+  min-height: 300px;
+}
+
+/* Şəkil stilləri */
+.tiptap img {
+  height: auto;
+  display: block;
+  margin: 1rem 0;
+  border-radius: 0.5rem;
+}
+
+.tiptap img.w-full {
+  width: 100%;
+}
+.tiptap img.w-\[50\%\] {
+  width: 50%;
+}
+.tiptap img.w-\[25\%\] {
+  width: 25%;
+}
+
+/* Başlıqlar və Paraqraflar */
+.tiptap h1,
+.tiptap h2,
+.tiptap h3 {
+  font-weight: 700;
+  line-height: 1.2;
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.tiptap p {
+  margin-bottom: 0.75rem;
+}
+
+/* Blockquote */
+.tiptap blockquote {
+  border-left: 4px solid #00a8e8; /* Sizin primary rənginiz */
+  padding-left: 1rem;
+  font-style: italic;
+  color: #64748b;
+  margin: 1.5rem 0;
+}
+.tiptap blockquote p {
+  margin: 0;
+}
+
+/* Siyahılar */
+.tiptap ul.custom-bullet-list {
+  list-style-type: disc;
+  padding-left: 1.5rem;
+}
+
+.tiptap ol.custom-ordered-list {
+  list-style-type: decimal;
+  padding-left: 1.5rem;
+}
+
+/* Link */
+.tiptap a {
+  color: #00a8e8;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+/* table */
+/* Tiptap Table Base Styles */
+.tiptap table {
+  border-collapse: collapse;
+  table-layout: fixed;
+  width: 100%;
+  margin: 1.5rem 0;
+  overflow: hidden;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  background-color: white;
+}
+
+.tiptap table td,
+.tiptap table th {
+  min-width: 1em;
+  border: 1px solid #e2e8f0;
+  padding: 12px 15px;
+  vertical-align: top;
+  box-sizing: border-box;
+  position: relative;
+  transition: background-color 0.2s;
+}
+
+/* Başlıq xanaları */
+.tiptap table th {
+  font-weight: 600;
+  background-color: #f8fafc; /* Slate-50 */
+  color: #334155; /* Slate-700 */
+  text-align: left;
+}
+
+/* Xanaların daxilindəki boşluqlar */
+.tiptap table p {
+  margin: 0 !important;
+  line-height: 1.5;
+}
+
+/* Seçilmiş xanaların rəngi (Multi-selection) */
+.tiptap table .selectedCell {
+  background-color: rgba(14, 165, 233, 0.08);
+}
+
+.tiptap table .selectedCell:after {
+  z-index: 2;
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background: rgba(14, 165, 233, 0.05);
+  pointer-events: none;
+}
+
+/* Ölçü dəyişdirmə (Resize) tutacağı */
+.tiptap table .column-resize-handle {
+  position: absolute;
+  right: -2px;
+  top: 0;
+  bottom: -2px;
+  width: 4px;
+  background-color: #0ea5e9; /* Sky-500 */
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+/* Cədvəlin üzərinə gələndə resize tutacağı görünsün */
+.tiptap table:hover .column-resize-handle {
+  opacity: 1;
+}
+
+/* Siyahılar cədvəl daxilindədirsə marginləri azaldaq */
+.tiptap table ul,
+.tiptap table ol {
+  margin: 0;
+  padding-left: 1.2rem;
+}
+
+/* Responsive konteyner üçün */
+.tiptap .tableWrapper {
+  overflow-x: auto;
+  margin: 1rem 0;
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e1 transparent;
+}
+.tiptap p, .tiptap h1, .tiptap h2, .tiptap h3 {
+  transition: text-align 0.2s ease;
+}

@@ -5,15 +5,16 @@ import redirectData from "@/json/redirect.json";
 
 const isDev = process.env.NODE_ENV === "development";
 // ✅ Əsas domain — yalnız bir yerdə dəyiş
-const MAIN_DOMAIN = "kometa.ge";
+const MAIN_DOMAIN = "kometa-ge.vercel.app";
 
 const nextConfig: NextConfig = {
   output: "standalone",
+  serverExternalPackages: ["sharp", "nodemailer", "ejs"],
   reactStrictMode: false,
   poweredByHeader: true,
   trailingSlash: false,
   compress: true,
-  // cacheComponents: true,
+  cacheComponents: true,
   productionBrowserSourceMaps: false,
 
   generateBuildId: async () => {
@@ -22,14 +23,14 @@ const nextConfig: NextConfig = {
 
   images: {
     remotePatterns: [
-      { protocol: "https", hostname: "**.kometa.ge" },
-      { protocol: "https", hostname: "**.kometa.ge" },
-      { protocol: "https", hostname: "kometa.ge" },
+      { protocol: "https", hostname: "**.kometa-ge.vercel.app" },
+      { protocol: "https", hostname: "**.kometa-ge.vercel.app" },
+      { protocol: "https", hostname: "kometa-ge.vercel.app" },
       { protocol: "https", hostname: "**.r2.dev" },
       { protocol: "https", hostname: "blobs.**" },
       { protocol: "https", hostname: "res.cloudinary.com" },
       { protocol: "https", hostname: "images.unsplash.com" },
-      { protocol: "https", hostname: "i.pinimg.com" },
+      { protocol: "https", hostname: "i.pinimg.com" }, 
     ],
     formats: ["image/avif", "image/webp"],
     deviceSizes: [640, 768, 1024, 1280, 1920],
@@ -47,7 +48,7 @@ const nextConfig: NextConfig = {
 
   experimental: {
     turbopackMemoryLimit: isDev ? 2048 : undefined,
-    optimizeCss: true,
+    // optimizeCss: true,
     optimizePackageImports: [
       "lucide-react",
       "recharts",
@@ -71,6 +72,8 @@ const nextConfig: NextConfig = {
       dynamic: 60,
       static: 180,
     },
+    workerThreads: false,
+    cpus: 1,
   },
 
   webpack: (config, { isServer }) => {
@@ -93,9 +96,6 @@ const nextConfig: NextConfig = {
         "https://www.googletagmanager.com",
         "https://static.cloudflareinsights.com",
         "https://connect.facebook.net",
-        "https://api-maps.yandex.ru",
-        "https://*.maps.yandex.net",
-        "https://yastatic.net",
         "https://www.clarity.ms",
         "https://*.clarity.ms",
         "https://challenges.cloudflare.com",
@@ -140,9 +140,15 @@ const nextConfig: NextConfig = {
       // Worker
       "worker-src 'self' blob:",
 
-      // Connect — ✅ köhnə domain silindi
+      // Connect — same-origin API + analytics/third-party
       [
         "connect-src 'self'",
+        "http://localhost:*",
+        "http://127.0.0.1:*",
+        "ws://localhost:*",
+        "ws://127.0.0.1:*",
+        "wss://localhost:*",
+        "wss://127.0.0.1:*",
         "https://www.google-analytics.com",
         "https://*.google-analytics.com",
         "https://*.analytics.google.com",
@@ -159,36 +165,46 @@ const nextConfig: NextConfig = {
       ].join(" "),
     ].join("; ");
 
+    const baseSecurityHeaders = [
+      { key: "X-DNS-Prefetch-Control", value: "on" },
+      { key: "X-Frame-Options", value: "SAMEORIGIN" },
+      { key: "X-Content-Type-Options", value: "nosniff" },
+      { key: "X-XSS-Protection", value: "1; mode=block" },
+      { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
+      {
+        key: "Strict-Transport-Security",
+        value: "max-age=63072000; includeSubDomains; preload",
+      },
+      {
+        key: "Permissions-Policy",
+        value: "camera=(), microphone=(), geolocation=(self)",
+      },
+      {
+        key: "Link",
+        value: `<https://${MAIN_DOMAIN}>; rel=preconnect`,
+      },
+    ];
+
     return [
       {
-        source: "/:path*",
+        source: "/sitemap.xml",
+        headers: baseSecurityHeaders,
+      },
+      {
+        source: "/robots.txt",
+        headers: baseSecurityHeaders,
+      },
+      {
+        source: "/llms.txt",
+        headers: baseSecurityHeaders,
+      },
+      {
+        source: "/((?!sitemap\\.xml|robots\\.txt|llms\\.txt).*)",
         headers: [
-          { key: "X-DNS-Prefetch-Control", value: "on" },
-          { key: "X-Frame-Options", value: "SAMEORIGIN" },
-          { key: "X-Content-Type-Options", value: "nosniff" },
-
-          // ✅ X-XSS-Protection köhnəlmiş headerdır, modern browserlər ignore edir
-          // Saxlanılır backward compat üçün
-          { key: "X-XSS-Protection", value: "1; mode=block" },
-
-          { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
-          {
-            key: "Strict-Transport-Security",
-            value: "max-age=63072000; includeSubDomains; preload",
-          },
-          {
-            key: "Permissions-Policy",
-            value: "camera=(), microphone=(), geolocation=(self)",
-          },
+          ...baseSecurityHeaders,
           {
             key: "Content-Security-Policy",
             value: csp,
-          },
-
-          // ✅ DƏYİŞDİ: Link header düzgün format
-          {
-            key: "Link",
-            value: `<https://${MAIN_DOMAIN}>; rel=preconnect`,
           },
         ],
       },
@@ -196,28 +212,6 @@ const nextConfig: NextConfig = {
       // Fontlar üçün cache
       {
         source: "/:path*\\.(woff|woff2|ttf)",
-        headers: [
-          {
-            key: "Cache-Control",
-            value: "public, max-age=31536000, immutable",
-          },
-        ],
-      },
-
-      // Static assets üçün cache
-      {
-        source: "/static/:path*",
-        headers: [
-          {
-            key: "Cache-Control",
-            value: "public, max-age=31536000, immutable",
-          },
-        ],
-      },
-
-      // ✅ YENİ: Next.js _next/static üçün cache
-      {
-        source: "/_next/static/:path*",
         headers: [
           {
             key: "Cache-Control",

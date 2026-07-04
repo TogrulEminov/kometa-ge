@@ -1,19 +1,107 @@
 import InnerBanner from "@/components/InnerBanner";
 import ServicesCategoryDetail from "../_components/detail/ServicesCategoryDetail";
+import {
+  fetchCategoriesByKey,
+  fetchContactInformation,
+  fetchServices,
+  fetchServicesDetailMain,
+  fetchServicesRelated,
+  fetchSocials,
+} from "@/actions/ui/main.controller";
+import {
+  CategoryKey,
+  CustomLocales,
+  IContactInformation,
+  ServicesType,
+  Social,
+} from "@/services/interface/type";
+import { notFound } from "next/navigation";
+import { Suspense } from "react";
+import { Metadata } from "next";
+import { generatePageMetadata } from "@/utils/metadata-generator";
 
-export default function ServicesCategory() {
+interface PageProps {
+  params: Promise<{ locale: string; category: string }>;
+}
+
+export async function generateMetadata({
+  params,
+}: PageProps): Promise<Metadata> {
+  const { locale, category } = await params;
+
+  return generatePageMetadata({
+    locale,
+    customPath: "services",
+    dataType: "serviceMain",
+    category,
+    detail: true,
+  });
+}
+
+export default async function ServicesCategory({ params }: PageProps) {
+  const { category, locale } = await params;
+  const categoryData = await fetchCategoriesByKey({
+    locale: locale as CustomLocales,
+    key: CategoryKey.services,
+  });
+  const categoryTr = categoryData?.translations?.[0];
+
+  const servicesCategoryData = await fetchServicesDetailMain({
+    locale: locale as CustomLocales,
+    slug: category,
+  });
+
+  const servicesTr = servicesCategoryData?.translations?.[0];
+
+  if (!servicesTr) return notFound();
   return (
     <>
       <InnerBanner
-        title="Services Category"
-        subtitle="Your trusted partner in global logistics and freight transportation"
+        title={servicesTr?.title ?? ""}
+        subtitle={servicesTr?.shortDescription ?? ""}
         breadcrumbs={[
-          { label: "Services", href: "/services" },
-          { label: "Services Category" },
+          { label: categoryTr?.title ?? "", href: "/services" },
+          { label: servicesTr?.title ?? "" },
         ]}
-        variant="dark"
       />
-      <ServicesCategoryDetail />
+      <Suspense fallback={null}>
+        <Content
+          servicesCategoryData={servicesCategoryData as unknown as ServicesType}
+          locale={locale as CustomLocales}
+          category={category}
+        />
+      </Suspense>
     </>
+  );
+}
+
+async function Content({
+  servicesCategoryData,
+  locale,
+  category,
+}: {
+  servicesCategoryData: ServicesType;
+  locale: CustomLocales;
+  category: string;
+}) {
+  const socials = await fetchSocials();
+  const contactInfo = await fetchContactInformation(locale as CustomLocales);
+  const servicesRelated = await fetchServicesRelated({
+    category: category,
+    locale: locale as CustomLocales,
+  });
+  const services = await fetchServices({
+    locale: locale as CustomLocales,
+    pageNumber: 1,
+  });
+
+  return (
+    <ServicesCategoryDetail
+      socials={socials as unknown as Social[]}
+      contactInfo={contactInfo as unknown as IContactInformation}
+      services={services?.data as unknown as ServicesType[]}
+      servicesDetail={servicesCategoryData as unknown as ServicesType}
+      servicesRelated={servicesRelated as unknown as ServicesType[] | undefined}
+    />
   );
 }

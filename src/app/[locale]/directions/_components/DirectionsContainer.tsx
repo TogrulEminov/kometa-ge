@@ -1,24 +1,48 @@
+import NoDataComponent from "@/components/NoData";
+import PaginationContainer from "@/components/Pagination";
 import SectionContentComponent from "@/components/SectionContent";
 import DirectionsCard from "@/globalElement/cards/DirectionsCard";
+import {
+  DirectionsType,
+  newInfoJson,
+  PaginationItem,
+} from "@/services/interface/type";
 
-export default function DirectionsContainer() {
+interface Props {
+  data: DirectionsType[];
+  sectionContent: newInfoJson | undefined;
+  paginations: PaginationItem;
+}
+export default function DirectionsContainer({
+  data,
+  sectionContent,
+  paginations,
+}: Props) {
   return (
-    <section className="lg:py-20 py-10">
+    <section className="lg:py-20 py-10 bg-background">
       <div className="container space-y-10">
         <SectionContentComponent
-          highlightWord={"Global Network"}
-          rootClass="max-w-full [&_article]:max-w-full"
-          title="Transportation Directions & Coverage"
-          description="Kometa GE operates across a wide range of international routes, connecting businesses with key markets throughout Europe, Asia, and neighboring regions. Through our extensive transportation network, we ensure seamless cargo movement regardless of destination.
-
-          Whether transporting goods to nearby countries or managing long-distance international shipments, our team selects the most efficient routes and transportation methods to optimize delivery times and costs. We are committed to providing flexible, secure, and reliable logistics solutions tailored to the unique requirements of every client."
+          highlightWord={
+            sectionContent?.highlightWord as string | null | undefined
+          }
+          rootClass="max-w-full [&_article]:max-w-full [&_h1]:text-foreground [&_strong]:text-foreground [&_article]:text-muted"
+          title={sectionContent?.title ?? ""}
+          description={sectionContent?.description ?? ""}
           type="vertical"
-          heading="h2"
+          heading="h1"
         />
         <div className="grid lg:grid-cols-3 gap-5 sm:grid-cols-2 grid-cols-1">
-          {Array.from({ length: 12 }).map((_, index) => {
-            return <DirectionsCard key={index} />;
-          })}
+          {data?.length > 0 ? (
+            data?.map((item, index) => {
+              return <DirectionsCard key={index} item={item} heading="h3" />;
+            })
+          ) : (
+            <NoDataComponent className="col-span-12" />
+          )}
+          <PaginationContainer
+            paginations={paginations}
+            className="col-span-12"
+          />
         </div>
       </div>
     </section>
