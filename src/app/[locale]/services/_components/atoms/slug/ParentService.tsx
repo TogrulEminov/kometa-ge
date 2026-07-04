@@ -42,7 +42,7 @@ export default async function ParentService({
           <div className="flex items-center gap-6">
             {parentService.iconsUrl && (
               <div className="size-20 rounded-2xl flex items-center text-primary bg-surface-elevated justify-center transition-all duration-300">
-                <DynamicIcon iconName={parentService.iconsUrl} className="size-10" />
+                <DynamicIcon iconName={parentService.iconsUrl} size={40} />
               </div>
             )}
             <div>

@@ -50,7 +50,7 @@ export default async function DeliveryType({
                 )}
               >
                 <div className="size-14 rounded-2xl bg-primary/10 flex items-center justify-center text-primary shrink-0">
-                  <DynamicIcon iconName={item.iconsUrl} />
+                  <DynamicIcon iconName={item.iconsUrl} size={36} />
                 </div>
                 <div className="space-y-2">
                   <h3 className="text-foreground font-bold text-xl">

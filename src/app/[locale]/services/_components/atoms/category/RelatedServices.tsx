@@ -40,7 +40,7 @@ export default async function RelatedServices({
               className="group surface-card rounded-2xl p-5 hover:border-primary/30 transition-all duration-300 flex items-start gap-4"
             >
               <div className="size-12 p-3 rounded-xl bg-primary/10 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-all duration-300 shrink-0">
-                <DynamicIcon iconName={service.iconUrl} />
+                <DynamicIcon iconName={service.iconUrl}  size={36}/>
               </div>
               <div>
                 <h3 className="text-foreground font-bold text-base mb-1 group-hover:text-primary transition-colors duration-300">
