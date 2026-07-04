@@ -1,46 +1,63 @@
 "use client";
 
-import { SendOutlined } from "@ant-design/icons";
-import { Form, Input, message, Select } from "antd";
-import { AnimatePresence, motion } from "framer-motion";
-import { useLocale, useTranslations } from "next-intl";
-import { useEffect, useState } from "react";
-import { createPortal } from "react-dom";
-import { useAction } from "next-safe-action/hooks";
+import {
+  CallActionInputType,
+  callActionSchema,
+} from "@/actions/ui/form.schema";
 import { submitBookingForm } from "@/actions/ui/form.controller";
 import FormSubmitSuccess from "@/components/form/FormSubmitSuccess";
 import TurnstileField from "@/components/TurnstileField";
+import FormInput from "@/globalElement/form/FormInput";
+import FormPhone from "@/globalElement/form/FormPhone";
+import FormSelect from "@/globalElement/form/FormSelect";
+import FormTextarea from "@/globalElement/form/FormTextarea";
+import FormWrapper from "@/globalElement/form/FormWrapper";
 import { useToggleState, useToggleStore } from "@/hooks/useToggleStore";
+import {
+  uiBorderlessSelectClassNames,
+  uiBorderlessSelectStyles,
+  uiFormColors,
+  uiFormLabelClassName,
+  uiSelectPopupModalClassName,
+  uiSubmitButtonClassName,
+} from "@/lib/ui/form";
 import { shipmentModalKey } from "@/services/interface/constant-keys";
 import { CustomLocales } from "@/services/interface/type";
 import { COUNTRY_SELECT_OPTIONS } from "@/utils/countryOptions";
-import {
-  uiFormColors,
-  uiFormLabelClassName,
-  uiBorderlessSelectClassNames,
-  uiBorderlessSelectStyles,
-  uiInputClassName,
-  uiInputStyles,
-  uiSelectPopupClassName,
-  uiSubmitButtonClassName,
-  uiTextareaClassName,
-  uiTextareaStyles,
-} from "@/lib/ui/form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { SendOutlined } from "@ant-design/icons";
+import { message } from "antd";
+import { AnimatePresence, motion } from "framer-motion";
+import { useLocale, useTranslations } from "next-intl";
+import { useAction } from "next-safe-action/hooks";
+import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
+import { useForm } from "react-hook-form";
 
 export default function ShipmentModal() {
   const t = useTranslations("atoms.components.callActionHero");
   const locale = useLocale() as CustomLocales;
   const { close } = useToggleStore();
   const isOpen = useToggleState(shipmentModalKey);
-  const [form] = Form.useForm();
   const [mounted, setMounted] = useState(false);
   const [turnstileToken, setTurnstileToken] = useState("");
+
+  const bookingForm = useForm<CallActionInputType>({
+    resolver: zodResolver(callActionSchema),
+    defaultValues: {
+      from: "",
+      to: "",
+      email: "",
+      telephone: "",
+      message: "",
+    },
+  });
 
   const { execute, isExecuting, hasSucceeded, reset } = useAction(
     submitBookingForm,
     {
       onSuccess: () => {
-        form.resetFields();
+        bookingForm.reset();
         setTurnstileToken("");
       },
       onError: ({ error }) => {
@@ -70,8 +87,9 @@ export default function ShipmentModal() {
     if (!isOpen) {
       setTurnstileToken("");
       reset();
+      bookingForm.reset();
     }
-  }, [isOpen, reset]);
+  }, [isOpen, reset, bookingForm.reset]);
 
   useEffect(() => {
     if (!hasSucceeded || !isOpen) return;
@@ -86,25 +104,18 @@ export default function ShipmentModal() {
 
   const handleReset = () => {
     reset();
-    form.resetFields();
+    bookingForm.reset();
     setTurnstileToken("");
   };
 
-  const handleSubmit = async (values: {
-    from: string;
-    to: string;
-    email: string;
-    telephone: string;
-    message?: string;
-  }) => {
+  const onSubmit = async (data: CallActionInputType) => {
     if (!turnstileToken && process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY) {
       message.error("Please complete the captcha");
       return;
     }
 
     await execute({
-      ...values,
-      message: values.message ?? "",
+      ...data,
       turnstileToken: turnstileToken || "dev-bypass",
       locale,
       formType: "SHIPMENT_MODAL",
@@ -170,7 +181,10 @@ export default function ShipmentModal() {
                   >
                     {t("title")}
                   </h2>
-                  <p className="mt-2 text-sm" style={{ color: uiFormColors.muted }}>
+                  <p
+                    className="mt-2 text-sm"
+                    style={{ color: uiFormColors.muted }}
+                  >
                     {t("description")}
                   </p>
                 </div>
@@ -186,122 +200,66 @@ export default function ShipmentModal() {
                     onReset={handleReset}
                   />
                 ) : (
-                <Form
-                  form={form}
-                  onFinish={handleSubmit}
-                  layout="vertical"
-                  requiredMark={false}
-                >
-                  <div className="grid gap-4 sm:grid-cols-2 lg:gap-6">
-                    <div>
-                      <label className={uiFormLabelClassName}>
-                        {t("form.pickup_location")} *
-                      </label>
-                      <Form.Item
-                        name="from"
-                        rules={[
-                          { required: true, message: t("form.pickup_location") },
-                        ]}
-                        className="mb-0!"
-                      >
-                        <Select
-                          showSearch
-                          optionFilterProp="label"
-                          placeholder={t("form.pickup_location")}
-                          options={COUNTRY_SELECT_OPTIONS}
-                          variant="borderless"
-                          classNames={{
-                            ...uiBorderlessSelectClassNames,
-                            popup: { root: uiSelectPopupClassName },
-                          }}
-                          styles={uiBorderlessSelectStyles}
-                        />
-                      </Form.Item>
-                    </div>
-
-                    <div>
-                      <label className={uiFormLabelClassName}>
-                        {t("form.delivery_location")} *
-                      </label>
-                      <Form.Item
-                        name="to"
-                        rules={[
-                          { required: true, message: t("form.delivery_location") },
-                        ]}
-                        className="mb-0!"
-                      >
-                        <Select
-                          showSearch
-                          optionFilterProp="label"
-                          placeholder={t("form.delivery_location")}
-                          options={COUNTRY_SELECT_OPTIONS}
-                          variant="borderless"
-                          classNames={{
-                            ...uiBorderlessSelectClassNames,
-                            popup: { root: uiSelectPopupClassName },
-                          }}
-                          styles={uiBorderlessSelectStyles}
-                        />
-                      </Form.Item>
-                    </div>
-
-                    <div>
-                      <label className={uiFormLabelClassName}>
-                        {t("form.email_address")} *
-                      </label>
-                      <Form.Item
-                        name="email"
-                        rules={[
-                          { required: true, message: t("form.email_address") },
-                          { type: "email", message: t("form.email_address") },
-                        ]}
-                        className="mb-0!"
-                      >
-                        <Input
-                          type="email"
-                          placeholder="Example: User@Website.Com"
-                          variant="outlined"
-                          classNames={{ root: uiInputClassName, input: uiInputClassName }}
-                          styles={uiInputStyles}
-                        />
-                      </Form.Item>
-                    </div>
-
-                    <div>
-                      <label className={uiFormLabelClassName}>
-                        {t("form.telephone")} *
-                      </label>
-                      <Form.Item
-                        name="telephone"
-                        rules={[
-                          { required: true, message: t("form.telephone") },
-                        ]}
-                        className="mb-0!"
-                      >
-                        <Input
-                          placeholder="+(602) 448 763 22"
-                          variant="outlined"
-                          classNames={{ root: uiInputClassName, input: uiInputClassName }}
-                          styles={uiInputStyles}
-                        />
-                      </Form.Item>
-                    </div>
-
-                    <div className="sm:col-span-2">
-                      <label className={uiFormLabelClassName}>
-                        {t("form.message")}
-                      </label>
-                      <Form.Item name="message" className="mb-0!">
-                        <Input.TextArea
-                          rows={3}
-                          placeholder="Additional details..."
-                          variant="outlined"
-                          classNames={{ textarea: uiTextareaClassName }}
-                          styles={uiTextareaStyles}
-                        />
-                      </Form.Item>
-                    </div>
-
+                  <FormWrapper
+                    methods={bookingForm}
+                    schema={callActionSchema}
+                    onSubmit={onSubmit}
+                    className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:gap-6"
+                  >
+                    <FormSelect
+                      label={t("form.pickup_location")}
+                      labelClassName={uiFormLabelClassName}
+                      options={COUNTRY_SELECT_OPTIONS}
+                      fieldName="from"
+                      showSearch
+                      optionFilterProp="label"
+                      variant="borderless"
+                      getPopupContainer={() => document.body}
+                      classNames={{
+                        ...uiBorderlessSelectClassNames,
+                        popup: { root: uiSelectPopupModalClassName },
+                      }}
+                      styles={uiBorderlessSelectStyles}
+                    />
+                    <FormSelect
+                      label={t("form.delivery_location")}
+                      labelClassName={uiFormLabelClassName}
+                      options={COUNTRY_SELECT_OPTIONS}
+                      fieldName="to"
+                      showSearch
+                      optionFilterProp="label"
+                      variant="borderless"
+                      getPopupContainer={() => document.body}
+                      classNames={{
+                        ...uiBorderlessSelectClassNames,
+                        popup: { root: uiSelectPopupModalClassName },
+                      }}
+                      styles={uiBorderlessSelectStyles}
+                    />
+                    <FormInput
+                      label={t("form.email_address")}
+                      labelClassName={uiFormLabelClassName}
+                      fieldName="email"
+                      type="email"
+                      placeholder="Example: User@Website.Com"
+                      variant="borderless"
+                    />
+                    <FormPhone
+                      label={t("form.telephone")}
+                      labelClassName={uiFormLabelClassName}
+                      fieldName="telephone"
+                      placeholder="+(602) 448 763 22"
+                      variant="borderless"
+                    />
+                    <FormTextarea
+                      wrapperClassName="sm:col-span-2"
+                      label={t("form.message")}
+                      labelClassName={uiFormLabelClassName}
+                      fieldName="message"
+                      placeholder="Additional details..."
+                      variant="borderless"
+                      rows={3}
+                    />
                     <div className="sm:col-span-2">
                       <TurnstileField
                         onVerify={setTurnstileToken}
@@ -309,8 +267,7 @@ export default function ShipmentModal() {
                         theme="dark"
                       />
                     </div>
-
-                    <Form.Item className="mb-0! sm:col-span-2">
+                    <div className="sm:col-span-2">
                       <button
                         type="submit"
                         disabled={isExecuting}
@@ -325,9 +282,8 @@ export default function ShipmentModal() {
                           </>
                         )}
                       </button>
-                    </Form.Item>
-                  </div>
-                </Form>
+                    </div>
+                  </FormWrapper>
                 )}
               </div>
             </motion.div>

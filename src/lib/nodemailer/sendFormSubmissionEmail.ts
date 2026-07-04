@@ -2,6 +2,7 @@ import { readFile } from "fs/promises";
 import path from "path";
 import ejs from "ejs";
 import { FormType } from "@/generated/prisma/enums";
+import { getCountryNameByIso } from "@/utils/countryOptions";
 import transporter from "./index";
 
 const TYPE_LABELS: Record<FormType, string> = {
@@ -14,12 +15,15 @@ const FIELD_LABELS: Record<string, string> = {
   name: "First name",
   surname: "Last name",
   email: "Email",
-  phone: "Phone",
-  telephone: "Telephone",
+  phone: "Tel",
+  telephone: "Tel",
   from: "Pickup location",
   to: "Delivery location",
   message: "Message",
 };
+
+const PHONE_FIELDS = new Set(["phone", "telephone"]);
+const COUNTRY_FIELDS = new Set(["from", "to"]);
 
 type SendFormSubmissionEmailParams = {
   type: FormType;
@@ -29,12 +33,23 @@ type SendFormSubmissionEmailParams = {
   ipAddress?: string | null;
 };
 
+function formatFieldValue(key: string, value: unknown): string {
+  const raw = String(value).trim();
+  if (!COUNTRY_FIELDS.has(key)) return raw;
+
+  const countryName = getCountryNameByIso(raw);
+  return countryName ? `${countryName} (${raw})` : raw;
+}
+
 function formatPayloadFields(payload: Record<string, unknown>) {
   return Object.entries(payload)
     .filter(([, value]) => value !== undefined && value !== null && String(value).trim() !== "")
     .map(([key, value]) => ({
+      key,
       label: FIELD_LABELS[key] ?? key,
-      value: String(value),
+      value: formatFieldValue(key, value),
+      isPhone: PHONE_FIELDS.has(key),
+      isEmail: key === "email",
     }));
 }
 

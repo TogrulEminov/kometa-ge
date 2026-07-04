@@ -6,56 +6,59 @@
   <title><%= subject %></title>
 </head>
 <body style="margin:0;padding:0;background:#f4f6f8;font-family:Arial,Helvetica,sans-serif;color:#1c1e29;">
-  <table width="100%" cellpadding="0" cellspacing="0" style="background:#f4f6f8;padding:24px 12px;">
-    <tr>
-      <td align="center">
-        <table width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;background:#ffffff;border-radius:12px;overflow:hidden;border:1px solid #e5e7eb;">
-          <tr>
-            <td style="background:#b11226;padding:24px 28px;">
-              <p style="margin:0;color:#ffffff;font-size:12px;letter-spacing:0.12em;text-transform:uppercase;">Kometa GE</p>
-              <h1 style="margin:8px 0 0;color:#ffffff;font-size:22px;line-height:1.3;"><%= typeLabel %></h1>
-            </td>
-          </tr>
-          <tr>
-            <td style="padding:28px;">
-              <p style="margin:0 0 20px;color:#64748b;font-size:14px;line-height:1.6;">
-                Yeni form mesajı daxil oldu. Aşağıda təqdim olunan məlumatları yoxlayın.
-              </p>
+  <div style="width:100%;background:#f4f6f8;padding:24px 12px;box-sizing:border-box;">
+    <div style="max-width:600px;width:100%;margin:0 auto;background:#ffffff;border-radius:12px;overflow:hidden;border:1px solid #e5e7eb;">
 
-              <table width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;">
-                <% fields.forEach(function(field) { %>
-                <tr>
-                  <td style="padding:10px 0;border-bottom:1px solid #f1f5f9;width:38%;vertical-align:top;color:#64748b;font-size:13px;font-weight:600;">
-                    <%= field.label %>
-                  </td>
-                  <td style="padding:10px 0;border-bottom:1px solid #f1f5f9;vertical-align:top;color:#1c1e29;font-size:14px;line-height:1.5;white-space:pre-wrap;">
-                    <%= field.value %>
-                  </td>
-                </tr>
-                <% }) %>
-              </table>
+      <!-- Header -->
+      <div style="background:#b11226;padding:24px 28px;">
+        <p style="margin:0;color:#ffffff;font-size:12px;letter-spacing:0.12em;text-transform:uppercase;">Kometa GE</p>
+        <h1 style="margin:8px 0 0;color:#ffffff;font-size:22px;line-height:1.3;"><%= typeLabel %></h1>
+      </div>
 
-              <table width="100%" cellpadding="0" cellspacing="0" style="margin-top:24px;background:#f8fafc;border-radius:8px;">
-                <tr>
-                  <td style="padding:14px 16px;font-size:12px;color:#64748b;line-height:1.6;">
-                    <strong style="color:#1c1e29;">Meta</strong><br />
-                    ID: <%= submissionId %><br />
-                    <% if (locale) { %>Locale: <%= locale %><br /><% } %>
-                    <% if (ipAddress) { %>IP: <%= ipAddress %><br /><% } %>
-                    Tarix: <%= createdAt %>
-                  </td>
-                </tr>
-              </table>
-            </td>
-          </tr>
-          <tr>
-            <td style="padding:16px 28px;background:#f8fafc;border-top:1px solid #e5e7eb;color:#94a3b8;font-size:12px;text-align:center;">
-              Bu mesaj Kometa GE saytından avtomatik göndərilib.
-            </td>
-          </tr>
-        </table>
-      </td>
-    </tr>
-  </table>
+      <!-- Body -->
+      <div style="padding:28px;">
+        <p style="margin:0 0 20px;color:#64748b;font-size:14px;line-height:1.6;">
+          A new form submission has been received. Please review the details below.
+        </p>
+
+        <!-- Fields -->
+        <div>
+          <% fields.forEach(function(field) { %>
+          <div style="border-bottom:1px solid #f1f5f9;padding:12px 0;">
+            <div style="color:#64748b;font-size:13px;font-weight:600;line-height:1.5;margin-bottom:6px;">
+              <%= field.label %>
+            </div>
+            <div style="text-align:center;color:#1c1e29;font-size:14px;line-height:1.5;white-space:pre-wrap;word-break:break-word;">
+              <% if (field.isPhone) { %>
+              <a href="tel:<%= field.value %>" style="color:#b11226;text-decoration:none;font-weight:600;"><%= field.value %></a>
+              <% } else if (field.isEmail) { %>
+              <a href="mailto:<%= field.value %>" style="color:#2563eb;text-decoration:underline;"><%= field.value %></a>
+              <% } else { %>
+              <%= field.value %>
+              <% } %>
+            </div>
+          </div>
+          <% }) %>
+        </div>
+
+        <!-- Meta -->
+        <div style="margin-top:24px;background:#f8fafc;border-radius:8px;padding:14px 16px;">
+          <div style="font-size:12px;color:#64748b;line-height:1.6;">
+            <strong style="color:#1c1e29;">Meta</strong><br />
+            ID: <%= submissionId %><br />
+            <% if (locale) { %>Locale: <%= locale %><br /><% } %>
+            <% if (ipAddress) { %>IP: <%= ipAddress %><br /><% } %>
+            Date: <%= createdAt %>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div style="padding:16px 28px;background:#f8fafc;border-top:1px solid #e5e7eb;color:#94a3b8;font-size:12px;text-align:center;">
+        This message was sent automatically from the Kometa GE website.
+      </div>
+
+    </div>
+  </div>
 </body>
 </html>

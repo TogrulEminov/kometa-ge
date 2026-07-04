@@ -67,6 +67,11 @@ export const uiSelectClassName = uiSelectClassNames.root;
 
 export const uiSelectPopupClassName = "ui-select-dropdown";
 
+export const uiSelectPopupModalClassName = cn(
+  uiSelectPopupClassName,
+  "!z-[1400]",
+);
+
 export const uiBorderlessSelectClassNames = {
   root: "ui-borderless-select w-full min-h-12",
 };
