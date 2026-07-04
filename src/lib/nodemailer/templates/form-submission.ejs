@@ -28,7 +28,7 @@
             <div style="color:#64748b;font-size:13px;font-weight:600;line-height:1.5;margin-bottom:6px;">
               <%= field.label %>
             </div>
-            <div style="text-align:center;color:#1c1e29;font-size:14px;line-height:1.5;white-space:pre-wrap;word-break:break-word;">
+            <div style="text-align:start;color:#1c1e29;font-size:14px;line-height:1.5;">
               <% if (field.isPhone) { %>
               <a href="tel:<%= field.value %>" style="color:#b11226;text-decoration:none;font-weight:600;"><%= field.value %></a>
               <% } else if (field.isEmail) { %>
