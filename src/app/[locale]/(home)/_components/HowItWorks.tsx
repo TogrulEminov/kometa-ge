@@ -8,13 +8,14 @@ import {
 } from "@/services/interface/type";
 import { getForCards } from "@/utils/getFullimageUrl";
 import { parseJSON } from "@/utils/parseJson";
- 
+import { getTranslations } from "next-intl/server";
 
 export default async function HowItWorksScroll({ locale }: SectionLocale) {
   const works = await fetchWorkProcessInfo(locale as CustomLocales);
   const worksTr = works?.translations?.[0] as
     | WorkProcessItemTranslationType
     | undefined;
+  const t = await getTranslations("atoms");
   const description = parseJSON<WorkJson>(worksTr?.description)?.data;
   const imageUrl = getForCards(works?.imageUrl);
   if (!works) return null;
@@ -46,56 +47,59 @@ export default async function HowItWorksScroll({ locale }: SectionLocale) {
             {/* Steps — scrollable */}
             <div className="flex flex-col overflow-y-auto  scrollbar-none max-h-[360px] pr-1">
               {description &&
-               description?.map((step: WorkJson, i: number) => (
-                <div key={i} className="flex gap-4">
-                  {/* Check + Line */}
-                  <div className="flex flex-col items-center flex-shrink-0">
-                    <div className="w-10 h-10 rounded-full flex items-center justify-center bg-white/20">
-                      <svg
-                        width="16"
-                        height="16"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="white"
-                        strokeWidth="2.5"
-                      >
-                        <polyline points="20,6 9,17 4,12" />
-                      </svg>
+                description?.map((step: WorkJson, i: number) => (
+                  <div key={i} className="flex gap-4">
+                    {/* Check + Line */}
+                    <div className="flex flex-col items-center flex-shrink-0">
+                      <div className="w-10 h-10 rounded-full flex items-center justify-center bg-white/20">
+                        <svg
+                          width="16"
+                          height="16"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="white"
+                          strokeWidth="2.5"
+                        >
+                          <polyline points="20,6 9,17 4,12" />
+                        </svg>
+                      </div>
+                      {i < description?.length - 1 && (
+                        <div
+                          className="w-px bg-white/20"
+                          style={{ height: 40 }}
+                        />
+                      )}
                     </div>
-                    {i < description?.length - 1 && (
-                      <div
-                        className="w-px bg-white/20"
-                        style={{ height: 40 }}
-                      />
-                    )}
-                  </div>
 
-                  {/* Content */}
-                  <div className="pb-2 flex-1">
-                    <p className="text-xs md:text-sm font-bold uppercase tracking-wide mt-0.5 leading-snug text-white">
-                      {step.title}
-                    </p>
-                    <p className="text-xs mt-1 leading-relaxed text-white/60">
-                      {step?.description}
-                    </p>
+                    {/* Content */}
+                    <div className="pb-2 flex-1">
+                      <p className="text-xs md:text-sm font-bold uppercase tracking-wide mt-0.5 leading-snug text-white">
+                        {step.title}
+                      </p>
+                      <p className="text-xs mt-1 leading-relaxed text-white/60">
+                        {step?.description}
+                      </p>
+                    </div>
                   </div>
-                </div>
-              ))}
+                ))}
             </div>
           </div>
 
           {/* RIGHT: Badge + Title + CTA */}
           <div className="flex  order-1 lg:order-2  flex-col justify-end pt-10   pb-2">
-            <span className="inline-block bg-primary text-white text-[10px] font-bold tracking-[0.15em] uppercase px-5 py-2 rounded-full w-fit">
-              How It Work
-            </span>
+            {worksTr?.subTitle && (
+              <span className="inline-block bg-primary text-white text-[10px] font-bold tracking-[0.15em] uppercase px-5 py-2 rounded-full w-fit">
+                {worksTr?.subTitle}
+              </span>
+            )}
             <h2 className="text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-extrabold text-foreground uppercase tracking-tight mt-4 leading-[1.05]">
-              From Order To
-              <br />
-              Delivery, Simplified
+              {worksTr?.title}
             </h2>
-            <button className="mt-6 inline-flex items-center gap-3 bg-primary text-white px-6 py-3.5 rounded-lg font-bold uppercase tracking-widest text-xs hover:bg-[#d43d20] transition-colors duration-200 w-fit">
-              Get Started
+            <button
+              type="button"
+              className="mt-6 inline-flex items-center gap-3 bg-primary text-white px-6 py-3.5 rounded-lg font-bold uppercase tracking-widest text-xs hover:bg-[#d43d20] transition-colors duration-200 w-fit"
+            >
+              {t("buttons.get_started")}
               <svg
                 width="13"
                 height="13"

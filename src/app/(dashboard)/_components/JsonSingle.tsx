@@ -370,7 +370,7 @@ export default function JsonSectionList({
   defaultValues,
   defaultConfig,
   sectionLimit = 20,
-  addLabel = "Bölmə əlavə et",
+  addLabel = "Add section",
 }: JsonSectionListProps) {
   const { control } = useFormContext();
   const { fields, append, remove, move } = useFieldArray({
@@ -422,7 +422,7 @@ export default function JsonSectionList({
           <div className="flex items-center justify-center size-7 rounded-lg bg-blue-600">
             <BsLayers className="w-3.5 h-3.5 text-white" />
           </div>
-          <span className="text-sm font-semibold text-slate-700">Bölmələr</span>
+          <span className="text-sm font-semibold text-slate-700">Sections</span>
           <span className="ml-auto flex items-center justify-center size-6 rounded-full bg-blue-100 text-blue-700 text-xs font-bold">
             {fields.length}
           </span>
