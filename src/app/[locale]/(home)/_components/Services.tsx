@@ -3,8 +3,10 @@ import {
   fetchServices,
 } from "@/actions/ui/main.controller";
 import SectionContentComponent from "@/components/SectionContent";
-import ServiceCard from "@/globalElement/cards/ServicesCard";
 import { CustomLocales, ServicesType } from "@/services/interface/type";
+import ServicesSlider from "./atoms/ServicesSlider";
+import ServicesSliderFallback from "./fallbacks/ServicesSliderFallback";
+import { Suspense } from "react";
 
 export default async function HomeServicesSection({
   locale,
@@ -14,7 +16,8 @@ export default async function HomeServicesSection({
   const services = await fetchServices({ pageNumber: 1, locale });
   const sectionInfo = await fetchSectionByKeys({ key: "services", locale });
   const sectionTr = sectionInfo?.translations?.[0];
-  if (!services?.data?.length || !sectionInfo?.translations?.length) return null;
+  if (!services?.data?.length || !sectionInfo?.translations?.length)
+    return null;
   return (
     <section className="py-10 lg:py-20">
       <div className="container">
@@ -26,11 +29,11 @@ export default async function HomeServicesSection({
           description={sectionTr?.description ?? ""}
         />
 
-        <div className="grid lg:grid-cols-3 gap-5">
-          {services?.data?.map((item, i) => {
-            return <ServiceCard key={i}  item={item as ServicesType}/>;
-          })}
-        </div>
+        <Suspense fallback={<ServicesSliderFallback />}>
+          <ServicesSlider
+            data={services?.data as unknown as ServicesType[]}
+          />
+        </Suspense>
       </div>
     </section>
   );
