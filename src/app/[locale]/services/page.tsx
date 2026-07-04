@@ -15,6 +15,7 @@ import { findJsonSection } from "@/utils/findJsonSection";
 import { Suspense } from "react";
 import { Metadata } from "next";
 import { generatePageMetadata } from "@/utils/metadata-generator";
+import CTASection from "../(home)/_components/CtaSection";
 
 interface PageProps {
   params: Promise<{ locale: string }>;
@@ -66,6 +67,10 @@ export default async function ServicesPage({
           sectionContent={sectionContent}
           locale={locale as CustomLocales}
         />
+      </Suspense>
+
+      <Suspense fallback={null}>
+        <CTASection locale={locale as CustomLocales} />
       </Suspense>
     </>
   );
