@@ -117,7 +117,7 @@ export default function ContactForm() {
           >
             <Input
               type="email"
-              placeholder={t("form.email")}
+              placeholder={t("form.email_placeholder")}
               variant="outlined"
               classNames={{ input: uiInputClassName }}
             />
@@ -148,7 +148,7 @@ export default function ContactForm() {
           >
             <Input.TextArea
               rows={4}
-              placeholder={t("form.message")}
+              placeholder={t("form.message_placeholder")}
               variant="outlined"
               classNames={{ textarea: uiTextareaClassName }}
             />

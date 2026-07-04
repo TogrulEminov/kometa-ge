@@ -13,7 +13,7 @@ export default async function DeliveryType({
   category: string;
   subServices: SubServicesType[];
 }) {
-  if (!delivery || !category || !subServices) return null;
+  if (!delivery || !category || !subServices.length) return null;
 
   return (
     <div id="ftl-ltl" className="scroll-mt-8 mt-16 mb-16">

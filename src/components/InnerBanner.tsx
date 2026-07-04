@@ -58,7 +58,7 @@ export default function InnerBanner({
   return (
     <div
       ref={sectionRef}
-      className="relative overflow-hidden pt-34 pb-16 sm:pb-20"
+      className="relative overflow-hidden border-b border-white/10 pt-34 pb-16 sm:pb-20"
     >
       <CustomImage
         src={bannerImage}

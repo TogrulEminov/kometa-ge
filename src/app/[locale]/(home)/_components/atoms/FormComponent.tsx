@@ -12,7 +12,7 @@ import FormPhone from "@/globalElement/form/FormPhone";
 import FormSelect from "@/globalElement/form/FormSelect";
 import FormTextarea from "@/globalElement/form/FormTextarea";
 import FormWrapper from "@/globalElement/form/FormWrapper";
-import { uiHeroFormLabelClassName, uiBorderlessSelectClassNames, uiBorderlessSelectStyles, uiSelectPopupClassName } from "@/lib/ui/form";
+import { uiHeroFormLabelClassName, uiBorderlessSelectClassNames, uiHeroBorderlessSelectStyles, uiSelectPopupHeroClassName } from "@/lib/ui/form";
 import { CustomLocales } from "@/services/interface/type";
 import { COUNTRY_SELECT_OPTIONS } from "@/utils/countryOptions";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -59,7 +59,7 @@ export default function FormComponent() {
 
   const onSubmit = async (data: CallActionInputType) => {
     if (!turnstileToken && process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY) {
-      message.error("Please complete the captcha");
+      message.error(t("form.captcha_required"));
       return;
     }
 
@@ -97,6 +97,7 @@ export default function FormComponent() {
           <FormSelect
             label={t("form.pickup_location")}
             labelClassName={uiHeroFormLabelClassName}
+            placeholder={t("form.pickup_location")}
             options={COUNTRY_SELECT_OPTIONS}
             fieldName="from"
             showSearch
@@ -104,13 +105,14 @@ export default function FormComponent() {
             variant="borderless"
             classNames={{
               ...uiBorderlessSelectClassNames,
-              popup: { root: uiSelectPopupClassName },
+              popup: { root: uiSelectPopupHeroClassName },
             }}
-            styles={uiBorderlessSelectStyles}
+            styles={uiHeroBorderlessSelectStyles}
           />
           <FormSelect
             label={t("form.delivery_location")}
             labelClassName={uiHeroFormLabelClassName}
+            placeholder={t("form.delivery_location")}
             options={COUNTRY_SELECT_OPTIONS}
             fieldName="to"
             showSearch
@@ -118,23 +120,23 @@ export default function FormComponent() {
             variant="borderless"
             classNames={{
               ...uiBorderlessSelectClassNames,
-              popup: { root: uiSelectPopupClassName },
+              popup: { root: uiSelectPopupHeroClassName },
             }}
-            styles={uiBorderlessSelectStyles}
+            styles={uiHeroBorderlessSelectStyles}
           />
           <FormInput
             label={t("form.email_address")}
             labelClassName={uiHeroFormLabelClassName}
             fieldName="email"
             type="email"
-            placeholder="Example: User@Website.Com"
+            placeholder={t("form.email_placeholder")}
             variant="borderless"
           />
           <FormPhone
             label={t("form.telephone")}
             labelClassName={uiHeroFormLabelClassName}
             fieldName="telephone"
-            placeholder="+(602) 448 763 22"
+            placeholder={t("form.telephone_placeholder")}
             variant="borderless"
           />
           <FormTextarea
@@ -142,7 +144,7 @@ export default function FormComponent() {
             label={t("form.message")}
             labelClassName={uiHeroFormLabelClassName}
             fieldName="message"
-            placeholder="Additional details..."
+            placeholder={t("form.message_placeholder")}
             variant="borderless"
           />
           <div className="col-span-2">

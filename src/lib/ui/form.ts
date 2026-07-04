@@ -72,6 +72,26 @@ export const uiSelectPopupModalClassName = cn(
   "!z-[1400]",
 );
 
+export const uiSelectPopupHeroClassName = cn(
+  uiSelectPopupClassName,
+  "ui-select-dropdown-hero",
+);
+
+export const uiHeroBorderlessSelectStyles = {
+  root: {
+    backgroundColor: "transparent",
+    border: "none",
+    borderBottom: "1px solid rgba(255, 255, 255, 0.45)",
+    borderRadius: 0,
+    color: "#ffffff",
+    boxShadow: "none",
+    minHeight: 48,
+  },
+  placeholder: {
+    color: "rgba(255, 255, 255, 0.5)",
+  },
+};
+
 export const uiBorderlessSelectClassNames = {
   root: "ui-borderless-select w-full min-h-12",
 };

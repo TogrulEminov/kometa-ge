@@ -110,7 +110,7 @@ export default function ShipmentModal() {
 
   const onSubmit = async (data: CallActionInputType) => {
     if (!turnstileToken && process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY) {
-      message.error("Please complete the captcha");
+      message.error(t("form.captcha_required"));
       return;
     }
 
@@ -209,6 +209,7 @@ export default function ShipmentModal() {
                     <FormSelect
                       label={t("form.pickup_location")}
                       labelClassName={uiFormLabelClassName}
+                      placeholder={t("form.pickup_location")}
                       options={COUNTRY_SELECT_OPTIONS}
                       fieldName="from"
                       showSearch
@@ -224,6 +225,7 @@ export default function ShipmentModal() {
                     <FormSelect
                       label={t("form.delivery_location")}
                       labelClassName={uiFormLabelClassName}
+                      placeholder={t("form.delivery_location")}
                       options={COUNTRY_SELECT_OPTIONS}
                       fieldName="to"
                       showSearch
@@ -241,14 +243,14 @@ export default function ShipmentModal() {
                       labelClassName={uiFormLabelClassName}
                       fieldName="email"
                       type="email"
-                      placeholder="Example: User@Website.Com"
+                      placeholder={t("form.email_placeholder")}
                       variant="borderless"
                     />
                     <FormPhone
                       label={t("form.telephone")}
                       labelClassName={uiFormLabelClassName}
                       fieldName="telephone"
-                      placeholder="+(602) 448 763 22"
+                      placeholder={t("form.telephone_placeholder")}
                       variant="borderless"
                     />
                     <FormTextarea
@@ -256,7 +258,7 @@ export default function ShipmentModal() {
                       label={t("form.message")}
                       labelClassName={uiFormLabelClassName}
                       fieldName="message"
-                      placeholder="Additional details..."
+                      placeholder={t("form.message_placeholder")}
                       variant="borderless"
                       rows={3}
                     />

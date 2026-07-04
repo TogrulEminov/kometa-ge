@@ -651,10 +651,53 @@ details:not([open]) summary:hover .chevron-icon {
   min-height: 48px;
 }
 
-.shipment-form-fields .ui-borderless-select .ant-select-placeholder,
+.shipment-form-fields .ui-borderless-select .ant-select-placeholder {
+  color: rgba(255, 255, 255, 0.5) !important;
+}
+
+.hero-booking-form .ui-borderless-select.ant-select {
+  --ant-select-color: #fff !important;
+}
+
 .hero-booking-form .ui-borderless-select .ant-select-placeholder,
 .hero-booking-form .ant-select:not(.ui-select-field) .ant-select-placeholder {
   color: rgba(255, 255, 255, 0.5) !important;
+}
+
+.hero-booking-form .ui-borderless-select.ant-select .ant-select-selection-item,
+.hero-booking-form .ui-borderless-select.ant-select .ant-select-content,
+.hero-booking-form .ui-borderless-select.ant-select .ant-select-selection-search-input {
+  color: #fff !important;
+}
+
+.hero-booking-form .ui-borderless-select.ant-select-focused,
+.hero-booking-form .ui-borderless-select.ant-select-open {
+  --ant-select-color: #fff !important;
+}
+
+.ui-select-dropdown-hero.ant-select-dropdown {
+  background-color: #ffffff !important;
+  border: 1px solid rgba(15, 23, 42, 0.1) !important;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.18) !important;
+}
+
+.ui-select-dropdown-hero .ant-select-item {
+  color: #1c1e29 !important;
+}
+
+.ui-select-dropdown-hero .ant-select-item-option-active:not(.ant-select-item-option-disabled) {
+  background-color: #f1f5f9 !important;
+  color: #0f172a !important;
+}
+
+.ui-select-dropdown-hero .ant-select-item-option-selected:not(.ant-select-item-option-disabled) {
+  background-color: #e2e8f0 !important;
+  color: #0f172a !important;
+  font-weight: 600;
+}
+
+.ui-select-dropdown-hero .ant-select-item-option-selected .ant-select-item-option-state {
+  color: #0f172a !important;
 }
 
 .dark-site details:not([open]) .faq-card {
