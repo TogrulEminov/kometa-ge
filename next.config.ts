@@ -28,6 +28,7 @@ const nextConfig: NextConfig = {
       { protocol: "https", hostname: "kometa-ge.vercel.app" },
       { protocol: "https", hostname: "**.r2.dev" },
       { protocol: "https", hostname: "blobs.**" },
+      { protocol: "https", hostname: "kometa-ge-new.togruleminov.site" },
       { protocol: "https", hostname: "res.cloudinary.com" },
       { protocol: "https", hostname: "images.unsplash.com" },
       { protocol: "https", hostname: "i.pinimg.com" }, 
