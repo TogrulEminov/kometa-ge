@@ -1,13 +1,23 @@
-import { Social } from "@/services/interface/type";
+import { clearPhoneRegex } from "@/lib/domburify";
 import { useTranslations } from "next-intl";
 import { FaWhatsapp } from "react-icons/fa6";
 
-export default function StickyWhatsApp({ whatsapp }: { whatsapp: Social }) {
+export default function StickyWhatsApp({
+  whatsapp,
+}: {
+  whatsapp: string | null | undefined;
+}) {
   const t = useTranslations("atoms.components.contactInfo");
+
+  if (!whatsapp) {
+    return null;
+  }
+
+  const href = `https://wa.me/${clearPhoneRegex(whatsapp)}`;
 
   return (
     <a
-      href={whatsapp?.socialLink}
+      href={href}
       target="_blank"
       rel="noopener noreferrer"
       aria-label={t("whatsapp")}

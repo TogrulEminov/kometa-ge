@@ -446,7 +446,7 @@ details:not([open]) summary:hover .chevron-icon {
   display: flex;
   align-items: flex-end;
   justify-content: center;
-  transform-origin: 50% 90%;
+  /* transform-origin: 50% 80%; */
   will-change: transform;
   backface-visibility: hidden;
 }
