@@ -26,11 +26,8 @@ const nextConfig: NextConfig = {
     unoptimized: true,
     remotePatterns: [
       { protocol: "https", hostname: "**.kometa-ge.vercel.app" },
-<<<<<<< HEAD
       { protocol: "https", hostname: "**.kometa-ge.vercel.app" },
       { protocol: "https", hostname: "kometa-ge-new.togruleminov.site" },
-=======
->>>>>>> a0873be9755b57ecfe62608e74a17b4d6dcbf190
       { protocol: "https", hostname: "kometa-ge.vercel.app" },
       { protocol: "https", hostname: "**.r2.dev" },
       { protocol: "https", hostname: "blobs.**" },
