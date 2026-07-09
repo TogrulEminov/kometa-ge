@@ -46,7 +46,7 @@ export default async function ServicesPage({ params }: PageProps) {
   const { locale, category, slug } = await params;
   const servicesCategoryData = await fetchServicesDetailMain({
     locale: locale as CustomLocales,
-    slug: slug,
+    slug: category,
   });
   const categoryData = await fetchCategoriesByKey({
     locale: locale as CustomLocales,

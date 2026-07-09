@@ -4,6 +4,7 @@ import { Link, usePathname } from "@/i18n/navigation";
 import { serviceMainHref, serviceSubHref } from "@/i18n/href";
 import { clearPhoneRegex } from "@/lib/domburify";
 import {
+  CustomLocales,
   IContactInformation,
   ServicesType,
   Social,
@@ -15,7 +16,7 @@ import {
   isServiceCategoryActive,
   isSubServicePathActive,
 } from "@/utils/serviceStickyBar";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
 import { FaMapMarkerAlt, FaPhoneAlt } from "react-icons/fa";
 import {
@@ -37,28 +38,33 @@ export default function StickyBar({
   socials: Social[];
 }) {
   const pathname = usePathname();
-  const [isMounted, setIsMounted] = useState(false);
-  const [expandedService, setExpandedService] = useState<string | null>(null);
+  const locale = useLocale() as CustomLocales;
+  const [expandedService, setExpandedService] = useState<string | null>(() =>
+    findExpandedServiceId(services, pathname, category, locale),
+  );
   const t = useTranslations("atoms.components");
 
   useEffect(() => {
-    setIsMounted(true);
-    const activeServiceId = findExpandedServiceId(services, pathname, category);
+    const activeServiceId = findExpandedServiceId(
+      services,
+      pathname,
+      category,
+      locale,
+    );
     if (activeServiceId) {
       setExpandedService(activeServiceId);
     }
-  }, [services, pathname, category]);
+  }, [services, pathname, category, locale]);
 
   const toggleService = (id: string) => {
     setExpandedService(expandedService === id ? null : id);
   };
 
   const isSubServiceActive = (parentSlug: string, subSlug?: string | null) =>
-    isMounted &&
     Boolean(
       parentSlug &&
         subSlug &&
-        isSubServicePathActive(pathname, parentSlug, subSlug),
+        isSubServicePathActive(pathname, parentSlug, subSlug, locale),
     );
 
   const getServiceButtonClassName = (
@@ -124,20 +130,20 @@ export default function StickyBar({
             const serviceSlug = service.translations[0]?.slug ?? "";
             const hasSubServices = Boolean(service.subServices?.length);
             const hasActiveChild =
-              isMounted &&
-              (service.subServices?.some((child) =>
+              service.subServices?.some((child) =>
                 isSubServiceActive(serviceSlug, child.translations[0]?.slug),
-              ) ??
-                false);
-            const isActive =
-              isMounted &&
-              (isServiceCategoryActive(pathname, serviceSlug) || hasActiveChild);
+              ) ?? false;
+            const isCategoryPageActive = isServiceCategoryActive(
+              pathname,
+              serviceSlug,
+              locale,
+            );
+            const isActive = isCategoryPageActive;
             const isExpanded =
-              isMounted &&
-              (expandedService === service.id || hasActiveChild);
+              expandedService === service.id || hasActiveChild;
             const rowClassName = `flex items-center gap-1 rounded-xl text-sm font-medium transition-all duration-300 ${getServiceButtonClassName(
               isActive,
-              isExpanded,
+              isExpanded && !isActive,
             )}`;
 
             return (

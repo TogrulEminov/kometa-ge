@@ -1,42 +1,49 @@
-import { ServicesType } from "@/services/interface/type";
+import { getPathname } from "@/i18n/navigation";
+import { AppHref, serviceMainHref, serviceSubHref } from "@/i18n/href";
+import { CustomLocales, ServicesType } from "@/services/interface/type";
 
-function getPathSegments(pathname: string): string[] {
-  return pathname.split("/").filter(Boolean);
+export function isHrefActive(
+  pathname: string,
+  href: AppHref,
+  locale: CustomLocales,
+): boolean {
+  const targetPath = getPathname({
+    href: href as Parameters<typeof getPathname>[0]["href"],
+    locale,
+  });
+  return pathname === targetPath;
 }
 
 export function isServiceCategoryActive(
   pathname: string,
   serviceSlug: string,
+  locale: CustomLocales,
 ): boolean {
-  const segments = getPathSegments(pathname);
-  const index = segments.indexOf(serviceSlug);
-
-  if (index === -1) {
+  if (!serviceSlug) {
     return false;
   }
 
-  return index === segments.length - 1 || index === segments.length - 2;
+  return isHrefActive(pathname, serviceMainHref(serviceSlug), locale);
 }
 
 export function isSubServicePathActive(
   pathname: string,
   parentSlug: string,
   subSlug: string,
+  locale: CustomLocales,
 ): boolean {
-  const segments = getPathSegments(pathname);
-  const parentIndex = segments.indexOf(parentSlug);
-
-  if (parentIndex === -1) {
+  if (!parentSlug || !subSlug) {
     return false;
   }
 
-  return segments[parentIndex + 1] === subSlug;
+  return isHrefActive(pathname, serviceSubHref(parentSlug, subSlug), locale);
 }
 
 export function findExpandedServiceId(
   services: ServicesType[],
   pathname: string,
   category: string,
+  locale: CustomLocales,
 ): string | null {
   if (category) {
     const matchedByCategory = services.find(
@@ -55,11 +62,12 @@ export function findExpandedServiceId(
     const hasActiveChild = service.subServices?.some((child) => {
       const subSlug = child.translations[0]?.slug;
       return Boolean(
-        subSlug && isSubServicePathActive(pathname, serviceSlug, subSlug),
+        subSlug &&
+          isSubServicePathActive(pathname, serviceSlug, subSlug, locale),
       );
     });
 
-    if (hasActiveChild || isServiceCategoryActive(pathname, serviceSlug)) {
+    if (hasActiveChild || isServiceCategoryActive(pathname, serviceSlug, locale)) {
       return service.id;
     }
   }

@@ -720,9 +720,16 @@ export async function fetchSubServices({
         select: {
           id: true,
           imageUrl: FILE_SELECT,
+          iconUrl: true,
           translations: {
             where: { locale, slug: category },
-            select: { title: true, id: true, slug: true, locale: true },
+            select: {
+              title: true,
+              id: true,
+              slug: true,
+              locale: true,
+              shortDescription: true,
+            },
           },
         },
       },
@@ -752,22 +759,23 @@ export async function fetchRelatedSubServices({
   "use cache";
   cacheLife("hours");
   cacheTag(CACHE_TAG_GROUPS.SUB_SERVICES);
-  return db.subServices.findFirst({
+  return db.subServices.findMany({
     where: {
+      isDeleted: false,
       services: {
         isDeleted: false,
         translations: {
           some: {
-            locale: locale,
+            locale,
             slug: category,
           },
         },
       },
       translations: {
         some: {
-          locale: locale,
-          NOT: {
-            slug: slug,
+          locale,
+          slug: {
+            not: slug,
           },
         },
       },
@@ -808,6 +816,7 @@ export async function fetchRelatedSubServices({
         },
       },
     },
+    orderBy: { orderNumber: "asc" },
   });
 }
 export async function fetchServicesDetailMain({

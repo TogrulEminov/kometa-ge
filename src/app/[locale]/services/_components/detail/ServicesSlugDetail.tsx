@@ -95,7 +95,7 @@ export default function ServicesSlugDetail({
             />
             <ParentService
               sectionData={parentService as unknown as newInfoJson}
-              parentService={servicesDetail as unknown as SubServicesType}
+              parentService={servicesDetail.services}
             />
           </div>
         </div>

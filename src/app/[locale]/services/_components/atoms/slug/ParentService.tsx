@@ -1,19 +1,21 @@
 import { Link } from "@/i18n/navigation";
-import { newInfoJson, SubServicesType } from "@/services/interface/type";
+import { newInfoJson, ServicesType } from "@/services/interface/type";
 import { DynamicIcon } from "@/utils/DynamicIcon";
 import { FaArrowRight } from "react-icons/fa6";
-import { serviceSubHref } from "@/i18n/href";
+import { serviceMainHref } from "@/i18n/href";
 
-export default async function ParentService({
+export default function ParentService({
   sectionData,
   parentService,
 }: {
   sectionData: newInfoJson;
-  parentService: SubServicesType;
+  parentService?: ServicesType | null;
 }) {
   if (!sectionData || !parentService) return null;
+
   const parentServiceTr = parentService.translations?.[0];
-  if (!parentServiceTr) return null;
+  if (!parentServiceTr?.slug) return null;
+
   return (
     <div id="parent-service" className="scroll-mt-8 mt-16 mb-16">
       <div className="mb-8">
@@ -23,26 +25,23 @@ export default async function ParentService({
           </span>
         )}
         <h2
-          title={parentServiceTr.title}
+          title={sectionData.title ?? parentServiceTr.title}
           className="text-3xl font-bold mt-2 mb-4 text-foreground"
         >
-          {parentServiceTr.title}
+          {sectionData.title ?? parentServiceTr.title}
         </h2>
         <div className="w-16 h-1 rounded-full mb-4 bg-primary" />
       </div>
 
       <Link
-        href={serviceSubHref(
-          parentService.services?.translations?.[0]?.slug ?? "",
-          parentServiceTr.slug ?? "",
-        )}
+        href={serviceMainHref(parentServiceTr.slug)}
         className="group block bg-secondary rounded-2xl p-8 shadow-xl hover:shadow-2xl transition-all duration-500"
       >
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-6">
-            {parentService.iconsUrl && (
+            {parentService.iconUrl && (
               <div className="size-20 rounded-2xl flex items-center text-primary bg-surface-elevated justify-center transition-all duration-300">
-                <DynamicIcon iconName={parentService.iconsUrl} size={40} />
+                <DynamicIcon iconName={parentService.iconUrl} size={40} />
               </div>
             )}
             <div>
