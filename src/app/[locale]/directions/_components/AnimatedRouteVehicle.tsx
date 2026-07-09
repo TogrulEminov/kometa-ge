@@ -9,10 +9,11 @@ const LORRY_ICON_URL = "/assets/lorry.png";
 const LORRY_ICON_SIZE = 64;
 /** PNG cab faces right; +90° aligns cab with forward screen bearing. */
 const LORRY_ICON_ROTATION = 90;
-/** Wheels sit near the bottom edge of the PNG — pin route line here. */
-const LORRY_WHEEL_RATIO = 0.9;
+/** Wheels sit near the bottom edge of the PNG — pin route line slightly above here. */
+const LORRY_WHEEL_RATIO = 0.875;
 const ROUTE_DURATION_MS = 12000;
-const BEARING_SMOOTHING = 0.12;
+// Match map bearing immediately (no lag) to keep rotation consistent.
+const BEARING_SMOOTHING = 1;
 const LOOK_AHEAD = 0.035;
 
 function getScreenBearing(
@@ -35,10 +36,13 @@ function smoothAngle(current: number, target: number, factor: number) {
   return current + delta * factor;
 }
 
+const wheelAnchorY = Math.round(LORRY_ICON_SIZE * LORRY_WHEEL_RATIO);
+const wheelOriginPercent = (wheelAnchorY / LORRY_ICON_SIZE) * 100;
+
 const vehicleIconHtml = `
   <div class="route-vehicle-shell">
     <div class="route-vehicle-glow" aria-hidden="true"></div>
-    <div class="route-vehicle-rotate">
+    <div class="route-vehicle-rotate" style="transform-origin: 50% ${wheelOriginPercent}%;">
       <img
         src="${LORRY_ICON_URL}"
         alt=""
@@ -60,7 +64,6 @@ export default function AnimatedRouteVehicle({
   const markerRef = useRef<L.Marker | null>(null);
   const frameRef = useRef<number | null>(null);
   const angleRef = useRef(LORRY_ICON_ROTATION);
-  const wheelAnchorY = LORRY_ICON_SIZE * LORRY_WHEEL_RATIO;
 
   useEffect(() => {
     if (positions.length < 2) return;
@@ -110,12 +113,9 @@ export default function AnimatedRouteVehicle({
 
         if (bearing !== null) {
           const targetAngle = bearing + LORRY_ICON_ROTATION;
-          angleRef.current = smoothAngle(
-            angleRef.current,
-            targetAngle,
-            BEARING_SMOOTHING,
-          );
-          rotateEl.style.transform = `rotate(${angleRef.current}deg) scaleY(-1)`;
+          // Avoid bearing lag: align rotation to current computed bearing.
+          angleRef.current = targetAngle;
+          rotateEl.style.transform = `rotate(${angleRef.current}deg)`;
         }
       }
 

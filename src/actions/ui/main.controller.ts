@@ -99,6 +99,7 @@ export async function fetchServices({
       where: whereAction,
       select: {
         id: true,
+        imageUrl: FILE_SELECT,
         iconUrl: true,
         translations: {
           where: { locale },
@@ -177,6 +178,7 @@ export async function fetchServicesRelated({
     select: {
       id: true,
       iconUrl: true,
+      imageUrl: FILE_SELECT,
       translations: {
         where: { locale },
         select: {
@@ -199,6 +201,7 @@ export async function fetchServicesRelated({
         select: {
           id: true,
           iconsUrl: true,
+          imageUrl: FILE_SELECT,
           translations: {
             where: { locale },
             select: {

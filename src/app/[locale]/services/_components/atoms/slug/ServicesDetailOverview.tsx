@@ -16,7 +16,7 @@ export default async function ServicesDetailOverview({
 }) {
   const servicesTr = servicesInfo?.translations?.[0];
 
-  const imageUrl = getForCards(servicesOverview?.imageUrl as FileType);
+  const imageUrl = getForCards(servicesInfo?.imageUrl as FileType);
   if (!servicesInfo || !servicesOverview) return null;
   return (
     <div id="overview" className="scroll-mt-8">

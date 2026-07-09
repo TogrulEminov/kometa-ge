@@ -24,7 +24,7 @@ export default async function MainLayoutProvider({ children, locale }: Props) {
         <ShipmentModal />
       </Suspense>
       <Suspense fallback={null}>
-        <StickyWhatsAppServer />
+        <StickyWhatsAppServer locale={locale} />
       </Suspense>
     </>
   );
