@@ -107,7 +107,9 @@ export async function generatePageMetadata({
     }
 
     return {
-      title,
+      title: {
+        absolute: title,
+      },
       description,
       keywords,
       openGraph: {
@@ -156,7 +158,9 @@ export async function generatePageMetadata({
       "Kometa GE";
 
     return {
-      title: fallbackTitle,
+      title: {
+        absolute: fallbackTitle,
+      },
       description: resolveDefaultDescription(customPath, locale),
     };
   }

@@ -12,7 +12,7 @@ export const metadata: Metadata = {
     process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000",
   ),
   title: {
-    template: "%s | Kometa GE",
+    template: "%s",
     default: "Kometa GE",
   },
   description:

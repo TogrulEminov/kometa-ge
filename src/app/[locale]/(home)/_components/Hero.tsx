@@ -1,5 +1,4 @@
 import CustomImage from "@/globalElement/CustomImage";
-import CustomLink from "next/link";
 import { Link } from "@/i18n/navigation";
 import { FileType, HeroInfo, SectionLocale } from "@/services/interface/type";
 import CallAction from "./CallAction";
@@ -28,9 +27,13 @@ export default async function HomeHeroComponent({ locale }: SectionLocale) {
   const t = await getTranslations("atoms");
   const translations = heroInfo?.translations?.[0] ?? null;
   const videoUrl = getForCards(heroInfo?.videoUrl as FileType);
+  const heroImageUrl = getForCards(heroInfo?.imageUrl as FileType);
 
   return (
     <>
+      {heroImageUrl ? (
+        <link rel="preload" as="image" href={heroImageUrl} fetchPriority="high" />
+      ) : null}
       <section className="relative lg:h-200 flex flex-col justify-start items-start">
         <div className="absolute inset-0 z-0">
           <CustomImage
@@ -38,7 +41,7 @@ export default async function HomeHeroComponent({ locale }: SectionLocale) {
             height={1080}
             className="w-full h-full object-cover"
             title={translations?.title}
-            src={getForCards(heroInfo?.imageUrl as FileType)}
+            src={heroImageUrl}
             priority
             fetchPriority="high"
           />
@@ -84,19 +87,21 @@ export default async function HomeHeroComponent({ locale }: SectionLocale) {
               <div className="flex items-center gap-3">
                 <div className="flex -space-x-3">
                   {ourBranches.map((src, i) => (
-                    <CustomLink
+                    <a
                       key={i}
                       href={src?.href || "#"}
                       target="_blank"
+                      rel="noopener noreferrer"
                       className="size-12 p-2 border-2 border-white rounded-full bg-white flex items-center justify-center"
                     >
                       <img
-                        key={i}
                         src={src?.path}
                         alt={src?.title}
                         className="object-contain"
+                        loading="lazy"
+                        decoding="async"
                       />
-                    </CustomLink>
+                    </a>
                   ))}
                   <div className="size-12 rounded-full border-2 border-white bg-[#B11226] flex items-center justify-center text-white font-bold text-lg">
                     +

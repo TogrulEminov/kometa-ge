@@ -15,15 +15,7 @@ const nextConfig: NextConfig = {
   trailingSlash: false,
   compress: true,
   cacheComponents: true,
-  productionBrowserSourceMaps: false,
-
-  generateBuildId: async () => {
-    return (
-      process.env.VERCEL_GIT_COMMIT_SHA ||
-      process.env.GIT_COMMIT_SHA ||
-      "development"
-    );
-  },
+  productionBrowserSourceMaps: true,
 
   images: {
  
@@ -182,6 +174,14 @@ const nextConfig: NextConfig = {
         value: "camera=(), microphone=(), geolocation=(self)",
       },
       {
+        key: "Cross-Origin-Opener-Policy",
+        value: "same-origin-allow-popups",
+      },
+      {
+        key: "Cross-Origin-Resource-Policy",
+        value: "same-site",
+      },
+      {
         key: "Link",
         value: `<https://${MAIN_DOMAIN}>; rel=preconnect, <https://kometa-ge-new.togruleminov.site>; rel=preconnect`,
       },
@@ -207,6 +207,10 @@ const nextConfig: NextConfig = {
           {
             key: "Content-Security-Policy",
             value: csp,
+          },
+          {
+            key: "Cache-Control",
+            value: "public, max-age=0, must-revalidate",
           },
         ],
       },
