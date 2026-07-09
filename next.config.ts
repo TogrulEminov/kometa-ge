@@ -18,7 +18,11 @@ const nextConfig: NextConfig = {
   productionBrowserSourceMaps: false,
 
   generateBuildId: async () => {
-    return process.env.GIT_COMMIT_SHA || Date.now().toString();
+    return (
+      process.env.VERCEL_GIT_COMMIT_SHA ||
+      process.env.GIT_COMMIT_SHA ||
+      "development"
+    );
   },
 
   images: {
@@ -179,7 +183,7 @@ const nextConfig: NextConfig = {
       },
       {
         key: "Link",
-        value: `<https://${MAIN_DOMAIN}>; rel=preconnect`,
+        value: `<https://${MAIN_DOMAIN}>; rel=preconnect, <https://kometa-ge-new.togruleminov.site>; rel=preconnect`,
       },
     ];
 

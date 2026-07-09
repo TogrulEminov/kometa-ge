@@ -39,6 +39,8 @@ export default async function HomeHeroComponent({ locale }: SectionLocale) {
             className="w-full h-full object-cover"
             title={translations?.title}
             src={getForCards(heroInfo?.imageUrl as FileType)}
+            priority
+            fetchPriority="high"
           />
           <div className="absolute inset-0 bg-black/60" />
         </div>

@@ -1,10 +1,53 @@
+import type { Metadata } from "next";
 import { hasLocale, NextIntlClientProvider } from "next-intl";
 import { notFound } from "next/navigation";
 import { getMessages, setRequestLocale } from "next-intl/server";
-import { Inter, DM_Sans } from "next/font/google";
+import { Inter } from "next/font/google";
 import MainLayoutProvider from "../_provider/MainLayoutProvider";
 import { routing } from "@/i18n/routing";
 import { CustomLocales } from "@/services/interface/type";
+
+export const metadata: Metadata = {
+  metadataBase: new URL(
+    process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000",
+  ),
+  title: {
+    template: "%s | Kometa GE",
+    default: "Kometa GE",
+  },
+  description:
+    "Kometa GE provides international freight transportation and logistics services from Georgia — road, sea, air and rail freight, FTL, LTL, groupage cargo and heavy machinery logistics.",
+  robots: {
+    index: true,
+    follow: true,
+    nocache: false,
+    googleBot: {
+      index: true,
+      follow: true,
+      noimageindex: false,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
+  other: {
+    robots: "noai, noimageai",
+  },
+  icons: {
+    icon: [
+      { url: "/favicon.ico", rel: "icon", sizes: "any" },
+      { url: "/favicon.ico", rel: "icon", type: "image/ico", sizes: "32x32" },
+    ],
+    apple: [
+      {
+        url: "/favicon.ico.ioc",
+        rel: "apple-touch-icon",
+        sizes: "180x180",
+        type: "image/ico",
+      },
+    ],
+  },
+};
 
 const inter = Inter({
   variable: "--font-inter",

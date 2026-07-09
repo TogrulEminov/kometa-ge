@@ -1,5 +1,6 @@
 import { getPathname } from "@/i18n/navigation";
 import { routing } from "@/i18n/routing";
+import { STATIC_PUBLIC_ROUTE_HREFS } from "@/lib/routes/static-public-routes";
 import { db } from "@/lib/prisma";
 import { CustomLocales } from "@/services/interface/type";
 import type { MetadataRoute } from "next";
@@ -7,16 +8,7 @@ import type { MetadataRoute } from "next";
 const LOCALES = routing.locales;
 const DEFAULT_LOCALE = routing.defaultLocale as CustomLocales;
 
-const STATIC_ROUTES = [
-  "/",
-  "/about",
-  "/services",
-  "/directions",
-  "/contact",
-  "/certificates",
-  "/photo-gallery",
-  "/video-gallery",
-] as const;
+const STATIC_ROUTES = STATIC_PUBLIC_ROUTE_HREFS;
 
 type StaticRoute = (typeof STATIC_ROUTES)[number];
 

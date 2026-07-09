@@ -1,21 +1,10 @@
+import { buildLlmsContent } from "@/lib/llms/build-llms-content";
 import { NextResponse } from "next/server";
 
 export async function GET() {
-  const websiteUrl = (
-    process.env.BETTER_AUTH_URL || "http://localhost:3000"
-  ).replace(/\/$/, "");
-  const sitemapUrl = `${websiteUrl}/sitemap.xml`;
-
-  const content = [
-    "User-agent: *",
-    "Allow: /",
-    "",
-    `Sitemap: ${sitemapUrl}`,
-  ].join("\n");
-
-  return new NextResponse(content, {
+  return new NextResponse(buildLlmsContent(), {
     headers: {
-      "Content-Type": "text/plain",
+      "Content-Type": "text/plain; charset=utf-8",
     },
   });
 }

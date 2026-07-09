@@ -9,6 +9,18 @@ import {
   getCachedMetadata,
 } from "@/services/interface/metadata-constant";
 import { CustomLocales } from "@/services/interface/type";
+import { CustomPath } from "@/services/interface/metadata-constant";
+
+function resolveDefaultDescription(
+  customPath: CustomPath,
+  locale: string,
+): string {
+  return (
+    DEFAULT_DESCRIPTIONS[customPath]?.[locale as CustomLocales]?.trim() ||
+    DEFAULT_DESCRIPTIONS[customPath]?.en?.trim() ||
+    "Kometa GE provides international freight transportation and logistics services from Georgia."
+  );
+}
 
 export async function generatePageMetadata({
   locale,
@@ -51,11 +63,8 @@ export async function generatePageMetadata({
         "Kometa GE";
     }
 
-    if (!description) {
-      description =
-        DEFAULT_DESCRIPTIONS[customPath]?.[locale as CustomLocales] ||
-        DEFAULT_DESCRIPTIONS[customPath]?.en ||
-        "";
+    if (!description?.trim()) {
+      description = resolveDefaultDescription(customPath, locale);
     }
 
     const slugsByLocale = data?.slugsByLocale ?? {};
@@ -148,10 +157,7 @@ export async function generatePageMetadata({
 
     return {
       title: fallbackTitle,
-      description:
-        DEFAULT_DESCRIPTIONS[customPath]?.[locale as CustomLocales] ||
-        DEFAULT_DESCRIPTIONS[customPath]?.en ||
-        "",
+      description: resolveDefaultDescription(customPath, locale),
     };
   }
 }
