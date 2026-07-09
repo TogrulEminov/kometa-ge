@@ -20,7 +20,7 @@ export default function CertificatesContainer({
   paginations,
 }: Props) {
   return (
-    <section className="lg:py-20 py-10">
+    <section className="bg-background lg:py-20 py-10">
       <div className="container space-y-10">
         <SectionContentComponent
           highlightWord={

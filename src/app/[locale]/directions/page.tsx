@@ -7,6 +7,10 @@ import { Suspense } from "react";
 import { Metadata } from "next";
 import { generatePageMetadata } from "@/utils/metadata-generator";
 import CTASection from "../(home)/_components/CtaSection";
+import {
+  CTASectionFallback,
+  DirectionsGridFallback,
+} from "@/components/fallbacks";
 
 interface PageProps {
   params: Promise<{ locale: string }>;
@@ -50,7 +54,7 @@ export default async function DirectionsPage({
         subtitle={bannerDescription?.description ?? ""}
         breadcrumbs={[{ label: categoryTr?.title ?? "" }]}
       />
-      <Suspense fallback={null}>
+      <Suspense fallback={<DirectionsGridFallback />}>
         <CardArea
           searchParams={searchParams}
           sectionContent={sectionContent}
@@ -58,7 +62,7 @@ export default async function DirectionsPage({
         />
       </Suspense>
 
-      <Suspense fallback={null}>
+      <Suspense fallback={<CTASectionFallback />}>
         <CTASection locale={locale as CustomLocales} />
       </Suspense>
     </>

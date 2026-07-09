@@ -18,6 +18,7 @@ import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import { Metadata } from "next";
 import { generatePageMetadata } from "@/utils/metadata-generator";
+import { DetailPageFallback } from "@/components/fallbacks";
 
 interface PageProps {
   params: Promise<{ locale: string; slug: string }>;
@@ -61,7 +62,7 @@ export default async function DirectionsDetailPage({ params }: PageProps) {
           { label: directionTr?.title ?? "" },
         ]}
       />
-      <Suspense fallback={null}>
+      <Suspense fallback={<DetailPageFallback />}>
         <Content
           data={directionData as unknown as DirectionsType}
           locale={locale as CustomLocales}

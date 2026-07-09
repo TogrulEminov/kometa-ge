@@ -22,6 +22,7 @@ import { Suspense } from "react";
 import { serviceMainHref } from "@/i18n/href";
 import { Metadata } from "next";
 import { generatePageMetadata } from "@/utils/metadata-generator";
+import { DetailPageFallback } from "@/components/fallbacks";
 
 interface PageProps {
   params: Promise<{ locale: string; category: string; slug: string }>;
@@ -77,9 +78,10 @@ export default async function ServicesPage({ params }: PageProps) {
           { label: servicesSubTr?.title ?? "" },
         ]}
       />
-      <Suspense fallback={null}>
+      <Suspense fallback={<DetailPageFallback />}>
         <Content
           servicesSubData={servicesSubData as unknown as SubServicesType}
+          servicesCategoryData={servicesCategoryData as unknown as ServicesType}
           locale={locale as CustomLocales}
           category={category}
           slug={slug}
@@ -90,11 +92,13 @@ export default async function ServicesPage({ params }: PageProps) {
 }
 async function Content({
   servicesSubData,
+  servicesCategoryData,
   locale,
   category,
   slug,
 }: {
   servicesSubData: SubServicesType;
+  servicesCategoryData: ServicesType;
   locale: CustomLocales;
   category: string;
   slug: string;
@@ -118,6 +122,7 @@ async function Content({
       services={services?.data as unknown as ServicesType[]}
       contactInfo={contactInfo as unknown as IContactInformation}
       socials={socials as unknown as Social[]}
+      parentServiceData={servicesCategoryData as unknown as ServicesType}
       category={category}
     />
   );

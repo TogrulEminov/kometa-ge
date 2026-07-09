@@ -26,6 +26,7 @@ import { parseJSON } from "@/utils/parseJson";
 import { Suspense } from "react";
 import { Metadata } from "next";
 import { generatePageMetadata } from "@/utils/metadata-generator";
+import { CTASectionFallback } from "@/components/fallbacks";
 
 interface PageProps {
   params: Promise<{ locale: string }>;
@@ -113,7 +114,7 @@ export default async function AboutPage({ params }: PageProps) {
           </div>
         </section>
       </Suspense>
-      <Suspense fallback={null}>
+      <Suspense fallback={<CTASectionFallback />}>
         <CTASection locale={locale as CustomLocales} />
       </Suspense>
     </>

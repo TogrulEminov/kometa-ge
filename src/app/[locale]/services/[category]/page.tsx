@@ -19,6 +19,7 @@ import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import { Metadata } from "next";
 import { generatePageMetadata } from "@/utils/metadata-generator";
+import { DetailPageFallback } from "@/components/fallbacks";
 
 interface PageProps {
   params: Promise<{ locale: string; category: string }>;
@@ -64,7 +65,7 @@ export default async function ServicesCategory({ params }: PageProps) {
           { label: servicesTr?.title ?? "" },
         ]}
       />
-      <Suspense fallback={null}>
+      <Suspense fallback={<DetailPageFallback />}>
         <Content
           servicesCategoryData={servicesCategoryData as unknown as ServicesType}
           locale={locale as CustomLocales}

@@ -6,11 +6,17 @@ import { serviceSubHref } from "@/i18n/href";
 export default async function RelatedServices({
   sectionData,
   relatedServices,
+  currentSlug,
 }: {
   sectionData: newInfoJson;
   relatedServices: SubServicesType[];
+  currentSlug: string;
 }) {
-  if (!sectionData || !relatedServices?.length) return null;
+  const filteredServices = relatedServices.filter(
+    (service) => service.translations?.[0]?.slug !== currentSlug,
+  );
+
+  if (!sectionData || !filteredServices.length) return null;
   return (
     <div id="other-service" className="scroll-mt-8 mt-16">
       <div className="mb-8">
@@ -31,7 +37,7 @@ export default async function RelatedServices({
       </div>
 
       <div className="space-y-4">
-        {relatedServices.map((service) => {
+        {filteredServices.map((service) => {
           const servicesCategorySlug = service.services?.translations?.[0];
           const serviceTr = service.translations?.[0];
           if (!serviceTr) return null;

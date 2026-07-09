@@ -17,6 +17,7 @@ import { findJsonSection } from "@/utils/findJsonSection";
 import { Suspense } from "react";
 import { Metadata } from "next";
 import { generatePageMetadata } from "@/utils/metadata-generator";
+import { ContactSectionFallback } from "@/components/fallbacks";
 
 interface PageProps {
   params: Promise<{ locale: string }>;
@@ -56,7 +57,7 @@ export default async function ContactPage({ params }: PageProps) {
         subtitle={bannerDescription?.description ?? ""}
         breadcrumbs={[{ label: categoryTr?.title ?? "" }]}
       />
-      <Suspense fallback={null}>
+      <Suspense fallback={<ContactSectionFallback />}>
         <CardArea
           sectionContent={sectionContent}
           locale={locale as CustomLocales}

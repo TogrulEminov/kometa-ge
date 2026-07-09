@@ -21,6 +21,7 @@ export default function ServicesSlugDetail({
   contactInfo,
   socials,
   relatedSubServices,
+  parentServiceData,
   category,
 }: {
   servicesDetail: SubServicesType;
@@ -28,6 +29,7 @@ export default function ServicesSlugDetail({
   contactInfo: IContactInformation;
   socials: Social[];
   relatedSubServices: SubServicesType[];
+  parentServiceData: ServicesType;
   category: string;
 }) {
   const servicesTr = servicesDetail?.translations?.[0];
@@ -55,7 +57,7 @@ export default function ServicesSlugDetail({
     servicesTr?.description ?? "",
     "related_services",
   );
-  const parentService = findJsonSection<newInfoJson>(
+  const parentServiceSection = findJsonSection<newInfoJson>(
     servicesTr?.description ?? "",
     "main_service",
   );
@@ -92,10 +94,11 @@ export default function ServicesSlugDetail({
               relatedServices={
                 relatedSubServices as unknown as SubServicesType[]
               }
+              currentSlug={servicesTr?.slug ?? ""}
             />
             <ParentService
-              sectionData={parentService as unknown as newInfoJson}
-              parentService={servicesDetail.services}
+              sectionData={parentServiceSection as unknown as newInfoJson}
+              parentService={parentServiceData}
             />
           </div>
         </div>

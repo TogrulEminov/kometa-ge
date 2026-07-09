@@ -49,7 +49,7 @@ export default function ContactSection({
               <div className="rounded-2xl relative overflow-hidden h-80">
                 <Suspense
                   fallback={
-                    <div className="absolute inset-0 bg-surface-elevated w-full h-full" />
+                    <div className="absolute inset-0 h-full w-full animate-pulse bg-surface-elevated" />
                   }
                 >
                   <MapContainerBox contactInfo={data} />

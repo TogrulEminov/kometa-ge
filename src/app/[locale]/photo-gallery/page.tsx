@@ -16,6 +16,10 @@ import { Suspense } from "react";
 import { Metadata } from "next";
 import { generatePageMetadata } from "@/utils/metadata-generator";
 import CTASection from "../(home)/_components/CtaSection";
+import {
+  CTASectionFallback,
+  GalleryGridFallback,
+} from "@/components/fallbacks";
 
 interface PageProps {
   params: Promise<{ locale: string }>;
@@ -59,7 +63,7 @@ export default async function PhotoGalleryPage({
         subtitle={bannerDescription?.description ?? ""}
         breadcrumbs={[{ label: categoryTr?.title ?? "" }]}
       />
-      <Suspense fallback={null}>
+      <Suspense fallback={<GalleryGridFallback />}>
         <CardArea
           searchParams={searchParams}
           sectionContent={sectionContent}
@@ -67,7 +71,7 @@ export default async function PhotoGalleryPage({
         />
       </Suspense>
 
-      <Suspense fallback={null}>
+      <Suspense fallback={<CTASectionFallback />}>
         <CTASection locale={locale as CustomLocales} />
       </Suspense>
     </>

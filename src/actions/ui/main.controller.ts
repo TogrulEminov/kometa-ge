@@ -774,11 +774,11 @@ export async function fetchRelatedSubServices({
           },
         },
       },
-      translations: {
-        some: {
-          locale,
-          slug: {
-            not: slug,
+      NOT: {
+        translations: {
+          some: {
+            locale,
+            slug,
           },
         },
       },
